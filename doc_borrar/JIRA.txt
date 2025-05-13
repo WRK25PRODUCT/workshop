@@ -1,0 +1,130 @@
+🟣 Épica 1: Gestión de Productos
+
+Historias de Usuario:
+
+    [US-101] Como administrador, quiero añadir productos para poder ampliar el catálogo.
+
+    [US-102] Como administrador, quiero actualizar productos existentes para mantener la información al día.
+
+    [US-103] Como administrador, quiero eliminar productos para depurar el catálogo.
+
+    [US-104] Como cliente, quiero obtener la información de un producto para decidir mi compra.
+
+Tareas técnicas:
+
+    [TASK] Crear entidad Producto con JPA.
+
+    [TASK] Crear repositorio y servicios para CRUD.
+
+    [TASK] Exponer endpoints REST (GET, POST, PUT, DELETE).
+
+    [TASK] Documentar endpoints con OpenAPI.
+
+    [TASK] Pruebas unitarias con JUnit + AssertJ.
+
+🟣 Épica 2: Gestión de Inventario
+
+Historias de Usuario:
+
+    [US-201] Como sistema, quiero actualizar el stock automáticamente cuando se compra o devuelve un producto.
+
+    [US-202] Como sistema, quiero enviar un mensaje a la cola si el stock cae por debajo del umbral.
+
+Tareas técnicas:
+
+    [TASK] Lógica de decremento/incremento de stock.
+
+    [TASK] Envío de eventos a RabbitMQ.
+
+    [TASK] Configuración de colas y conexión.
+
+    [TASK] **YAML** config de umbrales.
+
+    [TASK] Pruebas unitarias.
+
+
+-----PENDIENTE----
+
+🟣 Épica 3: Promociones y Descuentos
+
+Historias de Usuario:
+
+    [US-301] Como cliente, quiero recibir descuentos por volumen al hacer checkout.
+
+    [US-302] Como cliente, quiero ver promociones activas aplicadas automáticamente.
+
+Tareas técnicas:
+
+    [TASK] Crear módulo de reglas de promoción.
+
+    [TASK] Integrar en el flujo de checkout.
+
+    [TASK] Configurar descuentos desde base de datos.
+
+    [TASK] Pruebas unitarias con múltiples escenarios.
+
+------------------
+
+
+
+🟣 Épica 4: Recomendaciones de Productos
+
+Historias de Usuario:
+
+    [US-401] Como usuario, quiero recibir sugerencias basadas en mi historial de compras y navegación.
+
+Tareas técnicas:
+
+    [TASK] Diseñar modelo básico de recomendación.
+
+    [TASK] Crear endpoint de sugerencias personalizadas.
+
+    [TASK] Integrar con historial de usuario.
+
+    [TASK] Pruebas unitarias del algoritmo.
+
+🟣 Épica 5: Métricas y Reportes
+
+Historias de Usuario:
+
+    [US-501] Como administrador, quiero ver los productos más vendidos.
+
+    [US-502] Como administrador, quiero reportes de stock y tendencias de compra.
+
+Tareas técnicas:
+
+    [TASK] Consultas SQL para reportes.
+
+    [TASK] Endpoint REST para consultar reportes.
+
+    [TASK] Pruebas con datos simulados.
+
+🟣 Épica 6: Comunicación y Notificaciones (RabbitMQ)
+
+Historias de Usuario:
+
+    [US-601] Como sistema, quiero notificar cuando el stock esté bajo o se reabastezca.
+
+Tareas técnicas:
+
+    [TASK] Configurar colas: stock.low, stock.replenished.
+
+    [TASK] Crear eventos de dominio y productor RabbitMQ.
+
+    [TASK] Pruebas de integración de colas.
+
+🟣 Épica 7: Infraestructura y Calidad
+
+Tareas técnicas (tech tasks):
+
+    [TASK] Configurar Log4J.
+
+    [TASK] Configurar Maven y dependencias.
+
+    [TASK] Configurar Github Actions para CI.
+
+    [TASK] Aplicar principios SOLID a servicios.
+
+    [TASK] Documentación OpenAPI.--- SWAGGE
+
+    [TASK] Configuración en application.yaml. --- ACLARAR

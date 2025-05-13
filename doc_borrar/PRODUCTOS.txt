@@ -1,0 +1,170 @@
+******************************
+
+Product 
+
+POJO (@Data):
+
+   - Long id
+   - String name
+   - String description
+   - Double price
+   - Double weight
+   - Category category:
+           + ENUM
+
+
+SERVICE (Interface)
+
+   - Long createProduct(Product product)
+   - Optional<Product> readProduct(Long id)
+   - void updateProduct(Product product)
+   - void deleteProduct(Long id)
+   - List<Product> getAll()
+   - void updateStock(Long id, int quantity) --> checkUmbral, mandar rabbit a pedidos ó asíncrono
+   - List<Product> getRecommendations(Product product)
+   - List<Product> getTopSellingProducts()
+   - List<Product> getTopSellingProducts(Category category)
+   - List<Product> getLowStockProducts(int umbral)
+
+REPOSITORY 
+
+   - Optional<Product> findByCategory(Category category)
+   - List<Product> findByStockLessThan(int units)
+   - List<Product> findTopTenBySales()
+   - List<Product> findByStockMoreThan(int units)
+   + añadir más querys
+
+ 
+******************************
+
+Category 
+
+ENUM:
+
+   - TOYS, BOOKS, SPORTS, MEAL, CLOTHES, OTHERS
+
+********************************
+
+Promotions (@Data) 
+
+Abstract
+POJO:
+
+   - Long id
+   - Date start
+   - Date end
+   - Double discount
+   - PromotionType (+Enum)
+
+
+---
+
+PromotionSeason (@Data)
+
+POJO:
+
+   - String name
+   - List<Category> affectedCategories
+
+---
+
+PromotionQuantity (@Data)
+
+POJO:
+
+   - int quantity
+   - Category category
+
+**********************************
+
+PromotionType
+
+ENUM:
+
+  - SEASON, QUANTITY
+
+\\\\\\\\\\\\\\\|/////////////////////
+
+PostgreSQL
+
+TABLAS ESPECIALIZADAS
+
+DDBB:
+
+ TABLE PRODUCT:
+
+   - pojo
+
+
+ TABLE INVENTORY
+
+   - bigint idProduct
+   - int stock
+   - int sales
+   - Date lastSoldDate
+ 
+ TABLE UMBRAL
+
+   - int umbral
+
+ TABLE HISTORY
+   - bigint userId
+   - bigint productid
+   - Timestamp timestamp
+
+ TABLE PROMOTIONS
+   - bigint idPromotion
+   - Date start
+   - Date end
+   - Integer discount
+   - VARCHAR(20) tipoPromo
+
+ TABLE SEASON_PROMOTIONS
+   - Varchar[] Categories
+   - Varchar name
+
+ TABLE QUANTITY_PROMOTIONS
+   - Integer quantity
+   - Varchar category
+-----------------
+
+HACER FILTRO 
+
+
+
+-----
+
+@startuml
+class Product{
+  -id: Long
+  -name: String
+  -description: String
+  -price: Double
+  -weight: Double
+  -category: Category
+}
+
+enum Category{
+   - TOYS, BOOKS, SPORTS, MEAL, CLOTHES, OTHERS
+}
+
+class ProductService{
+   +createProduct(Product product): Long
+   +readProduct(Long id): Optional<Product>
+   +updateProduct(Product product): void
+   +deleteProduct(Long id): void
+   +getAll: List<Product>
+   +updateStock: void
+   +getRecommendations(Product product): List<Product>
+   +getTopSellingProducts(): List<Product>
+   +getTopSellingProducts(Category category): List<Product>
+   +getLowStockProducts(int umbral): List<Product>
+}
+
+class ProductRepository{
+   +findByCategory(Category category): Optional<Product>
+   +findTopTenBySales: List<Product>
+   +findByStockMoreThan(int units): List<Product>
+   +findBYStockLessThan(int units): List<Product>
+}
+@enduml
