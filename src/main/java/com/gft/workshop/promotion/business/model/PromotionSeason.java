@@ -14,4 +14,5 @@ public class PromotionSeason extends Promotion{
 
     private String name;
     private List<Category> affectedCategories;
+
 }
