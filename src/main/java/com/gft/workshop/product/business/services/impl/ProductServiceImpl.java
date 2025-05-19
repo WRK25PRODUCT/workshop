@@ -49,7 +49,9 @@ public class ProductServiceImpl implements ProductService {
 
         ProductPL productPL = mapper.map(product, ProductPL.class);
 
-        if(productPLRepository.findById(productPL.getId()).isEmpty()) {
+        Optional<Product> optional = readProductById(product.getId());
+
+        if(optional.isEmpty()) {
             throw new BusinessException("In order to update a product, the id must exist in the database");
         }
 
