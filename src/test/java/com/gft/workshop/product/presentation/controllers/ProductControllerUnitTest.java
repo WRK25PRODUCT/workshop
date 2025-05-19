@@ -11,8 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
@@ -22,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ProductControllerUT {
+public class ProductControllerUnitTest {
 
     @Mock
     private ProductService productService;
