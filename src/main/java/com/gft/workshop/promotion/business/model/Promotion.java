@@ -1,4 +1,4 @@
-package com.gft.workshop.business.model;
+package com.gft.workshop.product.business.model;
 
 import lombok.*;
 

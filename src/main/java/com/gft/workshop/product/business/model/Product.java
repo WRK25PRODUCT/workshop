@@ -1,18 +1,22 @@
-package com.gft.workshop.business.model;
+package com.gft.workshop.product.business.model;
 
 import lombok.*;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode(of = "id")
-//as
+@NoArgsConstructor
 public class Product {
 
     private Long id;
     private String name;
     private String description;
-    private Double price;
+    private BigDecimal price;
     private Double weight;
     private Category category;
+    private boolean inCatalog;
+
 }

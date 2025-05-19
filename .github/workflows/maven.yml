@@ -1,54 +1,45 @@
-name: Code Coverage with JaCoCo and PR Comment
- 
+name: Java CI with Maven
+
 on:
   push:
-    branches:
-      - '**'
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - '**'
- 
+    branches: [ "main" ]
+
 jobs:
   build:
+
     runs-on: ubuntu-latest
- 
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
- 
-      - name: Set up Maven 3.9.6
-        uses: s4u/setup-maven-action@v1.12.0
-        with:
-          maven-version: 3.9.6
- 
+      - uses: actions/checkout@v4
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
- 
-      - name: Build and test with JaCoCo
+
+      - name: Build with Maven
         run: mvn clean verify
- 
-      #- name: Upload JaCoCo Report
-      #  if: always()
-      #  uses: actions/upload-artifact@v3
-      #  with:
-      #    name: jacoco-report
-      #    path: |
-      #      target/site/jacoco/jacoco.xml
-      #      target/site/jacoco/index.html
- 
-      - name: Comment JaCoCo coverage in PR
-        if: github.event_name == 'pull_request'
-        uses: madrapps/jacoco-report@v1.6.1
-        with:
-          paths: target/site/jacoco/jacoco.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
-          min-coverage-overall: 100
-          min-coverage-changed-files: 100
-          title: ':white_check_mark: Coverage Report'
-          update-comment: true
-          pass-emoji: ':rocket:'
-          fail-emoji: ':boom:'
+
+      - name: Check JaCoCo coverage
+        run: |
+          mvn jacoco:report
+          covered_lines=$(grep -oP 'covered="\K[0-9]+' target/site/jacoco/jacoco.xml | awk '{s+=$1} END {print s}')
+          missed_lines=$(grep -oP 'missed="\K[0-9]+' target/site/jacoco/jacoco.xml | awk '{s+=$1} END {print s}')
+          
+          total_lines=$((covered_lines + missed_lines))
+          
+          if [ "$total_lines" -eq 0 ]; then
+            echo "No lines to cover."
+            exit 1
+          fi
+          
+          coverage=$(echo "scale=2; $covered_lines / $total_lines" | bc)
+          
+          if (( $(echo "$coverage < 1.0" | bc -l) )); then
+            echo "Coverage is below 100%: $coverage"
+            exit 1
+          fi
+
