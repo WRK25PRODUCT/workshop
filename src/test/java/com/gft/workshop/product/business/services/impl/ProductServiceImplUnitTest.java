@@ -52,7 +52,6 @@ class ProductServiceImplUnitTest {
         });
 
         String message = ex.getMessage();
-
         assertEquals("In order to create a product, the id must be null", message);
     }
 
@@ -61,7 +60,6 @@ class ProductServiceImplUnitTest {
     void updateNotFoundProductIdTest(){
 
         product1.setId(10L);
-
         when(productPLRepository.findById(10L)).thenReturn(Optional.empty());
 
         BusinessException ex = assertThrows(BusinessException.class, () -> {
@@ -69,7 +67,6 @@ class ProductServiceImplUnitTest {
         });
 
         String message = ex.getMessage();
-
         assertEquals("In order to update a product, the id must exist in the database", message);
     }
 
@@ -86,7 +83,6 @@ class ProductServiceImplUnitTest {
         });
 
         String message = ex.getMessage();
-
         assertEquals("The id does not exist in the database", message);
     }
 
@@ -133,6 +129,12 @@ class ProductServiceImplUnitTest {
         newProduct.setId(1238L);
 
         productPL1 = new ProductPL();
-        productPL1.setId(2L);
+        productPL1.setId(1L);
+        productPL1.setName("red toy");
+        productPL1.setPrice(amount);
+        productPL1.setWeight(10.00);
+        productPL1.setCategory(Category.TOYS);
+        productPL1.setInCatalog(true);
+        productPL1.setDescription("a red toy");
     }
 }

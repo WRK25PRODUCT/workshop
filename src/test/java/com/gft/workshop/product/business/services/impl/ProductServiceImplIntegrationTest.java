@@ -61,7 +61,6 @@ class ProductServiceImplIntegrationTest {
         Optional<Product> optional = productServiceImpl.readProductById(2L);
 
         assertTrue(optional.isPresent());
-
         assertEquals(product2, optional.get());
 
     }

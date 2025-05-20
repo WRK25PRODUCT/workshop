@@ -44,9 +44,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void updateProduct(Product product) {
-        Optional<ProductPL> existingProduct = productPLRepository.findById(product.getId());
+        Optional<Product> optional = readProductById(product.getId());
 
-        if (existingProduct.isEmpty()) {
+        if(optional.isEmpty()) {
             throw new BusinessException("In order to update a product, the id must exist in the database");
         }
 
@@ -55,12 +55,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
     public void updateProductByStock(Long id, int quantity) {
         int threshold = 10;
 
         Optional<Product> optional = readProductById(id);
-        if (optional.isEmpty()) {
+
+        if(optional.isEmpty()) {
             throw new BusinessException("The id does not exist in the database");
         }
 
