@@ -49,7 +49,13 @@ public class ProductServiceImpl implements ProductService {
 
         Optional<ProductPL> existingProduct = productPLRepository.findById(product.getId());
 
+<<<<<<< HEAD
         if (existingProduct.isEmpty()) {
+=======
+        Optional<Product> optional = readProductById(product.getId());
+
+        if(optional.isEmpty()) {
+>>>>>>> 3dbcb971d6994747a26bc55c341ed5ed25480a2b
             throw new BusinessException("In order to update a product, the id must exist in the database");
         }
 
@@ -57,6 +63,24 @@ public class ProductServiceImpl implements ProductService {
 
         productPLRepository.save(productPL);
 
+    }
+
+    @Override
+    public void updateProductByStock(Long id, int quantity) {
+
+        int threshold = 10;
+
+        Optional<Product> optional = readProductById(id);
+
+        if(optional.isEmpty()) {
+            throw new BusinessException("The id does not exist in the data base");
+        }
+
+        productPLRepository.updateStock(id, quantity);
+
+        Optional<Integer> newQuantity = productPLRepository.findStockByProductId(id);
+
+        //añadir rabbitMQ
     }
 
     @Override

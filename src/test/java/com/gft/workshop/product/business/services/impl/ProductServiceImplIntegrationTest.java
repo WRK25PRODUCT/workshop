@@ -61,7 +61,10 @@ class ProductServiceImplIntegrationTest {
         Optional<Product> optional = productServiceImpl.readProductById(2L);
 
         assertTrue(optional.isPresent());
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3dbcb971d6994747a26bc55c341ed5ed25480a2b
         assertEquals(product2, optional.get());
 
     }
@@ -147,5 +150,9 @@ class ProductServiceImplIntegrationTest {
         productPL1.setCategory(Category.TOYS);
         productPL1.setInCatalog(true);
         productPL1.setDescription("a red toy");
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3dbcb971d6994747a26bc55c341ed5ed25480a2b
     }
 }

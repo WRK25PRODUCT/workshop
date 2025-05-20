@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
+<<<<<<< HEAD
 
 import java.util.Optional;
 
@@ -13,6 +14,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 @Sql(scripts= {"/data/h2/schema.sql", "/data/h2/data.sql"})
+=======
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Optional;
+
+@DataJpaTest
+@Sql(scripts= {"/data/h2/schema_testing.sql", "/data/h2/data_testing.sql"})
+>>>>>>> 3dbcb971d6994747a26bc55c341ed5ed25480a2b
 class ProductPLRepositoryIntegrationTest {
 
     @Autowired

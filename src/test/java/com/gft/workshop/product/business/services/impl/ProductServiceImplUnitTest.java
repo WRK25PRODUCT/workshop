@@ -1,7 +1,10 @@
 package com.gft.workshop.product.business.services.impl;
 
 import com.gft.workshop.config.business.BusinessException;
+<<<<<<< HEAD
 import com.gft.workshop.product.business.model.Category;
+=======
+>>>>>>> 3dbcb971d6994747a26bc55c341ed5ed25480a2b
 import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.product.integration.repositories.ProductPLRepository;
@@ -14,11 +17,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+<<<<<<< HEAD
 import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+=======
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+>>>>>>> 3dbcb971d6994747a26bc55c341ed5ed25480a2b
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,7 +58,11 @@ class ProductServiceImplUnitTest {
     void createNotNullProductTest(){
 
         BusinessException ex = assertThrows(BusinessException.class, () -> {
+<<<<<<< HEAD
             productServiceImpl.createProduct(product1);
+=======
+            productServiceImpl.createProduct(newProduct);
+>>>>>>> 3dbcb971d6994747a26bc55c341ed5ed25480a2b
         });
 
         String message= ex.getMessage();
@@ -61,10 +75,13 @@ class ProductServiceImplUnitTest {
     @DisplayName("update not found product Id")
     void updateNotFoundProductIdTest(){
 
+<<<<<<< HEAD
         product1.setId(10L);
 
         when(productPLRepository.findById(10L)).thenReturn(Optional.empty());
 
+=======
+>>>>>>> 3dbcb971d6994747a26bc55c341ed5ed25480a2b
         BusinessException ex = assertThrows(BusinessException.class, () -> {
             productServiceImpl.updateProduct(product1);
         });
@@ -125,6 +142,7 @@ class ProductServiceImplUnitTest {
 
         product1 = new Product();
         product1.setId(1L);
+<<<<<<< HEAD
         product1.setName("red toy");
         BigDecimal amount = new BigDecimal("100.00");
         product1.setPrice(amount);
@@ -141,6 +159,14 @@ class ProductServiceImplUnitTest {
         productPL1.setCategory(Category.TOYS);
         productPL1.setInCatalog(true);
         productPL1.setDescription("a red toy");
+=======
+
+        newProduct = new Product();
+        newProduct.setId(1238L);
+
+        productPL1 = new ProductPL();
+        productPL1.setId(2L);
+>>>>>>> 3dbcb971d6994747a26bc55c341ed5ed25480a2b
 
     }
 }
