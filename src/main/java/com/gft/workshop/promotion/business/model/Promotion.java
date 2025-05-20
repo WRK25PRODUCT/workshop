@@ -1,9 +1,10 @@
-package com.gft.workshop.product.business.model;
+package com.gft.workshop.promotion.business.model;
 
 import lombok.*;
 
 import java.util.Date;
 
+@Generated
 @Getter
 @Setter
 @ToString
