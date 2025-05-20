@@ -3,6 +3,8 @@ package com.gft.workshop.product.presentation.controllers;
 import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.business.services.ProductService;
+import com.gft.workshop.product.presentation.config.ErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,10 +16,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductControllerUnitTest {
@@ -65,19 +69,91 @@ public class ProductControllerUnitTest {
 
     }
 
-    /*
+
     @Test
     @DisplayName("Should return error body and 404")
     void getProductByIdNotFoundTest() {
 
         when(productService.readProductById(1l)).thenReturn(Optional.empty());
 
-        Response
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        when(mockRequest.getRequestURI()).thenReturn("/api/v1/products/1");
 
+        ResponseEntity<?> response = productController.getProductById(1L, mockRequest);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(404);
+        assertThat(response.getBody()).isInstanceOf(ErrorResponse.class);
+
+        ErrorResponse error = (ErrorResponse) response.getBody();
+        assertThat(error.getMessage()).contains("Product not found with the id: 1");
+        assertThat(error.getPath()).isEqualTo("/api/v1/products/1");
 
     }
-    */
 
+    @Test
+    @DisplayName("Should return all products and 200")
+    void getAllProductsTest() {
+
+        List<Product> products = Arrays.asList(product1, product2);
+        when(productService.getAllProducts()).thenReturn(products);
+
+        List<Product> result = productController.getAllProducts();
+
+        assertThat(result).containsExactly(product1, product2);
+
+    }
+
+    @Test
+    @DisplayName("Should return nothing and update Product and 204")
+    void updateProductOkTest() {
+
+        when(productService.readProductById(1L)).thenReturn(Optional.of(product1));
+
+        ResponseEntity<?> response = productController.update(product1, 1L);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(204);
+        verify(productService).updateProduct(product1);
+
+    }
+
+    @Test
+    @DisplayName("Should return error body and 404")
+    void updateProductNotFoundTest() {
+
+        when(productService.readProductById(1L)).thenReturn(Optional.empty());
+
+        ResponseEntity<?> response = productController.update(product1, 1L);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(404);
+        assertThat(response.getBody()).isInstanceOf(ErrorResponse.class);
+        verify(productService, never()).updateProduct(any());
+
+    }
+
+    @Test
+    @DisplayName("Should return nothing when deleted and 204")
+    void deleteProductOkTest() {
+
+        when(productService.readProductById(1L)).thenReturn(Optional.of(product1));
+
+        ResponseEntity<?> response = productController.delete(1L);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(204);
+        verify(productService).deleteProduct(1L);
+    }
+
+    @Test
+    @DisplayName("Should return nothing and 404 when product does not exist")
+    void deleteProductNotFoundTest() {
+
+        when(productService.readProductById(1L)).thenReturn(Optional.empty());
+
+        ResponseEntity<?> response = productController.delete(1L);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(404);
+        verify(productService, never()).deleteProduct(any());
+
+    }
 
     // *******************************************************
     //

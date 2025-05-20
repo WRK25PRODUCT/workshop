@@ -47,14 +47,35 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void updateProduct(Product product) {
 
-        ProductPL productPL = mapper.map(product, ProductPL.class);
+        Optional<ProductPL> existingProduct = productPLRepository.findById(product.getId());
 
-        if(productPLRepository.findById(productPL.getId()).isEmpty()) {
+        if (existingProduct.isEmpty()) {
             throw new BusinessException("In order to update a product, the id must exist in the database");
         }
 
+        ProductPL productPL = mapper.map(product, ProductPL.class);
+
         productPLRepository.save(productPL);
 
+    }
+
+    @Override
+    @Transactional
+    public void updateProductByStock(Long id, int quantity) {
+
+        int threshold = 10;
+
+        Optional<Product> optional = readProductById(id);
+
+        if(optional.isEmpty()) {
+            throw new BusinessException("The id does not exist in the data base");
+        }
+
+        productPLRepository.updateStock(id, quantity);
+
+        Optional<Integer> newQuantity = productPLRepository.findStockByProductId(id);
+
+        //TODO añadir rabbitMQ
     }
 
     @Override
