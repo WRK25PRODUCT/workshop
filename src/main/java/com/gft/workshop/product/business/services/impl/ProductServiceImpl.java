@@ -60,6 +60,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public void updateProductByStock(Long id, int quantity) {
+
+        int threshold = 10;
+
+        Optional<Product> optional = readProductById(id);
+
+        if(optional.isEmpty()) {
+            throw new BusinessException("The id does not exist in the data base");
+        }
+
+        productPLRepository.updateStock(id, quantity);
+
+        Optional<Integer> newQuantity = productPLRepository.findStockByProductId(id);
+
+        //añadir rabbitMQ
+    }
+
+    @Override
     @Transactional
     public void deleteProduct(Long id) {
 

@@ -6,7 +6,6 @@ import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.product.integration.repositories.ProductPLRepository;
 import org.dozer.DozerBeanMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,15 +13,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.List;
+
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ProductServiceImplUT {
+class ProductServiceImplUnitTest {
 
     @InjectMocks
     private ProductServiceImpl productServiceImpl;
@@ -69,6 +67,23 @@ class ProductServiceImplUT {
 
         assertEquals("In order to update a product, the id must exist in the database", message);
 
+    }
+
+    @Test
+    @DisplayName("update product by quantity Id not found")
+    void updateQuantityNotFoundById(){
+
+        product1.setId(1000L);
+
+        when(productPLRepository.findById(product1.getId())).thenReturn(Optional.empty());
+
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            productServiceImpl.updateProductByStock(product1.getId(), 15);
+        });
+
+        String message= ex.getMessage();
+
+        assertEquals("The id does not exist in the data base", message);
     }
 
     @Test
