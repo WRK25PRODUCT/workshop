@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 @DataJpaTest
-@Sql(scripts= {"/data/h2/schema.sql", "/data/h2/data.sql"})
+@Sql(scripts = {"/data/h2/schema_testing.sql", "/data/h2/data_testing.sql"})
 class ProductPLRepositoryIntegrationTest {
 
     @Autowired
@@ -20,19 +20,18 @@ class ProductPLRepositoryIntegrationTest {
 
     @Test
     @DisplayName("find stock quantity by Id")
-    void findStockByProductIdTest(){
+    void findStockByProductIdTest() {
 
         Optional<Integer> optional = productPLRepository.findStockByProductId(1L);
 
         int quantity = optional.get();
 
         assertEquals(50, quantity);
-
     }
 
     @Test
     @DisplayName("Update product by stock quantity")
-    void updateStockTest(){
+    void updateStockTest() {
 
         productPLRepository.updateStock(1L, 20);
 
@@ -41,7 +40,5 @@ class ProductPLRepositoryIntegrationTest {
         int quantity = optional.get();
 
         assertEquals(70, quantity);
-
     }
-
 }

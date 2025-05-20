@@ -48,13 +48,12 @@ class ProductServiceImplUnitTest {
     void createNotNullProductTest(){
 
         BusinessException ex = assertThrows(BusinessException.class, () -> {
-            productServiceImpl.createProduct(product1);
+            productServiceImpl.createProduct(newProduct);
         });
 
-        String message= ex.getMessage();
+        String message = ex.getMessage();
 
         assertEquals("In order to create a product, the id must be null", message);
-
     }
 
     @Test
@@ -69,10 +68,9 @@ class ProductServiceImplUnitTest {
             productServiceImpl.updateProduct(product1);
         });
 
-        String message= ex.getMessage();
+        String message = ex.getMessage();
 
         assertEquals("In order to update a product, the id must exist in the database", message);
-
     }
 
     @Test
@@ -87,9 +85,9 @@ class ProductServiceImplUnitTest {
             productServiceImpl.updateProductByStock(product1.getId(), 15);
         });
 
-        String message= ex.getMessage();
+        String message = ex.getMessage();
 
-        assertEquals("The id does not exist in the data base", message);
+        assertEquals("The id does not exist in the database", message);
     }
 
     @Test
@@ -101,7 +99,6 @@ class ProductServiceImplUnitTest {
         });
 
         assertEquals("Cannot delete a product with a null ID", ex.getMessage());
-
     }
 
     @Test
@@ -112,7 +109,6 @@ class ProductServiceImplUnitTest {
         });
 
         assertEquals("Cannot delete product: ID not found", ex.getMessage());
-
     }
 
     // *******************************************************
@@ -133,14 +129,10 @@ class ProductServiceImplUnitTest {
         product1.setInCatalog(true);
         product1.setDescription("a red toy");
 
-        productPL1 = new ProductPL();
-        productPL1.setId(1L);
-        productPL1.setName("red toy");
-        productPL1.setPrice(amount);
-        productPL1.setWeight(10.00);
-        productPL1.setCategory(Category.TOYS);
-        productPL1.setInCatalog(true);
-        productPL1.setDescription("a red toy");
+        newProduct = new Product();
+        newProduct.setId(1238L);
 
+        productPL1 = new ProductPL();
+        productPL1.setId(2L);
     }
 }
