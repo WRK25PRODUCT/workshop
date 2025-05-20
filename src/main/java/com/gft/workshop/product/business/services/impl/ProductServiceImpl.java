@@ -30,6 +30,7 @@ public class ProductServiceImpl implements ProductService {
             throw new BusinessException("In order to create a product, the id must be null");
         }
 
+        //hola
         ProductPL productPL = mapper.map(product, ProductPL.class);
 
         return productPLRepository.save(productPL).getId();
