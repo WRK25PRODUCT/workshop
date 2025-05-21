@@ -23,4 +23,40 @@ VALUES
   (2, 3, '2025-04-29 14:00:00'),
   (1, 1, '2025-05-10 09:00:00');
 
+ INSERT INTO promotions (start_date, end_date, discount, promotion_type)
+ VALUES
+   ('2025-05-01', '2025-05-15', 0.20, 'QUANTITY'),
+   ('2025-05-10', '2025-05-20', 0.15, 'QUANTITY'),
+   ('2025-06-01', '2025-06-30', 0.05, 'QUANTITY'),
+   ('2025-11-01', '2025-11-30', 0.20, 'SEASON'),
+   ('2025-12-01', '2025-12-25', 0.15, 'SEASON'),
+   ('2025-02-01', '2025-02-14', 0.05, 'SEASON'),
+   ('2025-06-01', '2025-06-30', 0.05, 'SEASON');
+
+INSERT INTO promotion_quantities (id, quantity, category, promotion_id)
+VALUES
+  (1, 6, 'TOYS', 1),
+  (2, 2, 'BOOKS', 2),
+  (3, 3, 'SPORTS', 3),
+  (4, 4, 'MEAL', 4),
+  (5, 5, 'CLOTHES', 5),
+  (6, 0, 'OTHERS', 6);
+
+INSERT INTO promotion_season (id, name)
+VALUES
+  (1, 'Black Friday'),
+  (2, 'Christmas'),
+  (3, 'Valentine’s Day'),
+  (4, 'Summer');
+
+INSERT INTO promotion_season_categories (promotion_season_id, category)
+VALUES
+  (1, 'TOYS'),
+  (1, 'CLOTHES'),
+  (2, 'BOOKS'),
+  (2, 'TOYS'),
+  (3, 'MEAL'),
+  (3, 'SPORTS'),
+  (4, 'SPORTS');
+
 
