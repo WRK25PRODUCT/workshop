@@ -4,6 +4,8 @@ import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.product.integration.repositories.ProductPLRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.dozer.DozerBeanMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+@ActiveProfiles("test")
 @Transactional
 class ProductServiceImplIntegrationTest {
 
@@ -28,6 +32,9 @@ class ProductServiceImplIntegrationTest {
 
     @Autowired
     private DozerBeanMapper mapper;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private ProductPLRepository productPLRepository;
@@ -65,6 +72,7 @@ class ProductServiceImplIntegrationTest {
 
     }
 
+
     @Test
     @DisplayName("update product")
     void updateProductTest(){
@@ -75,6 +83,23 @@ class ProductServiceImplIntegrationTest {
 
         assertTrue(productPL.isPresent());
         assertEquals(productPL.get().getId(), product1.getId());
+
+    }
+
+    @Test
+    @DisplayName("update product by quantity")
+    void updateProductByQuantity(){
+
+        int quantityToAdd = 15;
+
+        Long id = product1.getId();
+
+        productServiceImpl.updateProductByStock(id, quantityToAdd);
+
+        Optional<Integer> updatedStock = productPLRepository.findStockByProductId(id);
+
+        assertTrue(updatedStock.isPresent());
+        assertEquals(65, updatedStock.get());
 
     }
 
@@ -129,6 +154,5 @@ class ProductServiceImplIntegrationTest {
         productPL1.setCategory(Category.TOYS);
         productPL1.setInCatalog(true);
         productPL1.setDescription("a red toy");
-
     }
 }
