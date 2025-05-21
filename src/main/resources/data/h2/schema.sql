@@ -3,7 +3,6 @@ DROP TABLE IF EXISTS inventory;
 DROP TABLE IF EXISTS configuration;
 DROP TABLE IF EXISTS products;
 
-
 CREATE TABLE products (
     id BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(100) NOT NULL,
@@ -42,7 +41,7 @@ CREATE TABLE history (
         ON DELETE CASCADE
 );
 
- DROP TABLE IF EXISTS promotion_season_categories;
+DROP TABLE IF EXISTS promotion_season_categories;
  DROP TABLE IF EXISTS promotion_season;
  DROP TABLE IF EXISTS promotion_quantities;
  DROP TABLE IF EXISTS promotions;
@@ -79,3 +78,4 @@ CREATE TABLE history (
      CONSTRAINT fk_promotion_season_categories_season FOREIGN KEY (promotion_season_id)
          REFERENCES promotion_season(id) ON DELETE CASCADE
  );
+
