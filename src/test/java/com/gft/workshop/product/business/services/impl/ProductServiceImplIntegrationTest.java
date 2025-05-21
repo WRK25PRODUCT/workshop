@@ -79,6 +79,23 @@ class ProductServiceImplIntegrationTest {
     }
 
     @Test
+    @DisplayName("update product by quantity")
+    void updateProductByQuantity(){
+
+        int quantityToAdd = 15;
+
+        Long id = product1.getId();
+
+        productServiceImpl.updateProductByStock(id, quantityToAdd);
+
+        Optional<Integer> updatedStock = productPLRepository.findStockByProductId(id);
+
+        assertTrue(updatedStock.isPresent());
+        assertEquals(65, updatedStock.get());
+
+    }
+
+    @Test
     @DisplayName("delete product by Id")
     void deleteProductByIdTest(){
 
@@ -129,6 +146,5 @@ class ProductServiceImplIntegrationTest {
         productPL1.setCategory(Category.TOYS);
         productPL1.setInCatalog(true);
         productPL1.setDescription("a red toy");
-
     }
 }

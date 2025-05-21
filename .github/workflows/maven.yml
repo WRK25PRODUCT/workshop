@@ -2,44 +2,45 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ '**' ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ '**' ]
-    
+    branches: [ "master" ]
+
 jobs:
   build:
 
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
 
-      - name: Build with Maven
-        run: mvn clean verify
+    - name: Build with Maven
+      run: mvn clean verify
 
-      - name: Check JaCoCo coverage
-        run: |
-          mvn jacoco:report
-          covered_lines=$(grep -oP 'covered="\K[0-9]+' target/site/jacoco/jacoco.xml | awk '{s+=$1} END {print s}')
-          missed_lines=$(grep -oP 'missed="\K[0-9]+' target/site/jacoco/jacoco.xml | awk '{s+=$1} END {print s}')
-          
-          total_lines=$((covered_lines + missed_lines))
-          
-          if [ "$total_lines" -eq 0 ]; then
-            echo "No lines to cover."
-            exit 1
-          fi
-          
-          coverage=$(echo "scale=2; $covered_lines / $total_lines" | bc)
-          
-          if (( $(echo "$coverage < 1.0" | bc -l) )); then
-            echo "Coverage is below 100%: $coverage"
-            exit 1
-          fi
+    - name: Check JaCoCo coverage
+      run: |
+        mvn jacoco:report
+        covered_lines=$(grep -oP 'covered="\K[0-9]+' target/site/jacoco/jacoco.xml | awk '{s+=$1} END {print s}')
+        missed_lines=$(grep -oP 'missed="\K[0-9]+' target/site/jacoco/jacoco.xml | awk '{s+=$1} END {print s}')
 
+        total_lines=$((covered_lines + missed_lines))
+
+        if [ "$total_lines" -eq 0 ]; then
+          echo "No lines to cover."
+          exit 1
+        fi
+
+        coverage=$(echo "scale=2; $covered_lines / $total_lines" | bc)
+
+        if (( $(echo "$coverage < 1.0" | bc -l) )); then
+          echo "Coverage is below 100%: $coverage"
+          exit 1
+        fi
+
+ 

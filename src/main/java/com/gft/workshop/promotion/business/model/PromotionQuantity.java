@@ -1,10 +1,9 @@
-package com.gft.workshop.product.business.model;
+package com.gft.workshop.promotion.business.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.gft.workshop.product.business.model.Category;
+import lombok.*;
 
+@Generated
 @Getter
 @Setter
 @ToString(callSuper = true)

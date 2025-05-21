@@ -1,5 +1,8 @@
-package com.gft.workshop.product.business.model;
+package com.gft.workshop.promotion.business.model;
 
+import lombok.Generated;
+
+@Generated
 public enum PromotionType {
     SEASON,
     QUANTITY;

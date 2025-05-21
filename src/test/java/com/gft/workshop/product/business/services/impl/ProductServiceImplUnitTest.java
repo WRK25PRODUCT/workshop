@@ -1,12 +1,12 @@
 package com.gft.workshop.product.business.services.impl;
 
 import com.gft.workshop.config.business.BusinessException;
+import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.product.integration.repositories.ProductPLRepository;
 import org.dozer.DozerBeanMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,15 +14,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.List;
+import java.math.BigDecimal;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ProductServiceImplUT {
+class ProductServiceImplUnitTest {
 
     @InjectMocks
     private ProductServiceImpl productServiceImpl;
@@ -51,24 +51,39 @@ class ProductServiceImplUT {
             productServiceImpl.createProduct(newProduct);
         });
 
-        String message= ex.getMessage();
-
+        String message = ex.getMessage();
         assertEquals("In order to create a product, the id must be null", message);
-
     }
 
     @Test
     @DisplayName("update not found product Id")
     void updateNotFoundProductIdTest(){
 
+        product1.setId(10L);
+        when(productPLRepository.findById(10L)).thenReturn(Optional.empty());
+
         BusinessException ex = assertThrows(BusinessException.class, () -> {
             productServiceImpl.updateProduct(product1);
         });
 
-        String message= ex.getMessage();
-
+        String message = ex.getMessage();
         assertEquals("In order to update a product, the id must exist in the database", message);
+    }
 
+    @Test
+    @DisplayName("update product by quantity Id not found")
+    void updateQuantityNotFoundById(){
+
+        product1.setId(1000L);
+
+        when(productPLRepository.findById(product1.getId())).thenReturn(Optional.empty());
+
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            productServiceImpl.updateProductByStock(product1.getId(), 15);
+        });
+
+        String message = ex.getMessage();
+        assertEquals("The id does not exist in the database", message);
     }
 
     @Test
@@ -80,7 +95,6 @@ class ProductServiceImplUT {
         });
 
         assertEquals("Cannot delete a product with a null ID", ex.getMessage());
-
     }
 
     @Test
@@ -91,7 +105,6 @@ class ProductServiceImplUT {
         });
 
         assertEquals("Cannot delete product: ID not found", ex.getMessage());
-
     }
 
     // *******************************************************
@@ -104,12 +117,24 @@ class ProductServiceImplUT {
 
         product1 = new Product();
         product1.setId(1L);
+        product1.setName("red toy");
+        BigDecimal amount = new BigDecimal("100.00");
+        product1.setPrice(amount);
+        product1.setWeight(10.00);
+        product1.setCategory(Category.TOYS);
+        product1.setInCatalog(true);
+        product1.setDescription("a red toy");
 
         newProduct = new Product();
         newProduct.setId(1238L);
 
         productPL1 = new ProductPL();
-        productPL1.setId(2L);
-
+        productPL1.setId(1L);
+        productPL1.setName("red toy");
+        productPL1.setPrice(amount);
+        productPL1.setWeight(10.00);
+        productPL1.setCategory(Category.TOYS);
+        productPL1.setInCatalog(true);
+        productPL1.setDescription("a red toy");
     }
 }
