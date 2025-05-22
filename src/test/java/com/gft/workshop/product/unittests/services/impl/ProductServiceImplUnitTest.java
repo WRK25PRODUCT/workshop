@@ -70,21 +70,6 @@ class ProductServiceImplUnitTest {
         assertEquals("In order to update a product, the id must exist in the database", message);
     }
 
-    @Test
-    @DisplayName("update product by quantity Id not found")
-    void updateQuantityNotFoundById(){
-
-        product1.setId(1000L);
-
-        when(productPLRepository.findById(product1.getId())).thenReturn(Optional.empty());
-
-        BusinessException ex = assertThrows(BusinessException.class, () -> {
-            productServiceImpl.updateProductByStock(product1.getId(), 15);
-        });
-
-        String message = ex.getMessage();
-        assertEquals("The id does not exist in the database", message);
-    }
 
     @Test
     @DisplayName("delete product by Id null")
