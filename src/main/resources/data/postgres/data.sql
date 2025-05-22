@@ -23,7 +23,7 @@ VALUES
   (2, 3, '2025-04-29 14:00:00'),
   (1, 1, '2025-05-10 09:00:00');
 
- INSERT INTO promotions (start_date, end_date, discount, promotion_type)
+INSERT INTO promotions (start_date, end_date, discount, promotion_type)
  VALUES
    ('2025-05-01', '2025-05-15', 0.20, 'QUANTITY'),
    ('2025-05-10', '2025-05-20', 0.15, 'QUANTITY'),
@@ -58,5 +58,3 @@ VALUES
   (3, 'MEAL'),
   (3, 'SPORTS'),
   (4, 'SPORTS');
-
-

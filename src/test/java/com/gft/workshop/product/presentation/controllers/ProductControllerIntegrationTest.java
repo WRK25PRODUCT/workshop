@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -25,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 public class ProductControllerIntegrationTest {
 
     @Autowired
@@ -115,6 +118,74 @@ public class ProductControllerIntegrationTest {
         assertThat(products).hasSize(2);
 
     }
+
+    @Test
+    @DisplayName("Should update existing product and return 204 No Content")
+    void updateProductOkTest() throws Exception {
+
+        ProductPL productPLsaved = repository.save(productPL1);
+
+        Product product = new Product();
+        product.setName(productPLsaved.getName());
+        product.setDescription(productPLsaved.getDescription());
+        product.setPrice(productPLsaved.getPrice());
+        product.setWeight(productPLsaved.getWeight());
+        product.setCategory(productPLsaved.getCategory());
+        product.setInCatalog(productPLsaved.isInCatalog());
+
+        product.setName("Updated");
+
+        String json = objectMapper.writeValueAsString(product);
+
+        mockMvc.perform(put(uri + "/" + productPLsaved.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isNoContent());
+
+        Optional<ProductPL> result = repository.findById(productPLsaved.getId());
+
+        assertThat(result).isPresent();
+        assertThat(result.get().getName()).isEqualTo("Updated");
+
+    }
+
+    @Test
+    @DisplayName("Should return 404 Not Found when updating a product that does not exist")
+    void updateProductNotFoundTest() throws Exception {
+
+        String requestBody = objectMapper.writeValueAsString(product1);
+
+        mockMvc.perform(put(uri + "/999")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Product not found with the id: 999")));
+
+    }
+
+    @Test
+    @DisplayName("Should delete an existing product and return 204 No Content")
+    void deleteProductOkTest() throws Exception {
+
+        ProductPL saved = repository.save(productPL1);
+
+        mockMvc.perform(delete(uri + "/" + saved.getId()))
+                .andExpect(status().isNoContent());
+
+        assertThat(repository.findById(saved.getId())).isEmpty();
+
+    }
+
+    @Test
+    @DisplayName("Should not find the product and return 404 Not Found")
+    void deleteProductNotFoundTest() throws Exception {
+
+        mockMvc.perform(delete(uri + "/999"))
+                .andExpect(status().isNotFound());
+
+    }
+
+    // AAA
 
     // *******************************************************
     //
