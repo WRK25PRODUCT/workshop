@@ -23,7 +23,7 @@ INSERT INTO promotion_quantities (id, quantity, category, promotion_id) VALUES
 (2, 2, 'TOYS', 2);
 
 INSERT INTO history (user_id, product_id, timestamp) VALUES
-('user01', 1, CURRENT_TIMESTAMP - INTERVAL '2 days'),
-('user02', 2, CURRENT_TIMESTAMP - INTERVAL '1 day'),
-('user01', 3, CURRENT_TIMESTAMP),
-('user03', 1, CURRENT_TIMESTAMP - INTERVAL '3 days');
+  ('user01', 1, DATEADD('DAY', -2, CURRENT_TIMESTAMP)),
+  ('user02', 2, DATEADD('DAY', -1, CURRENT_TIMESTAMP)),
+  ('user01', 3, CURRENT_TIMESTAMP),
+  ('user03', 1, DATEADD('DAY', -3, CURRENT_TIMESTAMP));

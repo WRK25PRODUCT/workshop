@@ -1,13 +1,11 @@
 package com.gft.workshop.promotion.integration.model;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
+@Generated
 @Entity
 @Table(name="promotion_season")
 @Getter

@@ -1,14 +1,20 @@
 package com.gft.workshop.product.business.services.impl;
 
 import com.gft.workshop.config.business.BusinessException;
+import com.gft.workshop.product.business.model.InventoryData;
 import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.business.services.ProductService;
 import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.product.integration.repositories.ProductPLRepository;
+import com.gft.workshop.product.presentation.config.ErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.dozer.DozerBeanMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +32,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Long createProduct(Product product) {
+
         if(product.getId() != null) {
             throw new BusinessException("In order to create a product, the id must be null");
         }
@@ -33,47 +40,64 @@ public class ProductServiceImpl implements ProductService {
         ProductPL productPL = mapper.map(product, ProductPL.class);
 
         return productPLRepository.save(productPL).getId();
+
     }
 
     @Override
-    public Optional<Product> readProductById(Long id) {
-        return productPLRepository.findById(id)
+    public Product readProductById(Long id) {
+
+        Optional<Product> optional = productPLRepository.findById(id)
                 .map(p -> mapper.map(p, Product.class));
+
+        if (optional.isEmpty()) {
+            throw new BusinessException("Product not found with the id: " + id);
+        }
+
+        return optional.get();
+    }
+
+    @Override
+    public List<Product> getAllProducts() {
+        return productPLRepository.findAll().stream()
+                .map(p -> mapper.map(p, Product.class))
+                .toList();
     }
 
     @Override
     @Transactional
     public void updateProduct(Product product) {
-        Optional<Product> optional = readProductById(product.getId());
+        //TODO
 
-        if(optional.isEmpty()) {
-            throw new BusinessException("In order to update a product, the id must exist in the database");
+        if (product.getId() == null) {
+            throw new BusinessException("In order to update a product, the id must not be null");
         }
 
-        ProductPL productPL = mapper.map(product, ProductPL.class);
-        productPLRepository.save(productPL); // Save the updated product
-    }
+        ProductPL existing = productPLRepository.findById(product.getId())
+                .orElseThrow(() -> new BusinessException("In order to update a product, the id must exist in the database"));
 
-    @Override
-    public void updateProductByStock(Long id, int quantity) {
-        int threshold = 10;
+        existing.setName(product.getName());
+        existing.setDescription(product.getDescription());
+        existing.setPrice(product.getPrice());
+        existing.setWeight(product.getWeight());
+        existing.setCategory(product.getCategory());
+        existing.setInCatalog(product.isInCatalog());
 
-        Optional<Product> optional = readProductById(id);
-
-        if(optional.isEmpty()) {
-            throw new BusinessException("The id does not exist in the database");
+        if (product.getInventoryData() != null) {
+            InventoryData inventory = new InventoryData();
+            inventory.setStock(product.getInventoryData().getStock());
+            inventory.setThreshold(product.getInventoryData().getThreshold());
+            inventory.setTotalSales(product.getInventoryData().getTotalSales());
+            existing.setInventoryData(inventory);
         }
 
-        productPLRepository.updateStock(id, quantity);
-
-        Optional<Integer> newQuantity = productPLRepository.findStockByProductId(id);
-
-        //TODO: Implement RabbitMQ logic here if necessary
+        productPLRepository.save(existing);
     }
+
 
     @Override
     @Transactional
     public void deleteProduct(Long id) {
+
         if(id == null) {
             throw new BusinessException("Cannot delete a product with a null ID");
         }
@@ -86,12 +110,7 @@ public class ProductServiceImpl implements ProductService {
 
         ProductPL productPL = optional.get();
         productPLRepository.delete(productPL);
+
     }
 
-    @Override
-    public List<Product> getAllProducts() {
-        return productPLRepository.findAll().stream()
-                .map(p -> mapper.map(p, Product.class))
-                .toList();
-    }
 }

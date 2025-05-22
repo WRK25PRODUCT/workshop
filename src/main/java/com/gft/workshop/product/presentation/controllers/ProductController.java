@@ -25,32 +25,20 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody Product product, UriComponentsBuilder ucb){
+    public ResponseEntity<Long> create(@RequestBody Product product){
 
         Long id = productService.createProduct(product);
-        URI uri = ucb.path("/products/{id}").build(id);
 
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.ok().body(id);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(@PathVariable Long id, HttpServletRequest request) {
 
-        Optional<Product> optional = productService.readProductById(id);
+        Product product = productService.readProductById(id);
 
-        if (optional.isEmpty()) {
-            ErrorResponse errorResponse = new ErrorResponse(
-                    LocalDateTime.now(),
-                    HttpStatus.NOT_FOUND.value(),
-                    HttpStatus.NOT_FOUND.getReasonPhrase(),
-                    "Product not found with the id: " + id,
-                    request.getRequestURI()
-            );
+        return ResponseEntity.ok(product);
 
-            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-        }
-
-        return ResponseEntity.ok(optional.get());
     }
 
     @GetMapping
@@ -60,37 +48,22 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody Product product, @PathVariable Long id) {
+
         product.setId(id);
-
-        Optional<Product> existingProduct = productService.readProductById(id);
-
-        if (existingProduct.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse(
-                            LocalDateTime.now(),
-                            HttpStatus.NOT_FOUND.value(),
-                            HttpStatus.NOT_FOUND.getReasonPhrase(),
-                            "Product not found with the id: " + id,
-                            "/products/" + id));
-        }
 
         productService.updateProduct(product);
 
         return ResponseEntity.noContent().build();
+
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
 
-        Optional<Product> product = productService.readProductById(id);
-
-        if (product.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
         productService.deleteProduct(id);
 
         return ResponseEntity.noContent().build();
+
     }
 
 }

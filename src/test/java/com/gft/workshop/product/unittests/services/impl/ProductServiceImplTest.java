@@ -1,8 +1,9 @@
-package com.gft.workshop.product.business.services.impl;
+package com.gft.workshop.product.unittests.services.impl;
 
 import com.gft.workshop.config.business.BusinessException;
 import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.product.business.model.Product;
+import com.gft.workshop.product.business.services.impl.ProductServiceImpl;
 import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.product.integration.repositories.ProductPLRepository;
 import org.dozer.DozerBeanMapper;
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ProductServiceImplUnitTest {
+class ProductServiceImplTest {
 
     @InjectMocks
     private ProductServiceImpl productServiceImpl;

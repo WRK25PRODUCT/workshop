@@ -35,18 +35,22 @@ public class CentralizedExceptionHandler extends ResponseEntityExceptionHandler 
     }
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<Object> handleBusinessException(BusinessException ex, HttpServletRequest request){
+    public ResponseEntity<Object> handleBusinessException(BusinessException ex, HttpServletRequest request) {
 
-         // TODO crear un LOG
+        String message = ex.getMessage().toLowerCase();
+
+        HttpStatus status = (message.contains("id not found") || message.contains("id must exist in the database"))
+                ? HttpStatus.NOT_FOUND
+                : HttpStatus.BAD_REQUEST;
 
         ErrorResponse error = new ErrorResponse(
                 LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                status.value(),
+                status.getReasonPhrase(),
                 ex.getMessage(),
                 request.getRequestURI()
         );
 
-        return ResponseEntity.badRequest().body(error);
+        return new ResponseEntity<>(error, status);
     }
 }

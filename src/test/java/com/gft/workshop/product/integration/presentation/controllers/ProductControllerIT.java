@@ -1,7 +1,8 @@
-package com.gft.workshop.product.presentation.controllers;
+package com.gft.workshop.product.integration.presentation.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gft.workshop.product.business.model.Category;
+import com.gft.workshop.product.business.model.InventoryData;
 import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.product.integration.repositories.ProductPLRepository;
@@ -12,13 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class ProductControllerIntegrationTest {
+public class ProductControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -57,20 +56,20 @@ public class ProductControllerIntegrationTest {
     void createProductOkTest() throws Exception {
 
         product1.setId(null);
-
         String requestJson = objectMapper.writeValueAsString(product1);
+
 
         MvcResult result = mockMvc.perform(post(uri)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
-                .andExpect(status().isCreated())
-                .andExpect(header().exists("Location"))
-                .andReturn();
+                        .andExpect(status().isOk())
+                        .andReturn();
 
-        String location = result.getResponse().getHeader("Location");
-        assertThat(location).isNotEmpty();
+        String responseBody = result.getResponse().getContentAsString();
+        assertThat(responseBody).isNotEmpty();
 
-        Long productId = Long.parseLong(location.substring(location.lastIndexOf("/") + 1));
+        Long productId = objectMapper.readValue(responseBody, Long.class);
+        assertThat(productId).isNotNull();
         assertThat(repository.findById(productId)).isPresent();
 
     }
@@ -79,8 +78,9 @@ public class ProductControllerIntegrationTest {
     @DisplayName("Should return existing product by ID and 200 OK")
     void getProductByIdTest() throws Exception {
 
-        ProductPL savedProductPL = repository.save(productPL1);
+        productPL1.setId(null);
 
+        ProductPL savedProductPL = repository.save(productPL1);
 
         MvcResult result = mockMvc.perform(get(uri + "/" + savedProductPL.getId()))
                 .andExpect(status().isOk())
@@ -88,9 +88,18 @@ public class ProductControllerIntegrationTest {
 
         Product received = objectMapper.readValue(result.getResponse().getContentAsString(), Product.class);
 
+        assertThat(received).isNotNull();
         assertThat(received.getName()).isEqualTo(savedProductPL.getName());
         assertThat(received.getDescription()).isEqualTo(savedProductPL.getDescription());
+        assertThat(received.getCategory()).isEqualTo(savedProductPL.getCategory());
+        assertThat(received.getPrice()).isEqualByComparingTo(savedProductPL.getPrice());
+        assertThat(received.getWeight()).isEqualTo(savedProductPL.getWeight());
+        assertThat(received.isInCatalog()).isEqualTo(savedProductPL.isInCatalog());
 
+        assertThat(received.getInventoryData()).isNotNull();
+        assertThat(received.getInventoryData().getStock()).isEqualTo(savedProductPL.getInventoryData().getStock());
+        assertThat(received.getInventoryData().getThreshold()).isEqualTo(savedProductPL.getInventoryData().getThreshold());
+        assertThat(received.getInventoryData().getTotalSales()).isEqualTo(savedProductPL.getInventoryData().getTotalSales());
     }
 
     @Test
@@ -98,7 +107,7 @@ public class ProductControllerIntegrationTest {
     void getProductByIdNotFoundTest() throws Exception {
 
         mockMvc.perform(get(uri + "/999"))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isBadRequest())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Product not found with the id: 999")));
 
     }
@@ -106,6 +115,9 @@ public class ProductControllerIntegrationTest {
     @Test
     @DisplayName("Should return all products and 200 OK")
     void getAllProductsTest() throws Exception {
+
+        productPL1.setId(null);
+        productPL2.setId(null);
 
         repository.save(productPL1);
         repository.save(productPL2);
@@ -123,35 +135,42 @@ public class ProductControllerIntegrationTest {
     @DisplayName("Should update existing product and return 204 No Content")
     void updateProductOkTest() throws Exception {
 
-        ProductPL productPLsaved = repository.save(productPL1);
+        productPL1.setId(null);
+        ProductPL saved = repository.save(productPL1);
 
-        Product product = new Product();
-        product.setName(productPLsaved.getName());
-        product.setDescription(productPLsaved.getDescription());
-        product.setPrice(productPLsaved.getPrice());
-        product.setWeight(productPLsaved.getWeight());
-        product.setCategory(productPLsaved.getCategory());
-        product.setInCatalog(productPLsaved.isInCatalog());
+        Product updated = new Product();
+        updated.setId(saved.getId());
+        updated.setName("Updated");
+        updated.setDescription(saved.getDescription());
+        updated.setPrice(saved.getPrice());
+        updated.setWeight(saved.getWeight());
+        updated.setCategory(saved.getCategory());
+        updated.setInCatalog(saved.isInCatalog());
 
-        product.setName("Updated");
+        InventoryData inventory = new InventoryData();
+        inventory.setStock(saved.getInventoryData().getStock());
+        inventory.setThreshold(saved.getInventoryData().getThreshold());
+        inventory.setTotalSales(saved.getInventoryData().getTotalSales());
+        updated.setInventoryData(inventory);
 
-        String json = objectMapper.writeValueAsString(product);
+        String json = objectMapper.writeValueAsString(updated);
 
-        mockMvc.perform(put(uri + "/" + productPLsaved.getId())
+        mockMvc.perform(put(uri + "/" + saved.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isNoContent());
 
-        Optional<ProductPL> result = repository.findById(productPLsaved.getId());
-
+        Optional<ProductPL> result = repository.findById(saved.getId());
         assertThat(result).isPresent();
         assertThat(result.get().getName()).isEqualTo("Updated");
-
     }
+
 
     @Test
     @DisplayName("Should return 404 Not Found when updating a product that does not exist")
     void updateProductNotFoundTest() throws Exception {
+
+        product1.setId(999L);
 
         String requestBody = objectMapper.writeValueAsString(product1);
 
@@ -159,13 +178,17 @@ public class ProductControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Product not found with the id: 999")));
-
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.message").value("In order to update a product, the id must exist in the database"))
+                .andExpect(jsonPath("$.error").value("Not Found"))
+                .andExpect(jsonPath("$.path").value("/api/v1/products/999"));
     }
 
     @Test
     @DisplayName("Should delete an existing product and return 204 No Content")
     void deleteProductOkTest() throws Exception {
+
+        productPL1.setId(null);
 
         ProductPL saved = repository.save(productPL1);
 
@@ -181,11 +204,12 @@ public class ProductControllerIntegrationTest {
     void deleteProductNotFoundTest() throws Exception {
 
         mockMvc.perform(delete(uri + "/999"))
-                .andExpect(status().isNotFound());
-
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.message").value("Cannot delete product: ID not found"))
+                .andExpect(jsonPath("$.error").value("Not Found"))
+                .andExpect(jsonPath("$.path").value("/api/v1/products/999"));
     }
-
-    // AAA
 
     // *******************************************************
     //
@@ -196,36 +220,64 @@ public class ProductControllerIntegrationTest {
     private void initObjects() {
 
         product1 = new Product();
-        product1.setName("toy car");
-        product1.setDescription("red car");
-        product1.setPrice(BigDecimal.valueOf(9.99));
-        product1.setWeight(1.0);
-        product1.setCategory(Category.TOYS);
+        product1.setId(1L);
+        product1.setName("Pelota de fútbol");
+        product1.setDescription("Pelota profesional tamaño 5");
+        product1.setPrice(new BigDecimal("29.99"));
+        product1.setWeight(0.45);
+        product1.setCategory(Category.SPORTS);
         product1.setInCatalog(true);
 
+        InventoryData inventory1 = new InventoryData();
+        inventory1.setStock(40);
+        inventory1.setThreshold(4);
+        inventory1.setTotalSales(150);
+        product1.setInventoryData(inventory1);
+
         product2 = new Product();
-        product2.setName("puzzle");
-        product2.setDescription("1000 pieces");
-        product2.setPrice(BigDecimal.valueOf(15.50));
-        product2.setWeight(0.8);
+        product2.setId(2L);
+        product2.setName("Muñeca articulada");
+        product2.setDescription("Muñeca con accesorios intercambiables");
+        product2.setPrice(new BigDecimal("24.99"));
+        product2.setWeight(0.3);
         product2.setCategory(Category.TOYS);
         product2.setInCatalog(true);
 
+        InventoryData inventory2 = new InventoryData();
+        inventory2.setStock(35);
+        inventory2.setThreshold(3);
+        inventory2.setTotalSales(90);
+        product2.setInventoryData(inventory2);
+
         productPL1 = new ProductPL();
-        productPL1.setName("toy car");
-        productPL1.setDescription("red car");
-        productPL1.setPrice(BigDecimal.valueOf(9.99));
-        productPL1.setWeight(1.0);
-        productPL1.setCategory(Category.TOYS);
+        productPL1.setId(1L);
+        productPL1.setName("Pelota de fútbol");
+        productPL1.setDescription("Pelota profesional tamaño 5");
+        productPL1.setPrice(new BigDecimal("29.99"));
+        productPL1.setWeight(0.45);
+        productPL1.setCategory(Category.SPORTS);
         productPL1.setInCatalog(true);
 
+        InventoryData inventoryPL1 = new InventoryData();
+        inventoryPL1.setStock(40);
+        inventoryPL1.setThreshold(4);
+        inventoryPL1.setTotalSales(150);
+        productPL1.setInventoryData(inventoryPL1);
+
         productPL2 = new ProductPL();
-        productPL2.setName("puzzle");
-        productPL2.setDescription("1000 pieces");
-        productPL2.setPrice(BigDecimal.valueOf(15.50));
-        productPL2.setWeight(0.8);
+        productPL2.setId(2L);
+        productPL2.setName("Muñeca articulada");
+        productPL2.setDescription("Muñeca con accesorios intercambiables");
+        productPL2.setPrice(new BigDecimal("24.99"));
+        productPL2.setWeight(0.3);
         productPL2.setCategory(Category.TOYS);
         productPL2.setInCatalog(true);
+
+        InventoryData inventoryPL2 = new InventoryData();
+        inventoryPL2.setStock(35);
+        inventoryPL2.setThreshold(3);
+        inventoryPL2.setTotalSales(90);
+        productPL2.setInventoryData(inventoryPL2);
 
     }
 
