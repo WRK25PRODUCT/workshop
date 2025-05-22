@@ -18,5 +18,6 @@ public class Product {
     private Double weight;
     private Category category;
     private boolean inCatalog;
+    private InventoryData inventoryData;
 
 }
