@@ -40,8 +40,6 @@ public class ProductPL {
     @Column(name = "in_catalog", nullable = false)
     private boolean inCatalog;
 
-    private Integer umbral;
-
     @Embedded
     private InventoryData inventoryData;
 

@@ -13,20 +13,17 @@ CREATE TABLE products (
     in_catalog BOOLEAN NOT NULL DEFAULT TRUE,
     stock BIGINT DEFAULT 0 CHECK (stock >= 0) NOT NULL,
     threshold BIGINT DEFAULT 1 CHECK (threshold > 0) NOT NULL,
-    total_sales BIGINT DEFAULT 0 CHECK (total_sales >= 0) NOT NULL
+    total_sales BIGINT DEFAULT 0 CHECK (total_sales >= 0) NOT NULL,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE history (
-    id BIGINT  NOT NULL GENERATED ALWAYS AS IDENTITY,
+    id BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
     user_id VARCHAR(100) NOT NULL,
     product_id BIGINT NOT NULL,
     timestamp TIMESTAMP NOT NULL,
-    CONSTRAINT fk_history_product
-        PRIMARY KEY (id)
-        FOREIGN KEY (product_id)
-        REFERENCES products(id)
-        ON DELETE CASCADE
+    PRIMARY KEY (id),
+    CONSTRAINT fk_history_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
  DROP TABLE IF EXISTS promotion_season_categories;
