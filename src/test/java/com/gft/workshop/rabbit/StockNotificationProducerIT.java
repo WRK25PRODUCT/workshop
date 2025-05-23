@@ -20,7 +20,6 @@ public class StockNotificationProducerIT {
     {
         producer.sendRestockNotification(1L, 10);
         Thread.sleep(2000);
-        System.out.println("Notification sent");
     }
 
     @Test
@@ -28,13 +27,12 @@ public class StockNotificationProducerIT {
     public void testSendBelowThresholdNotification() throws InterruptedException {
         producer.sendBelowThresholdNotification(1L, 3);
         Thread.sleep(2000);
-        System.out.println("Notification sent");
     }
 
     @Test
+    @DisplayName("should send an stock update notification to CloudAMQP")
     public void testSendStockUpdateNotification() throws InterruptedException {
         producer.sendStockUpdateNotification(1L, 20);
         Thread.sleep(2000);
-        System.out.println("Notification sent");
     }
 }
