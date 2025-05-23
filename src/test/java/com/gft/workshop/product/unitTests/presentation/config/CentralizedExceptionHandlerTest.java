@@ -1,4 +1,4 @@
-package com.gft.workshop.product.unittests.presentation.config;
+package com.gft.workshop.product.unitTests.presentation.config;
 
 import com.gft.workshop.config.business.BusinessException;
 import com.gft.workshop.product.presentation.config.CentralizedExceptionHandler;
@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
