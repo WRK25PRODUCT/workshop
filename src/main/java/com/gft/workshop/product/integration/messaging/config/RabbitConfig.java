@@ -1,7 +1,16 @@
 package com.gft.workshop.product.integration.messaging.config;
 
-import lombok.Generated;
+import org.springframework.amqp.core.TopicExchange;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@Generated
+@Configuration
 public class RabbitConfig {
+
+    public static final String EXCHANGE_PRODUCT = "product";
+
+    @Bean
+    public TopicExchange productExchange() {
+        return new TopicExchange(EXCHANGE_PRODUCT);
+    }
 }
