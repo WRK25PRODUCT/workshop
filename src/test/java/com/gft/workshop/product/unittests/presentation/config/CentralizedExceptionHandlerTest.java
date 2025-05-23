@@ -4,6 +4,7 @@ import com.gft.workshop.config.business.BusinessException;
 import com.gft.workshop.product.presentation.config.CentralizedExceptionHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ public class CentralizedExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("Should return internal server error")
     void handleExceptionShouldReturnInternalServerError(){
         Exception exception = new Exception("Unexpected error");
 
@@ -38,6 +40,7 @@ public class CentralizedExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("Should return bad request")
     void handleBusinessExceptionShouldReturnBadRequest() {
         BusinessException businessException = new BusinessException("Business error");
 
@@ -48,6 +51,7 @@ public class CentralizedExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("Should return not found")
     void handleBusinessExceptionShouldReturnNotFound() {
 
         BusinessException businessException = new BusinessException("Product not found with the id: ");
@@ -60,6 +64,7 @@ public class CentralizedExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("Should return not found for Id must exist in data base")
     void handleBusinessExceptionShouldReturnNotFoundForIdMustExist() {
 
         BusinessException businessException = new BusinessException("In order to update a product, the id must exist in the database");
@@ -72,6 +77,7 @@ public class CentralizedExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("Should return not found for Id not found in data base")
     void handleBusinessExceptionShouldReturnNotFoundForIdNotFound() {
         BusinessException businessException = new BusinessException("id not found in the database");
 

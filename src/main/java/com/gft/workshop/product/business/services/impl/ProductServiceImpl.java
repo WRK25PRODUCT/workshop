@@ -6,15 +6,10 @@ import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.business.services.ProductService;
 import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.product.integration.repositories.ProductPLRepository;
-import com.gft.workshop.product.presentation.config.ErrorResponse;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.dozer.DozerBeanMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,33 +66,32 @@ public class ProductServiceImpl implements ProductService {
             throw new BusinessException("In order to update a product, the id must not be null");
         }
 
-        Optional<ProductPL> optionalExisting = productPLRepository.findById(product.getId());
+        Optional<ProductPL> optional = productPLRepository.findById(product.getId());
 
-        if (optionalExisting.isEmpty()) {
+        if (optional.isEmpty()) {
             throw new BusinessException("In order to update a product, the id must exist in the database");
         }
 
-        ProductPL existing = optionalExisting.get();
+        ProductPL productPL = optional.get();
 
-        existing.setName(product.getName());
-        existing.setDescription(product.getDescription());
-        existing.setPrice(product.getPrice());
-        existing.setWeight(product.getWeight());
-        existing.setCategory(product.getCategory());
-        existing.setInCatalog(product.isInCatalog());
+        productPL.setName(product.getName());
+        productPL.setDescription(product.getDescription());
+        productPL.setPrice(product.getPrice());
+        productPL.setWeight(product.getWeight());
+        productPL.setCategory(product.getCategory());
+        productPL.setInCatalog(product.isInCatalog());
 
         if (product.getInventoryData() != null) {
             InventoryData inventory = new InventoryData();
             inventory.setStock(product.getInventoryData().getStock());
             inventory.setThreshold(product.getInventoryData().getThreshold());
             inventory.setTotalSales(product.getInventoryData().getTotalSales());
-            existing.setInventoryData(inventory);
+            productPL.setInventoryData(inventory);
         }
 
-        productPLRepository.save(existing);
+        productPLRepository.save(productPL);
 
     }
-
 
     @Override
     @Transactional

@@ -3,16 +3,10 @@ package com.gft.workshop.product.presentation.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.business.services.ProductService;
-import com.gft.workshop.product.presentation.config.ErrorResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -33,7 +27,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getProductById(@PathVariable Long id, HttpServletRequest request) {
+    public ResponseEntity<Product> getProductById(@PathVariable Long id, HttpServletRequest request) {
 
         Product product = productService.readProductById(id);
 

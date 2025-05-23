@@ -56,8 +56,8 @@ public class ProductControllerIT {
     void createProductOkTest() throws Exception {
 
         product1.setId(null);
-        String requestJson = objectMapper.writeValueAsString(product1);
 
+        String requestJson = objectMapper.writeValueAsString(product1);
 
         MvcResult result = mockMvc.perform(post(uri)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -66,6 +66,7 @@ public class ProductControllerIT {
                         .andReturn();
 
         String responseBody = result.getResponse().getContentAsString();
+
         assertThat(responseBody).isNotEmpty();
 
         Long productId = objectMapper.readValue(responseBody, Long.class);
@@ -161,6 +162,7 @@ public class ProductControllerIT {
                 .andExpect(status().isNoContent());
 
         Optional<ProductPL> result = repository.findById(saved.getId());
+
         assertThat(result).isPresent();
         assertThat(result.get().getName()).isEqualTo("Updated");
     }

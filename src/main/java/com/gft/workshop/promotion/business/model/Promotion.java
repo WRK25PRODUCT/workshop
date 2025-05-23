@@ -9,6 +9,7 @@ import java.util.Date;
 @Setter
 @ToString
 @EqualsAndHashCode(of = "id")
+@NoArgsConstructor
 public abstract class Promotion {
 
     private Long id;
