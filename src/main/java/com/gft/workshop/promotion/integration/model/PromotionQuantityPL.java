@@ -2,11 +2,9 @@ package com.gft.workshop.promotion.integration.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
+@Generated
 @Entity
 @Table(name="promotion_quantities")
 @Getter

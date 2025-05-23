@@ -10,11 +10,4 @@ import java.util.Optional;
 
 public interface ProductPLRepository extends JpaRepository<ProductPL, Long> {
 
-    @Query(value = "SELECT stock FROM inventory WHERE product_id = :productId", nativeQuery = true)
-    Optional<Integer> findStockByProductId(Long productId);
-
-    @Modifying
-    @Transactional
-    @Query(value = "UPDATE inventory SET stock = stock + :quantity WHERE product_id = :productId", nativeQuery = true)
-    void updateStock(Long productId, int quantity);
 }

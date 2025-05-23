@@ -1,6 +1,7 @@
 package com.gft.workshop.product.integration.model;
 
 import com.gft.workshop.product.business.model.Category;
+import com.gft.workshop.product.business.model.InventoryData;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -38,6 +39,9 @@ public class ProductPL {
 
     @Column(name = "in_catalog", nullable = false)
     private boolean inCatalog;
+
+    @Embedded
+    private InventoryData inventoryData;
 
 }
 

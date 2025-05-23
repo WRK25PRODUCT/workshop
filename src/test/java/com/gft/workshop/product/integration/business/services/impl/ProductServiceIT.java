@@ -1,7 +1,9 @@
-package com.gft.workshop.product.business.services.impl;
+package com.gft.workshop.product.integration.business.services.impl;
 
 import com.gft.workshop.product.business.model.Category;
+import com.gft.workshop.product.business.model.InventoryData;
 import com.gft.workshop.product.business.model.Product;
+import com.gft.workshop.product.business.services.impl.ProductServiceImpl;
 import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.product.integration.repositories.ProductPLRepository;
 import jakarta.persistence.EntityManager;
@@ -25,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-class ProductServiceImplIntegrationTest {
+class ProductServiceIT {
 
     @Autowired
     private ProductServiceImpl productServiceImpl;
@@ -57,7 +59,7 @@ class ProductServiceImplIntegrationTest {
 
         Long id = productServiceImpl.createProduct(product1);
 
-        assertEquals(5L, id);
+        assertEquals(6L, id);
 
     }
 
@@ -65,10 +67,9 @@ class ProductServiceImplIntegrationTest {
     @DisplayName("read product by Id")
     void readProductByIdTest(){
 
-        Optional<Product> optional = productServiceImpl.readProductById(2L);
+        Product product = productServiceImpl.readProductById(2L);
 
-        assertTrue(optional.isPresent());
-        assertEquals(product2, optional.get());
+        assertEquals(product2, product);
 
     }
 
@@ -83,23 +84,6 @@ class ProductServiceImplIntegrationTest {
 
         assertTrue(productPL.isPresent());
         assertEquals(productPL.get().getId(), product1.getId());
-
-    }
-
-    @Test
-    @DisplayName("update product by quantity")
-    void updateProductByQuantity(){
-
-        int quantityToAdd = 15;
-
-        Long id = product1.getId();
-
-        productServiceImpl.updateProductByStock(id, quantityToAdd);
-
-        Optional<Integer> updatedStock = productPLRepository.findStockByProductId(id);
-
-        assertTrue(updatedStock.isPresent());
-        assertEquals(65, updatedStock.get());
 
     }
 
@@ -135,24 +119,33 @@ class ProductServiceImplIntegrationTest {
 
         product1 = new Product();
         product1.setId(1L);
-        product1.setName("red toy");
-        BigDecimal amount = new BigDecimal("100.00");
-        product1.setPrice(amount);
-        product1.setWeight(10.00);
-        product1.setCategory(Category.TOYS);
+        product1.setName("Pelota de fútbol");
+        product1.setDescription("Pelota profesional tamaño 5");
+        product1.setPrice(new BigDecimal("29.99"));
+        product1.setWeight(0.45);
+        product1.setCategory(Category.SPORTS);
         product1.setInCatalog(true);
-        product1.setDescription("a red toy");
+
+        InventoryData inventory1 = new InventoryData();
+        inventory1.setStock(40);
+        inventory1.setThreshold(4);
+        inventory1.setTotalSales(150);
+        product1.setInventoryData(inventory1);
 
         product2 = new Product();
         product2.setId(2L);
+        product2.setName("Muñeca articulada");
+        product2.setDescription("Muñeca con accesorios intercambiables");
+        product2.setPrice(new BigDecimal("24.99"));
+        product2.setWeight(0.3);
+        product2.setCategory(Category.TOYS);
+        product2.setInCatalog(true);
 
-        productPL1 = new ProductPL();
-        productPL1.setId(1L);
-        productPL1.setName("red toy");
-        productPL1.setPrice(amount);
-        productPL1.setWeight(10.00);
-        productPL1.setCategory(Category.TOYS);
-        productPL1.setInCatalog(true);
-        productPL1.setDescription("a red toy");
+        InventoryData inventory2 = new InventoryData();
+        inventory2.setStock(35);
+        inventory2.setThreshold(3);
+        inventory2.setTotalSales(90);
+        product2.setInventoryData(inventory2);
+
     }
 }

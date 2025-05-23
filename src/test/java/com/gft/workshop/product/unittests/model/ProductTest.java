@@ -1,7 +1,9 @@
-package com.gft.workshop.product.business.model;
+package com.gft.workshop.product.unittests.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.gft.workshop.product.business.model.Category;
+import com.gft.workshop.product.business.model.Product;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
