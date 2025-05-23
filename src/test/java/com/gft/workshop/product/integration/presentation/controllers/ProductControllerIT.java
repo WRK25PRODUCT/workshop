@@ -107,7 +107,7 @@ public class ProductControllerIT {
     void getProductByIdNotFoundTest() throws Exception {
 
         mockMvc.perform(get(uri + "/999"))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotFound())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Product not found with the id: 999")));
 
     }

@@ -39,7 +39,7 @@ public class CentralizedExceptionHandler extends ResponseEntityExceptionHandler 
 
         String message = ex.getMessage().toLowerCase();
 
-        HttpStatus status = (message.contains("id not found") || message.contains("id must exist in the database"))
+        HttpStatus status = (message.contains("id not found") || message.contains("id must exist in the database") ||  message.contains("not found with the id"))
                 ? HttpStatus.NOT_FOUND
                 : HttpStatus.BAD_REQUEST;
 

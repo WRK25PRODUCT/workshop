@@ -66,14 +66,18 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void updateProduct(Product product) {
-        //TODO
 
         if (product.getId() == null) {
             throw new BusinessException("In order to update a product, the id must not be null");
         }
 
-        ProductPL existing = productPLRepository.findById(product.getId())
-                .orElseThrow(() -> new BusinessException("In order to update a product, the id must exist in the database"));
+        Optional<ProductPL> optionalExisting = productPLRepository.findById(product.getId());
+
+        if (optionalExisting.isEmpty()) {
+            throw new BusinessException("In order to update a product, the id must exist in the database");
+        }
+
+        ProductPL existing = optionalExisting.get();
 
         existing.setName(product.getName());
         existing.setDescription(product.getDescription());
@@ -91,6 +95,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         productPLRepository.save(existing);
+
     }
 
 

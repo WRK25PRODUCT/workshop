@@ -69,8 +69,22 @@ class ProductServiceImplTest {
 
         String message = ex.getMessage();
         assertEquals("In order to update a product, the id must exist in the database", message);
+
     }
 
+    @Test
+    @DisplayName("Should throw BusinessException")
+    void updateProductWithIDNull(){
+
+        Product product = new Product();
+
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            productServiceImpl.updateProduct(product);
+        });
+
+        assertEquals("In order to update a product, the id must not be null", exception.getMessage());
+
+    }
 
     @Test
     @DisplayName("delete product by Id null")
