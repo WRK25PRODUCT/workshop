@@ -46,4 +46,40 @@ public class CentralizedExceptionHandlerTest {
         assertEquals(400, response.getStatusCode().value());
         assertNotNull(response.getBody());
     }
+
+    @Test
+    void handleBusinessExceptionShouldReturnNotFound() {
+
+        BusinessException businessException = new BusinessException("Product not found with the id: ");
+
+        ResponseEntity<Object> response = centralizedExceptionHandler.handleBusinessException(businessException, request);
+
+        assertEquals(404, response.getStatusCode().value());
+        assertNotNull(response.getBody());
+
+    }
+
+    @Test
+    void handleBusinessExceptionShouldReturnNotFoundForIdMustExist() {
+
+        BusinessException businessException = new BusinessException("In order to update a product, the id must exist in the database");
+
+        ResponseEntity<Object> response = centralizedExceptionHandler.handleBusinessException(businessException, request);
+
+        assertEquals(404, response.getStatusCode().value());
+        assertNotNull(response.getBody());
+
+    }
+
+    @Test
+    void handleBusinessExceptionShouldReturnNotFoundForIdNotFound() {
+        BusinessException businessException = new BusinessException("id not found in the database");
+
+        ResponseEntity<Object> response = centralizedExceptionHandler.handleBusinessException(businessException, request);
+
+        assertEquals(404, response.getStatusCode().value());
+        assertNotNull(response.getBody());
+    }
+
+
 }

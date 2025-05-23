@@ -2,6 +2,7 @@ package com.gft.workshop.product.unittests.services.impl;
 
 import com.gft.workshop.config.business.BusinessException;
 import com.gft.workshop.product.business.model.Category;
+import com.gft.workshop.product.business.model.InventoryData;
 import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.business.services.impl.ProductServiceImpl;
 import com.gft.workshop.product.integration.model.ProductPL;
@@ -16,10 +17,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -106,6 +109,99 @@ class ProductServiceImplTest {
 
         assertEquals("Cannot delete product: ID not found", ex.getMessage());
     }
+
+    @DisplayName("create product successfully")
+    @Test
+    void createProductOkTest() {
+        product1.setId(null);
+        ProductPL mappedPL = new ProductPL();
+        mappedPL.setId(99L);
+        when(mapper.map(product1, ProductPL.class)).thenReturn(mappedPL);
+        when(productPLRepository.save(mappedPL)).thenReturn(mappedPL);
+
+        Long resultId = productServiceImpl.createProduct(product1);
+
+        assertEquals(99L, resultId);
+        verify(productPLRepository).save(mappedPL);
+    }
+
+    @DisplayName("read product by id successfully")
+    @Test
+    void readProductByIdOkTest() {
+        when(productPLRepository.findById(1L)).thenReturn(Optional.of(productPL1));
+        when(mapper.map(productPL1, Product.class)).thenReturn(product1);
+
+        Product result = productServiceImpl.readProductById(1L);
+
+        assertEquals(product1, result);
+    }
+
+    @DisplayName("get all products")
+    @Test
+    void getAllProductsTest() {
+        when(productPLRepository.findAll()).thenReturn(List.of(productPL1));
+        when(mapper.map(productPL1, Product.class)).thenReturn(product1);
+
+        List<Product> result = productServiceImpl.getAllProducts();
+
+        assertEquals(1, result.size());
+        assertEquals(product1, result.get(0));
+    }
+
+    @DisplayName("update product correctly")
+    @Test
+    void updateProductOkTest() {
+        product1.setId(1L);
+        when(productPLRepository.findById(1L)).thenReturn(Optional.of(productPL1));
+
+        productServiceImpl.updateProduct(product1);
+
+        verify(productPLRepository).save(productPL1);
+    }
+
+    @DisplayName("delete product successfully")
+    @Test
+    void deleteProductOkTest() {
+        when(productPLRepository.findById(1L)).thenReturn(Optional.of(productPL1));
+
+        productServiceImpl.deleteProduct(1L);
+
+        verify(productPLRepository).delete(productPL1);
+    }
+
+    @Test
+    @DisplayName("readProductById should throw BusinessException when not found")
+    void readProductByIdNotFoundTest() {
+        when(productPLRepository.findById(99L)).thenReturn(Optional.empty());
+
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            productServiceImpl.readProductById(99L);
+        });
+
+        assertEquals("Product not found with the id: 99", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("updateProduct should update inventoryData if present")
+    void updateProductWithInventoryTest() {
+        product1.setId(1L);
+
+        InventoryData inventoryData = new InventoryData();
+        inventoryData.setStock(10);
+        inventoryData.setThreshold(2);
+        inventoryData.setTotalSales(5);
+        product1.setInventoryData(inventoryData);
+
+        when(productPLRepository.findById(1L)).thenReturn(Optional.of(productPL1));
+
+        productServiceImpl.updateProduct(product1);
+
+        verify(productPLRepository).save(productPL1);
+        assertEquals(10, productPL1.getInventoryData().getStock());
+        assertEquals(2, productPL1.getInventoryData().getThreshold());
+        assertEquals(5, productPL1.getInventoryData().getTotalSales());
+    }
+
 
     // *******************************************************
     //
