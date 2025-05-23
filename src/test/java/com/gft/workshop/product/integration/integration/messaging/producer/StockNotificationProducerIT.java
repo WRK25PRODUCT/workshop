@@ -16,22 +16,21 @@ public class StockNotificationProducerIT {
 
     @Test
     @DisplayName("should send a restock notification to CloudAMQP")
-    public void shouldSendRestockNotification() throws InterruptedException
-    {
+    public void shouldSendRestockNotification() throws InterruptedException {
         producer.sendRestockNotification(1L, 10);
         Thread.sleep(2000);
     }
 
     @Test
     @DisplayName("should send a below threshold notification to CloudAMQP")
-    public void testSendBelowThresholdNotification() throws InterruptedException {
+    public void shouldSendBelowThresholdNotification() throws InterruptedException {
         producer.sendBelowThresholdNotification(1L, 3);
         Thread.sleep(2000);
     }
 
     @Test
     @DisplayName("should send an stock update notification to CloudAMQP")
-    public void testSendStockUpdateNotification() throws InterruptedException {
+    public void shouldSendStockUpdateNotification() throws InterruptedException {
         producer.sendStockUpdateNotification(1L, 20);
         Thread.sleep(2000);
     }
