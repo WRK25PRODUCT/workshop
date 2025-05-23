@@ -1,4 +1,4 @@
-package com.gft.workshop.product.unittests.model;
+package com.gft.workshop.product.unitTests.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
