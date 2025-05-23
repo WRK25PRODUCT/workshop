@@ -1,4 +1,4 @@
-package com.gft.workshop.product.business.enums;
+package com.gft.workshop.product.business.model;
 
 public enum Category {
     TOYS,
