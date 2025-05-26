@@ -94,6 +94,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public void updateProductStock(Long idProduct, int quantityChange) {
+
+
+
+
+    }
+
+    @Override
     @Transactional
     public void deleteProduct(Long id) {
 

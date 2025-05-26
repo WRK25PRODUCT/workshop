@@ -109,6 +109,12 @@ class ProductServiceIT {
 
     }
 
+    @Test
+    @DisplayName("Should update the stock of a product and return ")
+    void updateProductStockTest() {
+
+    }
+
     // *******************************************************
     //
     // Private Methods
