@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.product.business.model.InventoryData;
 import com.gft.workshop.product.business.model.Product;
+import com.gft.workshop.product.business.services.impl.ProductServiceImpl;
 import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.product.integration.repositories.ProductPLRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class ProductControllerIT {
+class ProductControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -44,6 +45,8 @@ public class ProductControllerIT {
     private Product product2;
     private ProductPL productPL1;
     private ProductPL productPL2;
+    private ProductPL savedProductPL;
+    private Product updated;
 
     @BeforeEach
     void init() {
@@ -70,6 +73,7 @@ public class ProductControllerIT {
         assertThat(responseBody).isNotEmpty();
 
         Long productId = objectMapper.readValue(responseBody, Long.class);
+
         assertThat(productId).isNotNull();
         assertThat(repository.findById(productId)).isPresent();
 
@@ -81,7 +85,7 @@ public class ProductControllerIT {
 
         productPL1.setId(null);
 
-        ProductPL savedProductPL = repository.save(productPL1);
+        savedProductPL = repository.save(productPL1);
 
         MvcResult result = mockMvc.perform(get(uri + "/" + savedProductPL.getId()))
                 .andExpect(status().isOk())
@@ -89,27 +93,25 @@ public class ProductControllerIT {
 
         Product received = objectMapper.readValue(result.getResponse().getContentAsString(), Product.class);
 
-        assertThat(received).isNotNull();
-        assertThat(received.getName()).isEqualTo(savedProductPL.getName());
-        assertThat(received.getDescription()).isEqualTo(savedProductPL.getDescription());
-        assertThat(received.getCategory()).isEqualTo(savedProductPL.getCategory());
-        assertThat(received.getPrice()).isEqualByComparingTo(savedProductPL.getPrice());
-        assertThat(received.getWeight()).isEqualTo(savedProductPL.getWeight());
-        assertThat(received.isInCatalog()).isEqualTo(savedProductPL.isInCatalog());
+        product1.setId(received.getId());
 
-        assertThat(received.getInventoryData()).isNotNull();
-        assertThat(received.getInventoryData().getStock()).isEqualTo(savedProductPL.getInventoryData().getStock());
-        assertThat(received.getInventoryData().getThreshold()).isEqualTo(savedProductPL.getInventoryData().getThreshold());
-        assertThat(received.getInventoryData().getTotalSales()).isEqualTo(savedProductPL.getInventoryData().getTotalSales());
+        assertThat(received).isNotNull();
+        assertThat(received).isEqualTo(product1);
+
     }
+
 
     @Test
     @DisplayName("Should not find the product by ID and return 404 Not Found")
     void getProductByIdNotFoundTest() throws Exception {
 
-        mockMvc.perform(get(uri + "/999"))
+        mockMvc.perform(get(uri + "/20"))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Product not found with the id: 999")));
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.error").value("Not Found"))
+                .andExpect(jsonPath("$.message").value("Product not found with the id: 20"))
+                .andExpect(jsonPath("$.path").value("/api/v1/products/20"));
 
     }
 
@@ -137,31 +139,31 @@ public class ProductControllerIT {
     void updateProductOkTest() throws Exception {
 
         productPL1.setId(null);
-        ProductPL saved = repository.save(productPL1);
+        savedProductPL = repository.save(productPL1);
 
-        Product updated = new Product();
-        updated.setId(saved.getId());
+        updated = new Product();
+        updated.setId(savedProductPL.getId());
         updated.setName("Updated");
-        updated.setDescription(saved.getDescription());
-        updated.setPrice(saved.getPrice());
-        updated.setWeight(saved.getWeight());
-        updated.setCategory(saved.getCategory());
-        updated.setInCatalog(saved.isInCatalog());
+        updated.setDescription(savedProductPL.getDescription());
+        updated.setPrice(savedProductPL.getPrice());
+        updated.setWeight(savedProductPL.getWeight());
+        updated.setCategory(savedProductPL.getCategory());
+        updated.setInCatalog(savedProductPL.isInCatalog());
 
         InventoryData inventory = new InventoryData();
-        inventory.setStock(saved.getInventoryData().getStock());
-        inventory.setThreshold(saved.getInventoryData().getThreshold());
-        inventory.setTotalSales(saved.getInventoryData().getTotalSales());
+        inventory.setStock(savedProductPL.getInventoryData().getStock());
+        inventory.setThreshold(savedProductPL.getInventoryData().getThreshold());
+        inventory.setTotalSales(savedProductPL.getInventoryData().getTotalSales());
         updated.setInventoryData(inventory);
 
         String json = objectMapper.writeValueAsString(updated);
 
-        mockMvc.perform(put(uri + "/" + saved.getId())
+        mockMvc.perform(put(uri + "/" + savedProductPL.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isNoContent());
+                        .andExpect(status().isNoContent());
 
-        Optional<ProductPL> result = repository.findById(saved.getId());
+        Optional<ProductPL> result = repository.findById(savedProductPL.getId());
 
         assertThat(result).isPresent();
         assertThat(result.get().getName()).isEqualTo("Updated");
@@ -179,11 +181,11 @@ public class ProductControllerIT {
         mockMvc.perform(put(uri + "/999")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.status").value(404))
-                .andExpect(jsonPath("$.message").value("In order to update a product, the id must exist in the database"))
-                .andExpect(jsonPath("$.error").value("Not Found"))
-                .andExpect(jsonPath("$.path").value("/api/v1/products/999"));
+                        .andExpect(status().isNotFound())
+                        .andExpect(jsonPath("$.status").value(404))
+                        .andExpect(jsonPath("$.message").value("In order to update a product, the id must exist in the database"))
+                        .andExpect(jsonPath("$.error").value("Not Found"))
+                        .andExpect(jsonPath("$.path").value("/api/v1/products/999"));
     }
 
     @Test
@@ -192,12 +194,12 @@ public class ProductControllerIT {
 
         productPL1.setId(null);
 
-        ProductPL saved = repository.save(productPL1);
+        ProductPL productPL = repository.save(productPL1);
 
-        mockMvc.perform(delete(uri + "/" + saved.getId()))
-                .andExpect(status().isNoContent());
+        mockMvc.perform(delete(uri + "/" + productPL.getId()))
+                        .andExpect(status().isNoContent());
 
-        assertThat(repository.findById(saved.getId())).isEmpty();
+        assertThat(repository.findById(productPL.getId())).isEmpty();
 
     }
 
