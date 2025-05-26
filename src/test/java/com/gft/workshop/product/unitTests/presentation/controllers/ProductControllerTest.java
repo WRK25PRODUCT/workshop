@@ -1,4 +1,4 @@
-package com.gft.workshop.product.unittests.presentation.controllers;
+package com.gft.workshop.product.unitTests.presentation.controllers;
 
 import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.product.business.model.InventoryData;

@@ -1,4 +1,5 @@
-package com.gft.workshop.product.unittests.services.impl;
+package com.gft.workshop.product.unitTests.services.impl;
+
 
 import com.gft.workshop.config.business.BusinessException;
 import com.gft.workshop.product.business.model.Category;
