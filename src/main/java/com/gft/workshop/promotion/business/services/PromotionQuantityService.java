@@ -1,15 +1,16 @@
 package com.gft.workshop.promotion.business.services;
 
-import com.gft.workshop.promotion.business.model.Promotion;
+
+import com.gft.workshop.promotion.business.model.PromotionQuantity;
 
 public interface PromotionQuantityService {
 
-    Long createPromotion(Promotion promotion);
+    Long createPromotionQuantity(PromotionQuantity promotionQuantity);
 
-    Promotion readPromotionById(Long id);
+    PromotionQuantity readPromotionQuantityById(Long id);
 
-    void updatePromotion(Promotion promotion);
+    void updatePromotionQuantity(PromotionQuantity promotionQuantity);
 
-    void deletePromotion(Long id);
+    void deletePromotionQuantity(Long id);
 
 }
