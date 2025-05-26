@@ -6,6 +6,7 @@ import com.gft.workshop.product.business.model.InventoryData;
 import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.product.integration.repositories.ProductPLRepository;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -101,6 +102,7 @@ public class ProductControllerIT {
         assertThat(received.getInventoryData().getStock()).isEqualTo(savedProductPL.getInventoryData().getStock());
         assertThat(received.getInventoryData().getThreshold()).isEqualTo(savedProductPL.getInventoryData().getThreshold());
         assertThat(received.getInventoryData().getTotalSales()).isEqualTo(savedProductPL.getInventoryData().getTotalSales());
+
     }
 
     @Test
@@ -109,7 +111,7 @@ public class ProductControllerIT {
 
         mockMvc.perform(get(uri + "/999"))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Product not found with the id: 999")));
+                .andExpect(content().string(Matchers.containsString("Product not found with the id: 999"))); // TODO Ojo
 
     }
 

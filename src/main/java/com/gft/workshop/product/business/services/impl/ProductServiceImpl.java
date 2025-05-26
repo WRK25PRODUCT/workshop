@@ -81,6 +81,8 @@ public class ProductServiceImpl implements ProductService {
         productPL.setCategory(product.getCategory());
         productPL.setInCatalog(product.isInCatalog());
 
+        // TODO Sería InventoryDaraPL y extraer método
+
         if (product.getInventoryData() != null) {
             InventoryData inventory = new InventoryData();
             inventory.setStock(product.getInventoryData().getStock());

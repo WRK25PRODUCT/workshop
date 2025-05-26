@@ -27,7 +27,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id, HttpServletRequest request) {
+    public ResponseEntity<Product> getProductById(@PathVariable Long id, HttpServletRequest request) { // TODO quitar request??
 
         Product product = productService.readProductById(id);
 

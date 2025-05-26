@@ -38,6 +38,8 @@ public class ProductControllerTest {
         initObjects();
     }
 
+    // TODO test negativos y excepciones? Añadir más verify
+
     @Test
     @DisplayName("Should create a product successfully and return 200 with ID")
     void createProductOkTest() {

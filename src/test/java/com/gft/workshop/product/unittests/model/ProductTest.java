@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 
 public class ProductTest {
 
+    // TODO Eliminar clase
+
     @Test
     void testGettersAndSetters() {
         Product product = new Product();

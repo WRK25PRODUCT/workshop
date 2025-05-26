@@ -51,6 +51,8 @@ class ProductServiceIT {
         initObjects();
     }
 
+    // TODO Valores harcodeados. Negativos?
+
     @Test
     @DisplayName("create product successfully")
     void createProductTest(){
@@ -105,7 +107,7 @@ class ProductServiceIT {
 
         int productsSize = products.size();
 
-        assertEquals(productsSize, products.size());
+        assertTrue(productsSize >= 5);
 
     }
 
