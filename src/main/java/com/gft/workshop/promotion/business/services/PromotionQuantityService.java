@@ -2,7 +2,7 @@ package com.gft.workshop.promotion.business.services;
 
 import com.gft.workshop.promotion.business.model.Promotion;
 
-public interface PromotionService {
+public interface PromotionQuantityService {
 
     Long createPromotion(Promotion promotion);
 
