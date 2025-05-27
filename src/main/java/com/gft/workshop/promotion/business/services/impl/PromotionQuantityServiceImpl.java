@@ -32,18 +32,4 @@ public class PromotionQuantityServiceImpl implements PromotionQuantityService {
         return promotionQuantityPLRepository.save(promotionQuantityPL).getId();
     }
 
-    @Override
-    public PromotionQuantity readPromotionQuantityById(Long id) {
-        return null;
-    }
-
-    @Override
-    public void updatePromotionQuantity(PromotionQuantity promotionQuantity) {
-
-    }
-
-    @Override
-    public void deletePromotionQuantity(Long id) {
-
-    }
 }
