@@ -1,42 +1,44 @@
-package com.gft.workshop.promotion.unitTests.services.impl;
+package com.gft.workshop.promotion.integration.business.services.impl;
 
-import com.gft.workshop.config.business.BusinessException;
 import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionType;
-import com.gft.workshop.promotion.business.services.PromotionQuantityService;
+import com.gft.workshop.promotion.business.services.impl.PromotionQuantityServiceImpl;
 import com.gft.workshop.promotion.integration.model.CategoryPL;
 import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
 import com.gft.workshop.promotion.integration.model.PromotionTypePL;
 import com.gft.workshop.promotion.integration.repositories.PromotionQuantityPLRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.dozer.DozerBeanMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+@SpringBootTest
+@ActiveProfiles("test")
+@Transactional
+class PromotionQuantityServiceIT {
 
-@ExtendWith(MockitoExtension.class)
-class PromotionQuantityServiceImplTest {
+    @Autowired
+    private PromotionQuantityServiceImpl promotionQuantityService;
 
-    @InjectMocks
-    PromotionQuantityService promotionQuantityService;
+    @Autowired
+    private PromotionQuantityPLRepository promotionQuantityPLRepository;
 
-    @Mock
-    PromotionQuantityPLRepository promotionQuantityPLRepository;
+    @Autowired
+    private DozerBeanMapper mapper;
 
-    @Mock
-    DozerBeanMapper mapper;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private PromotionQuantity promotionQuantity1;
     private PromotionQuantity newPromotionQuantity;
@@ -49,31 +51,14 @@ class PromotionQuantityServiceImplTest {
     }
 
     @Test
-    @DisplayName("create promotionQuantity Id not null")
-    void createNotNullProductTest(){
-
-        BusinessException ex = assertThrows(BusinessException.class, () -> {
-            promotionQuantityService.createPromotionQuantity(newPromotionQuantity);
-        });
-
-        String message = ex.getMessage();
-        assertEquals("In order to create a promotion quantity, the id must be null", message);
-    }
-
-    @Test
-    @DisplayName("create promotion quantity successfully")
-    void createPromotionQuantityOkTest(){
+    @DisplayName("create product seccessfully")
+    void createProductTest(){
 
         promotionQuantity1.setId(null);
-
-        when(mapper.map(promotionQuantity1, PromotionQuantityPL.class)).thenReturn(promotionQuantityPL);
-
-        when(promotionQuantityPLRepository.save(promotionQuantityPL)).thenReturn(promotionQuantityPL);
 
         Long id = promotionQuantityService.createPromotionQuantity(promotionQuantity1);
 
         assertEquals(1L, id);
-        verify(promotionQuantityPLRepository).save(promotionQuantityPL);
     }
 
     // *******************************************************
@@ -116,6 +101,5 @@ class PromotionQuantityServiceImplTest {
         promotionQuantityPL.setPromotionTypePL(PromotionTypePL.QUANTITY);
         promotionQuantityPL.setQuantity(10);
         promotionQuantityPL.setCategory(CategoryPL.TOYS);
-
     }
 }

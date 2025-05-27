@@ -1,42 +1,47 @@
-package com.gft.workshop.promotion.unitTests.services.impl;
+package com.gft.workshop.promotion.integration.presentation.controllers;
 
-import com.gft.workshop.config.business.BusinessException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionType;
-import com.gft.workshop.promotion.business.services.PromotionQuantityService;
 import com.gft.workshop.promotion.integration.model.CategoryPL;
 import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
 import com.gft.workshop.promotion.integration.model.PromotionTypePL;
 import com.gft.workshop.promotion.integration.repositories.PromotionQuantityPLRepository;
-import org.dozer.DozerBeanMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
-class PromotionQuantityServiceImplTest {
+import static org.assertj.core.api.Assertions.assertThat;
 
-    @InjectMocks
-    PromotionQuantityService promotionQuantityService;
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+public class PromotionQuantityControllerIT {
 
-    @Mock
-    PromotionQuantityPLRepository promotionQuantityPLRepository;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @Mock
-    DozerBeanMapper mapper;
+    @Autowired
+    private PromotionQuantityPLRepository promotionQuantityPLRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private final String uri = "/api/v1/promotionsQuantity";
 
     private PromotionQuantity promotionQuantity1;
     private PromotionQuantity newPromotionQuantity;
@@ -45,35 +50,33 @@ class PromotionQuantityServiceImplTest {
 
     @BeforeEach
     void init(){
+        promotionQuantityPLRepository.deleteAll();
         initObjects();
     }
 
     @Test
-    @DisplayName("create promotionQuantity Id not null")
-    void createNotNullProductTest(){
-
-        BusinessException ex = assertThrows(BusinessException.class, () -> {
-            promotionQuantityService.createPromotionQuantity(newPromotionQuantity);
-        });
-
-        String message = ex.getMessage();
-        assertEquals("In order to create a promotion quantity, the id must be null", message);
-    }
-
-    @Test
-    @DisplayName("create promotion quantity successfully")
-    void createPromotionQuantityOkTest(){
+    @DisplayName("should create a promotion quantity and return 201")
+    void createPromotionQuantityOkTest() throws Exception{
 
         promotionQuantity1.setId(null);
 
-        when(mapper.map(promotionQuantity1, PromotionQuantityPL.class)).thenReturn(promotionQuantityPL);
+        String requestJson = objectMapper.writeValueAsString(promotionQuantity1);
 
-        when(promotionQuantityPLRepository.save(promotionQuantityPL)).thenReturn(promotionQuantityPL);
+        MvcResult result = mockMvc.perform(post(uri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                        .andExpect(status().isOk())
+                        .andReturn();
 
-        Long id = promotionQuantityService.createPromotionQuantity(promotionQuantity1);
+        String responseBody = result.getResponse().getContentAsString();
 
-        assertEquals(1L, id);
-        verify(promotionQuantityPLRepository).save(promotionQuantityPL);
+        assertThat(responseBody).isNotEmpty();
+
+        Long promotionQuantityId = objectMapper.readValue(responseBody, Long.class);
+
+        assertThat(promotionQuantityId).isNotNull();
+        assertThat(promotionQuantityPLRepository.findById(promotionQuantityId)).isPresent();
+
     }
 
     // *******************************************************
@@ -82,7 +85,7 @@ class PromotionQuantityServiceImplTest {
     //
     // *******************************************************
 
-    private void initObjects(){
+    private void initObjects() {
 
         Date startDate = new Date();
         Calendar cal = Calendar.getInstance();
@@ -116,6 +119,5 @@ class PromotionQuantityServiceImplTest {
         promotionQuantityPL.setPromotionTypePL(PromotionTypePL.QUANTITY);
         promotionQuantityPL.setQuantity(10);
         promotionQuantityPL.setCategory(CategoryPL.TOYS);
-
     }
 }
