@@ -23,6 +23,7 @@ import static org.mockito.Mockito.verify;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -75,6 +76,20 @@ class PromotionQuantityServiceImplTest {
 
         assertEquals(1L, id);
         verify(promotionQuantityPLRepository).save(promotionQuantityPL);
+    }
+
+    @Test
+    @DisplayName("readPromotionQuantityById should throw BusinessException when not found")
+    void readPromotionQuantityByIdNotFoundTest(){
+
+        when(promotionQuantityPLRepository.findById(100L)).thenReturn(Optional.empty());
+
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            promotionQuantityService.readPromotionQuantityById(100L);
+        });
+
+        assertEquals("Promotion quantity not found with the id: 100", exception.getMessage());
+
     }
 
     // *******************************************************

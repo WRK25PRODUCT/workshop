@@ -50,7 +50,7 @@ class PromotionQuantityServiceIT {
     }
 
     @Test
-    @DisplayName("create product seccessfully")
+    @DisplayName("create product successfully")
     void createProductTest(){
 
         promotionQuantity1.setId(null);
