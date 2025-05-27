@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface ProductPLRepository extends JpaRepository<ProductPL, Long> {
 
-    @Query("SELECT p.inventoryData.stock FROM Product p WHERE p.id = :id")
+    @Query("SELECT p.inventoryData.stock FROM ProductPL p WHERE p.id = :id")
     Optional<Integer> findStockByProductId(@Param("id") Long id);
 
 }
