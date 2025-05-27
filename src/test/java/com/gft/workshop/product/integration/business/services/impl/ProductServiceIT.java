@@ -33,12 +33,6 @@ class ProductServiceIT {
     private ProductServiceImpl productServiceImpl;
 
     @Autowired
-    private DozerBeanMapper mapper;
-
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Autowired
     private ProductPLRepository productPLRepository;
 
     private Product product1;
@@ -106,6 +100,26 @@ class ProductServiceIT {
         int productsSize = products.size();
 
         assertEquals(productsSize, products.size());
+
+    }
+
+    @Test
+    @DisplayName("Should update the stock of a product and return ")
+    void updateProductStockTest() {
+
+        product1.setId(null);
+
+        Long newId = productServiceImpl.createProduct(product1);
+
+        int quantityChange = -2;
+        int expectedStock = product1.getInventoryData().getStock() + quantityChange;
+
+        productServiceImpl.updateProductStock(newId, quantityChange);
+
+        Optional<ProductPL> updatedProductPL = productPLRepository.findById(newId);
+
+        assertTrue(updatedProductPL.isPresent());
+        assertEquals(expectedStock, updatedProductPL.get().getInventoryData().getStock());
 
     }
 

@@ -173,6 +173,72 @@ class ProductServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should update the stock of a product successfully")
+    void updateProductStockOkTest() {
+
+        int curerentStock = 10;
+        int quantityChange = -2;
+        int expectedStock = curerentStock + quantityChange;
+
+        InventoryData inventoryData = new InventoryData();
+        inventoryData.setStock(curerentStock);
+
+        ProductPL productPL = new ProductPL();
+        productPL.setId(1L);
+        productPL.setInventoryData(inventoryData);
+
+        when(productPLRepository.findById(1L)).thenReturn(Optional.of(productPL));
+
+        productServiceImpl.updateProductStock(1L, quantityChange);
+
+        verify(productPLRepository).findById(1L);
+        verify(productPLRepository).save(productPL);
+
+        assertEquals(expectedStock, productPL.getInventoryData().getStock());
+
+    }
+
+
+    @Test
+    @DisplayName("Should throw Business Exception: productId is null")
+    void updateProductStockIdNullTest() {
+
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            productServiceImpl.updateProductStock(null, -2);
+        });
+
+        assertEquals("In order to update the stock of a product, the id must not be null", exception.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("Should throw Business Exception: product not found")
+    void updateProductStockIdNotFoundTest() {
+
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            productServiceImpl.updateProductStock(999L, -2);
+        });
+
+        String message = ex.getMessage();
+        assertEquals("In order to update the stock of a product, the id must exist in the database", message);
+
+    }
+
+    @Test
+    @DisplayName("Should throw Business Exception: quantityChange can not be 0")
+    void updateProductStockIsZeroTest() {
+
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            productServiceImpl.updateProductStock(1L, 0);
+        });
+
+        String message = ex.getMessage();
+        assertEquals("In order to update the stock of a product, the quantity change must not be 0", message);
+
+    }
+
+
+    @Test
     @DisplayName("delete product by Id null")
     void deleteProductByIdNullTest() {
 
