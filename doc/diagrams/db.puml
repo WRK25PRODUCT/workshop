@@ -1,0 +1,62 @@
+@startuml
+'https://plantuml.com/ie-diagram
+
+!define table(x) class x << (T,#FFAAAA) >>
+!define primary_key(x) <b>x</b>
+!define foreign_key(x) <i>x</i>
+
+skinparam classAttributeIconSize 0
+
+table(products) {
+    primary_key(id) : BIGINT
+    name : VARCHAR(100)
+    description : TEXT
+    price : NUMERIC(10,2)
+    weight : DOUBLE PRECISION
+    category : VARCHAR(20)
+    in_catalog : BOOLEAN
+    stock : BIGINT
+    threshold : BIGINT
+    total_sales : BIGINT
+}
+
+table(history) {
+    primary_key(id) : BIGINT
+    user_id : VARCHAR(100)
+    foreign_key(product_id) : BIGINT
+    timestamp : TIMESTAMP
+}
+
+table(promotions) {
+    primary_key(id) : BIGINT
+    start_date : DATE
+    end_date : DATE
+    discount : FLOAT
+    promotion_type : VARCHAR(30)
+}
+
+table(promotion_quantities) {
+    primary_key(id) : BIGINT
+    quantity : INT
+    category : VARCHAR(30)
+    foreign_key(promotion_id) : BIGINT
+}
+
+table(promotion_season) {
+    primary_key(id) : BIGINT
+    name : VARCHAR(100)
+    foreign_key(id) : BIGINT
+}
+
+table(promotion_season_categories) {
+    primary_key(promotion_season_id) : BIGINT
+    primary_key(category) : VARCHAR(30)
+    foreign_key(promotion_season_id) : BIGINT
+}
+
+history --> products : product_id
+promotion_quantities --> promotions : promotion_id
+promotion_season --> promotions : id (herencia)
+promotion_season_categories --> promotion_season : promotion_season_id
+
+@enduml
