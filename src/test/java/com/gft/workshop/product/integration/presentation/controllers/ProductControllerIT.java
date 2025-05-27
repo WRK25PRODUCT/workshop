@@ -7,6 +7,8 @@ import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.business.services.impl.ProductServiceImpl;
 import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.product.integration.repositories.ProductPLRepository;
+import com.gft.workshop.product.presentation.dto.StockUpdateDTO;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@Transactional
 class ProductControllerIT {
 
     @Autowired
@@ -215,6 +218,52 @@ class ProductControllerIT {
                 .andExpect(jsonPath("$.path").value("/api/v1/products/999"));
     }
 
+    @Test
+    @DisplayName("Should update the stock of a product and return 204 No Content")
+    void updateProductStockOkTest() throws Exception {
+
+        productPL1.setId(null);
+        savedProductPL = repository.save(productPL1);
+
+        Long productId = savedProductPL.getId();
+        int initialStock = savedProductPL.getInventoryData().getStock();
+        int quantityChange = -5;
+
+        StockUpdateDTO stockUpdateDTO = new StockUpdateDTO(quantityChange);
+        String requestJson = objectMapper.writeValueAsString(stockUpdateDTO);
+
+
+        mockMvc.perform(patch(uri + "/" + productId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(status().isNoContent());
+
+
+        Optional<ProductPL> result = repository.findById(productId);
+        assertThat(result).isPresent();
+        assertThat(result.get().getInventoryData().getStock()).isEqualTo(initialStock + quantityChange);
+
+    }
+
+    @Test
+    @DisplayName("Should return 404 when trying to update stock of a non-existent product")
+    void updateProductStockNotFoundTest() throws Exception {
+
+        Long notFoundtId = 999L;
+        StockUpdateDTO stockUpdateDTO = new StockUpdateDTO(-2);
+
+        String requestJson = objectMapper.writeValueAsString(stockUpdateDTO);
+
+        mockMvc.perform(patch(uri + "/" + notFoundtId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.message").value("In order to update the stock of a product, the id must exist in the database"))
+                .andExpect(jsonPath("$.error").value("Not Found"))
+                .andExpect(jsonPath("$.path").value("/api/v1/products/" + notFoundtId));
+
+    }
 
 
     // *******************************************************
