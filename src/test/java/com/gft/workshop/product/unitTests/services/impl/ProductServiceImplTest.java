@@ -186,12 +186,10 @@ class ProductServiceImplTest {
         productPL.setId(1L);
         productPL.setInventoryData(inventoryData);
 
-        when(productPLRepository.findStockByProductId(1L)).thenReturn(Optional.of(curerentStock));
         when(productPLRepository.findById(1L)).thenReturn(Optional.of(productPL));
 
         productServiceImpl.updateProductStock(1L, quantityChange);
 
-        verify(productPLRepository).findStockByProductId(1L);
         verify(productPLRepository).findById(1L);
         verify(productPLRepository).save(productPL);
 
@@ -205,7 +203,7 @@ class ProductServiceImplTest {
     void updateProductStockIdNullTest() {
 
         BusinessException exception = assertThrows(BusinessException.class, () -> {
-            productServiceImpl.updateProductStock(999L, -2);
+            productServiceImpl.updateProductStock(null, -2);
         });
 
         assertEquals("In order to update the stock of a product, the id must not be null", exception.getMessage());
@@ -216,11 +214,8 @@ class ProductServiceImplTest {
     @DisplayName("Should throw Business Exception: product not found")
     void updateProductStockIdNotFoundTest() {
 
-        product1.setId(10L);
-        when(productPLRepository.findStockByProductId(10L)).thenReturn(Optional.empty());
-
         BusinessException ex = assertThrows(BusinessException.class, () -> {
-            productServiceImpl.updateProductStock(10L, -2);
+            productServiceImpl.updateProductStock(999L, -2);
         });
 
         String message = ex.getMessage();

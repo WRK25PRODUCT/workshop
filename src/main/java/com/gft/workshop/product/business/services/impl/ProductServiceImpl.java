@@ -94,12 +94,28 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateProductStock(Long idProduct, int quantityChange) {
+    public void updateProductStock(Long productId, int quantityChange) {
 
+        if (productId == null) {
+            throw new BusinessException("In order to update the stock of a product, the id must not be null");
+        }
 
+        if (quantityChange == 0) {
+            throw new BusinessException("In order to update the stock of a product, the quantity change must not be 0");
+        }
 
+        ProductPL product = productPLRepository.findById(productId)
+                .orElseThrow(() -> new BusinessException("In order to update the stock of a product, the id must exist in the database"));
+
+        int currentStock = product.getInventoryData().getStock();
+        int newStock = currentStock + quantityChange;
+
+        product.getInventoryData().setStock(newStock);
+
+        productPLRepository.save(product);
 
     }
+
 
     @Override
     @Transactional
