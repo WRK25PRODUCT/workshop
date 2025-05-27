@@ -19,8 +19,8 @@ INSERT INTO promotion_season_categories (promotion_season_id, category) VALUES
 (1, 'SPORTS'),
 (3, 'BOOKS');
 
-INSERT INTO promotion_quantities (id, quantity, category, promotion_id) VALUES
-(2, 2, 'TOYS', 2);
+INSERT INTO promotion_quantities (id, quantity, category) VALUES
+(2, 2, 'TOYS');
 
 INSERT INTO history (user_id, product_id, timestamp) VALUES
   ('user01', 1, DATEADD('DAY', -2, CURRENT_TIMESTAMP)),
