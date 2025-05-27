@@ -1,5 +1,6 @@
 package com.gft.workshop.promotion.integration.model;
 
+import com.gft.workshop.promotion.business.model.PromotionType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,5 +31,5 @@ public class PromotionPL {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "promotion_type", nullable = false, length = 30)
-    private PromotionTypePL promotionTypePL;
+    private PromotionType promotionType;
 }

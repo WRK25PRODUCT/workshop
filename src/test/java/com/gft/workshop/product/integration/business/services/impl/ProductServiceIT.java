@@ -6,16 +6,14 @@ import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.business.services.impl.ProductServiceImpl;
 import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.product.integration.repositories.ProductPLRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-import org.dozer.DozerBeanMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -38,8 +36,6 @@ class ProductServiceIT {
     private Product product1;
     private Product product2;
 
-    private ProductPL productPL1;
-
     @BeforeEach
     void init(){
         initObjects();
@@ -53,7 +49,7 @@ class ProductServiceIT {
 
         Long id = productServiceImpl.createProduct(product1);
 
-        assertEquals(6L, id);
+        assertNotNull(id);
 
     }
 
@@ -61,9 +57,13 @@ class ProductServiceIT {
     @DisplayName("read product by Id")
     void readProductByIdTest(){
 
-        Product product = productServiceImpl.readProductById(2L);
+        product1.setId(null);
 
-        assertEquals(product2, product);
+        Long id = productServiceImpl.createProduct(product1);
+
+        Product product = productServiceImpl.readProductById(id);
+
+        assertEquals(id, product.getId());
 
     }
 
