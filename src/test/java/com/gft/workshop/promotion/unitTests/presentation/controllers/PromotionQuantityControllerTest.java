@@ -39,8 +39,8 @@ public class PromotionQuantityControllerTest {
     }
 
     @Test
-    @DisplayName("Should create a product successfully and return 200 with ID")
-    void createProductOkTest() {
+    @DisplayName("Should create a promotion quantity successfully and return 200 with ID")
+    void createPromotionQuantityOkTest() {
 
         promotionQuantity1.setId(null);
 
