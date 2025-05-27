@@ -50,7 +50,7 @@ class PromotionQuantityServiceImplTest {
 
     @Test
     @DisplayName("create promotionQuantity Id not null")
-    void createNotNullProductTest(){
+    void createNotNullPromotionQuantityTest(){
 
         BusinessException ex = assertThrows(BusinessException.class, () -> {
             promotionQuantityService.createPromotionQuantity(newPromotionQuantity);

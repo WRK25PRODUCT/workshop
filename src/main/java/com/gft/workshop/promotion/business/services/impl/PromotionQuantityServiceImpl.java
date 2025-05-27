@@ -4,7 +4,9 @@ import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.services.PromotionQuantityService;
 import com.gft.workshop.promotion.integration.repositories.PromotionQuantityPLRepository;
 import org.dozer.DozerBeanMapper;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PromotionQuantityServiceImpl implements PromotionQuantityService {
 
     private final PromotionQuantityPLRepository promotionQuantityPLRepository;
