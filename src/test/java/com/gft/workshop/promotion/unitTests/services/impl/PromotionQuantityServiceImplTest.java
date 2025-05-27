@@ -5,6 +5,7 @@ import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.business.services.PromotionQuantityService;
+import com.gft.workshop.promotion.business.services.impl.PromotionQuantityServiceImpl;
 import com.gft.workshop.promotion.integration.model.CategoryPL;
 import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
 import com.gft.workshop.promotion.integration.model.PromotionTypePL;
@@ -30,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class PromotionQuantityServiceImplTest {
 
     @InjectMocks
-    PromotionQuantityService promotionQuantityService;
+    PromotionQuantityServiceImpl promotionQuantityService;
 
     @Mock
     PromotionQuantityPLRepository promotionQuantityPLRepository;
@@ -113,9 +114,9 @@ class PromotionQuantityServiceImplTest {
         promotionQuantityPL.setStartDate(startDate);
         promotionQuantityPL.setEndDate(endDate);
         promotionQuantityPL.setDiscount(15.0);
-        promotionQuantityPL.setPromotionTypePL(PromotionTypePL.QUANTITY);
+        promotionQuantityPL.setPromotionType(PromotionType.QUANTITY);
         promotionQuantityPL.setQuantity(10);
-        promotionQuantityPL.setCategory(CategoryPL.TOYS);
+        promotionQuantityPL.setCategory(Category.TOYS);
 
     }
 }

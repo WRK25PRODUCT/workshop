@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class PromotionQuantityControllerIT {
+class PromotionQuantityControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -116,8 +116,8 @@ public class PromotionQuantityControllerIT {
         promotionQuantityPL.setStartDate(startDate);
         promotionQuantityPL.setEndDate(endDate);
         promotionQuantityPL.setDiscount(15.0);
-        promotionQuantityPL.setPromotionTypePL(PromotionTypePL.QUANTITY);
+        promotionQuantityPL.setPromotionType(PromotionType.QUANTITY);
         promotionQuantityPL.setQuantity(10);
-        promotionQuantityPL.setCategory(CategoryPL.TOYS);
+        promotionQuantityPL.setCategory(Category.TOYS);
     }
 }

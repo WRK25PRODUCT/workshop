@@ -1,5 +1,6 @@
 package com.gft.workshop.promotion.integration.model;
 
+import com.gft.workshop.product.business.model.Category;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,6 +18,6 @@ public class PromotionQuantityPL extends PromotionPL {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
-    private CategoryPL category;
+    private Category category;
 
 }

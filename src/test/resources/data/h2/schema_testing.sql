@@ -40,14 +40,15 @@ CREATE TABLE history (
      PRIMARY KEY (id)
  );
 
- CREATE TABLE promotion_quantities (
-      id BIGINT PRIMARY KEY,
-      quantity INT NOT NULL CHECK (quantity >= 0),
-      category VARCHAR(30) NOT NULL,
-      promotion_id BIGINT NOT NULL,
-       CONSTRAINT fk_promotion_quantity_promotion FOREIGN KEY (promotion_id)
-              REFERENCES promotions(id) ON DELETE CASCADE
- );
+CREATE TABLE promotion_quantities (
+     id BIGINT PRIMARY KEY,
+     quantity INT NOT NULL CHECK (quantity >= 0),
+     category VARCHAR(30) NOT NULL,
+     CONSTRAINT fk_promotion_quantity_promotion FOREIGN KEY (id)
+           REFERENCES promotions(id) ON DELETE CASCADE
+);
+
+
 
  CREATE TABLE promotion_season (
      id BIGINT PRIMARY KEY,

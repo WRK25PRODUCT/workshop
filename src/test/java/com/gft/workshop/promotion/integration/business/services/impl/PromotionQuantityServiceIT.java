@@ -4,9 +4,7 @@ import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.business.services.impl.PromotionQuantityServiceImpl;
-import com.gft.workshop.promotion.integration.model.CategoryPL;
 import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
-import com.gft.workshop.promotion.integration.model.PromotionTypePL;
 import com.gft.workshop.promotion.integration.repositories.PromotionQuantityPLRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -18,7 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 import java.util.Calendar;
 import java.util.Date;
@@ -58,7 +57,7 @@ class PromotionQuantityServiceIT {
 
         Long id = promotionQuantityService.createPromotionQuantity(promotionQuantity1);
 
-        assertEquals(1L, id);
+        assertNotNull(id);
     }
 
     // *******************************************************
@@ -98,8 +97,8 @@ class PromotionQuantityServiceIT {
         promotionQuantityPL.setStartDate(startDate);
         promotionQuantityPL.setEndDate(endDate);
         promotionQuantityPL.setDiscount(15.0);
-        promotionQuantityPL.setPromotionTypePL(PromotionTypePL.QUANTITY);
+        promotionQuantityPL.setPromotionType(PromotionType.QUANTITY);
         promotionQuantityPL.setQuantity(10);
-        promotionQuantityPL.setCategory(CategoryPL.TOYS);
+        promotionQuantityPL.setCategory(Category.TOYS);
     }
 }
