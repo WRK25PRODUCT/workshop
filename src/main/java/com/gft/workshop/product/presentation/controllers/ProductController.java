@@ -1,5 +1,6 @@
 package com.gft.workshop.product.presentation.controllers;
 
+import com.gft.workshop.product.presentation.dto.StockUpdateDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.business.services.ProductService;
@@ -55,6 +56,15 @@ public class ProductController {
     public ResponseEntity<?> delete(@PathVariable Long id) {
 
         productService.deleteProduct(id);
+
+        return ResponseEntity.noContent().build();
+
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateProductStock(@RequestBody StockUpdateDTO stockUpdateDTO, @PathVariable Long id) {
+
+        productService.updateProductStock(id, stockUpdateDTO.quantityChange());
 
         return ResponseEntity.noContent().build();
 

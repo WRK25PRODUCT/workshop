@@ -5,6 +5,7 @@ import com.gft.workshop.product.business.model.InventoryData;
 import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.business.services.ProductService;
 import com.gft.workshop.product.presentation.controllers.ProductController;
+import com.gft.workshop.product.presentation.dto.StockUpdateDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -100,6 +101,19 @@ public class ProductControllerTest {
         assertThat(response.getStatusCode().value()).isEqualTo(204);
         verify(productService).deleteProduct(1L);
 
+    }
+
+    @Test
+    @DisplayName("Should update product stock and return 204")
+    void updateProductStockTest() {
+
+        StockUpdateDTO dto = new StockUpdateDTO(-5);
+        Long productId = 1L;
+
+        ResponseEntity<?> response = productController.updateProductStock(dto, productId);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(204);
+        verify(productService).updateProductStock(productId, dto.quantityChange());
     }
 
     // *******************************************************

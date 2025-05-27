@@ -12,13 +12,15 @@ http://localhost:8080/api/v1
 
 ## · Products
 
-| Method | Endpoint               | Descripción                |
-|--------|------------------------|----------------------------|
-| GET    | `/products`            | Get all products           |
-| POST   | `/products`            | Create new product         |
-| GET    | `/products/{id}`       | Get a product by its ID    |
-| PUT    | `/products/{id}`       | Update a product by its ID |
-| DELETE | `/products/{id}`       | Delete a product by its ID |
+| Method | Endpoint               | Descripción                             |
+|--------|------------------------|-----------------------------------------|
+| GET    | `/products`            | Get all products                        |
+| POST   | `/products`            | Create new product                      |
+| GET    | `/products/{id}`       | Get a product by its ID                 |
+| PUT    | `/products/{id}`       | Update a product by its ID              |
+| DELETE | `/products/{id}`       | Delete a product by its ID              |
+| PATCH  | `/products/{id}`       | Update the stock of a product by its ID |
+
 
 ---
 
