@@ -215,6 +215,8 @@ class ProductControllerIT {
                 .andExpect(jsonPath("$.path").value("/api/v1/products/999"));
     }
 
+
+
     // *******************************************************
     //
     // Private Methods
