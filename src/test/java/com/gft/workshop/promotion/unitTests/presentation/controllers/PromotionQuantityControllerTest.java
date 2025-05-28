@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -75,6 +76,18 @@ class PromotionQuantityControllerTest {
         assertThat(response.getStatusCode().value()).isEqualTo(204);
         verify(promotionQuantityService).updatePromotionQuantity(promotionQuantity1);
         assertThat(promotionQuantity1.getId()).isEqualTo(1L);
+
+    }
+
+    @Test
+    @DisplayName("Should delete promotion quantity and return 204")
+    void deletePromotionQuantityOkTest() {
+
+        when(promotionQuantityController.delete(1L)).thenReturn(ResponseEntity.noContent().build());
+        ResponseEntity<?> response = promotionQuantityController.delete(1L);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(204);
+        verify(promotionQuantityService).deletePromotionQuantity(1L);
 
     }
 
