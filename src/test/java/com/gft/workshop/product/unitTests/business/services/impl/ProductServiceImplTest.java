@@ -1,4 +1,4 @@
-package com.gft.workshop.product.unitTests.services.impl;
+package com.gft.workshop.product.unitTests.business.services.impl;
 
 
 import com.gft.workshop.config.business.BusinessException;
@@ -6,6 +6,7 @@ import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.product.business.model.InventoryData;
 import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.business.services.impl.ProductServiceImpl;
+import com.gft.workshop.product.integration.messaging.producer.StockNotificationProducer;
 import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.product.integration.repositories.ProductPLRepository;
 import org.dozer.DozerBeanMapper;
@@ -23,8 +24,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceImplTest {
@@ -37,6 +37,9 @@ class ProductServiceImplTest {
 
     @Mock
     private ProductPLRepository productPLRepository;
+
+    @Mock
+    private StockNotificationProducer stockNotificationProducer;
 
     private Product product1;
     private Product newProduct;
@@ -237,6 +240,74 @@ class ProductServiceImplTest {
 
     }
 
+    @Test
+    @DisplayName("Should only send stock update notification")
+    void updateProductStockNoThresholdCrossed() {
+
+        InventoryData inventoryData = new InventoryData();
+        inventoryData.setStock(10);
+        inventoryData.setThreshold(5);
+
+        ProductPL productPL = new ProductPL();
+        productPL.setId(1L);
+        productPL.setInventoryData(inventoryData);
+
+        when(productPLRepository.findById(1L)).thenReturn(Optional.of(productPL));
+
+        productServiceImpl.updateProductStock(1L, -2);
+
+        verify(productPLRepository).save(productPL);
+        verify(stockNotificationProducer).sendStockUpdateNotification(1L, 8);
+        verify(stockNotificationProducer, never()).sendBelowThresholdNotification(anyLong(), anyInt());
+        verify(stockNotificationProducer, never()).sendRestockNotification(anyLong(), anyInt());
+
+    }
+
+    @Test
+    @DisplayName("Should send stock update notification and stock below notification")
+    void updateProductStockThresholdCrossedBelow() {
+
+        InventoryData inventoryData = new InventoryData();
+        inventoryData.setStock(10);
+        inventoryData.setThreshold(5);
+
+        ProductPL productPL = new ProductPL();
+        productPL.setId(1L);
+        productPL.setInventoryData(inventoryData);
+
+        when(productPLRepository.findById(1L)).thenReturn(Optional.of(productPL));
+
+        productServiceImpl.updateProductStock(1L, -6);
+
+        verify(productPLRepository).save(productPL);
+        verify(stockNotificationProducer).sendStockUpdateNotification(1L, 4);
+        verify(stockNotificationProducer).sendBelowThresholdNotification(1L, 4);
+        verify(stockNotificationProducer, never()).sendRestockNotification(anyLong(), anyInt());
+
+    }
+
+    @Test
+    @DisplayName("Should send stock update notification and stock below notification")
+    void updateProductStockThresholdCrossedRestock() {
+
+        InventoryData inventoryData = new InventoryData();
+        inventoryData.setStock(5);
+        inventoryData.setThreshold(10);
+
+        ProductPL productPL = new ProductPL();
+        productPL.setId(1L);
+        productPL.setInventoryData(inventoryData);
+
+        when(productPLRepository.findById(1L)).thenReturn(Optional.of(productPL));
+
+        productServiceImpl.updateProductStock(1L, 10);
+
+        verify(productPLRepository).save(productPL);
+        verify(stockNotificationProducer).sendStockUpdateNotification(1L, 15);
+        verify(stockNotificationProducer, never()).sendBelowThresholdNotification(anyLong(), anyInt());
+        verify(stockNotificationProducer).sendRestockNotification(1L, 15);
+
+    }
 
     @Test
     @DisplayName("delete product by Id null")
