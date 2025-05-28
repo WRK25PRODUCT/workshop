@@ -172,11 +172,13 @@ class PromotionQuantityServiceImplTest {
     @Test
     @DisplayName("delete promotion quantity successfully")
     void deleteProductOkTest() {
-        when(productPLRepository.findById(1L)).thenReturn(Optional.of(productPL1));
 
-        productServiceImpl.deleteProduct(1L);
+        when(promotionQuantityPLRepository.findById(1L)).thenReturn(Optional.of(promotionQuantityPL));
 
-        verify(productPLRepository).delete(productPL1);
+        promotionQuantityService.deletePromotionQuantity(1L);
+
+        verify(promotionQuantityPLRepository).delete(promotionQuantityPL);
+
     }
 
 
