@@ -61,7 +61,7 @@ class PromotionQuantityServiceIT {
     }
 
     @Test
-    @DisplayName("read product quantity by Id")
+    @DisplayName("read promotion quantity by Id")
     void readPromotionQuantityByIdTest(){
 
         promotionQuantity1.setId(null);

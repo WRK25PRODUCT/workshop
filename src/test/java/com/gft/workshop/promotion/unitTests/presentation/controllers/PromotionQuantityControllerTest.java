@@ -52,6 +52,19 @@ class PromotionQuantityControllerTest {
 
     }
 
+    @Test
+    @DisplayName("Should return promotion quantity by ID and 200")
+    void getPromotionQuantityByIdTest() {
+
+        when(promotionQuantityService.readPromotionQuantityById(1L)).thenReturn(promotionQuantity1);
+
+        ResponseEntity<?> response = promotionQuantityController.getPromotionQuantityById(1L);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isEqualTo(promotionQuantity1);
+
+    }
+
     // *******************************************************
     //
     // Private Methods
