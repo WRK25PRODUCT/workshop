@@ -104,6 +104,22 @@ class PromotionQuantityServiceImplTest {
 
     }
 
+    @Test
+    @DisplayName("update not found promotion quantity Id")
+    void updateNotFoundPromotionQuantityIdTest(){
+
+        when(promotionQuantityPLRepository.findById(10L)).thenReturn(Optional.empty());
+
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            promotionQuantityService.updatePromotionQuantity(promotionQuantity1);
+        });
+
+        String message = ex.getMessage();
+
+        assertEquals("In order to update a promotion quantity, the id must exist in the database", message);
+
+    }
+
     // *******************************************************
     //
     // Private Methods
