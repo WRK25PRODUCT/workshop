@@ -5,7 +5,7 @@ It follows a layered architecture (`integration`, `business`, `presentation`).
 
 ## 🌐 Base URL
 
-http://localhost:8080/api/v1
+https://workshop-7uvd.onrender.com/api/v1
 
 ---
 
