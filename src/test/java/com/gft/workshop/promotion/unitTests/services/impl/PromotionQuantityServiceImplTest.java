@@ -147,6 +147,17 @@ class PromotionQuantityServiceImplTest {
         verify(promotionQuantityPLRepository).save(promotionQuantityPL);
     }
 
+    @Test
+    @DisplayName("delete promotion quantity by Id null")
+    void deletePromotionQuantityByIdNullTest(){
+
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            promotionQuantityService.deletePromotionQuantity(null);
+        });
+
+        assertEquals("Cannot delete a promotion quantity with a null ID", ex.getMessage());
+    }
+
 
 
     // *******************************************************
