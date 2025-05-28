@@ -74,4 +74,9 @@ public class PromotionQuantityServiceImpl implements PromotionQuantityService {
 
         promotionQuantityPLRepository.save(promotionQuantityPL);
     }
+
+    @Override
+    public void deletePromotionQuantity(Long id) {
+
+    }
 }
