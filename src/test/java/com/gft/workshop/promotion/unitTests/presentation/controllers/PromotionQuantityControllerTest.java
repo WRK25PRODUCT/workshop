@@ -52,8 +52,6 @@ class PromotionQuantityControllerTest {
 
     }
 
-
-
     // *******************************************************
     //
     // Private Methods

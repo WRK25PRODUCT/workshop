@@ -8,6 +8,8 @@ import com.gft.workshop.promotion.integration.repositories.PromotionQuantityPLRe
 import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class PromotionQuantityServiceImpl implements PromotionQuantityService {
 
@@ -23,7 +25,7 @@ public class PromotionQuantityServiceImpl implements PromotionQuantityService {
     @Override
     public Long createPromotionQuantity(PromotionQuantity promotionQuantity) {
 
-        if(promotionQuantity.getId() != null) {
+        if (promotionQuantity.getId() != null) {
             throw new BusinessException("In order to create a promotion quantity, the id must be null");
         }
 
@@ -34,7 +36,14 @@ public class PromotionQuantityServiceImpl implements PromotionQuantityService {
 
     @Override
     public PromotionQuantity readPromotionQuantityById(Long id) {
-        return null;
-    }
 
+        Optional<PromotionQuantity> optional = promotionQuantityPLRepository.findById(id)
+                .map(p -> mapper.map(p, PromotionQuantity.class));
+
+        if (optional.isEmpty()) {
+            throw new BusinessException("Promotion quantity not found with the id: " + id);
+        }
+
+        return optional.get();
+    }
 }

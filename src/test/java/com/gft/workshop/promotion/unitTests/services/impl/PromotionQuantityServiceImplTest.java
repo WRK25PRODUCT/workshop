@@ -15,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
@@ -73,6 +75,19 @@ class PromotionQuantityServiceImplTest {
 
         assertEquals(1L, id);
         verify(promotionQuantityPLRepository).save(promotionQuantityPL);
+    }
+
+    @Test
+    @DisplayName("get promotion quantity by Id")
+    void getPromotionQuantityByIdTest() {
+
+        when(promotionQuantityPLRepository.findById(promotionQuantity1.getId())).thenReturn(Optional.of(promotionQuantityPL));
+        when(mapper.map(promotionQuantityPL, PromotionQuantity.class)).thenReturn(promotionQuantity1);
+
+        PromotionQuantity promotionQuantity = promotionQuantityService.readPromotionQuantityById(promotionQuantity1.getId());
+
+        assertNotNull(promotionQuantity);
+        assertEquals(promotionQuantity1.getId(), promotionQuantity.getId());
     }
 
     @Test
