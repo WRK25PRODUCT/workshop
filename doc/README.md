@@ -1,12 +1,11 @@
 # 🛍️ PRODUCTOS API Endpoints
 
-This service exposes RESTful endpoints for managing products and their inventory.
+This service exposes RESTful endpoints for managing products and their inventory.  
 It follows a layered architecture (`integration`, `business`, `presentation`).
 
 ## 🌐 Base URL
 
 http://localhost:8080/api/v1
-
 
 ---
 
@@ -21,18 +20,29 @@ http://localhost:8080/api/v1
 | DELETE | `/products/{id}`       | Delete a product by its ID              |
 | PATCH  | `/products/{id}`       | Update the stock of a product by its ID |
 
+---
+
+## · Promotions
+
+| Method | Endpoint                   | Descripción                             |
+|--------|----------------------------|-----------------------------------------|
+| GET    | `/promotionsQuantity`      | Get all quantity-based promotions       |
+| POST   | `/promotionsQuantity`      | Create a quantity-based promotion       |
+| GET    | `/promotionsQuantity/{id}` | Get a quantity-based promotion by its i |
+| POST   | `/promotionsQuantity`      | Create a quantity-based promotion       |
+| POST   | `/promotionsQuantity`      | Create a quantity-based promotion       |
 
 ---
 
 ## · InventoryData (inside Product)
 
-Each product has the following fields of Inventory:
+Each product has the following inventory fields:
 
-| Campo       | Tipo    | Descripción                    |
-|-------------|---------|--------------------------------|
-| `stock`     | int32   | Available units                |
-| `threshold` | int32   | Limit to trigger the `restock` |
-| `totalSales`| int32   | Total units sold               |
+| Campo        | Tipo   | Descripción                    |
+|--------------|--------|--------------------------------|
+| `stock`      | int32  | Available units                |
+| `threshold`  | int32  | Limit to trigger restock event |
+| `totalSales` | int32  | Total units sold               |
 
 ---
 
@@ -48,7 +58,14 @@ The possible values for the `category` field are:
 
 ---
 
+## · Enum: Promotion Type
 
+The possible values for the `promotionType` field are:
+
+- `SEASON`
+- `QUANTITY`
+
+---
 
 ## 🗄️ Database diagram
 
@@ -59,4 +76,3 @@ The possible values for the `category` field are:
 ## 📦 Classes Diagram
 
 ![CL Diagram](./diagrams/models.svg)
-
