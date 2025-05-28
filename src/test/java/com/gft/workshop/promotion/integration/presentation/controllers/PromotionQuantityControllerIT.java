@@ -2,6 +2,7 @@ package com.gft.workshop.promotion.integration.presentation.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gft.workshop.product.business.model.Category;
+import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.Calendar;
 import java.util.Date;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -79,6 +81,20 @@ class PromotionQuantityControllerIT {
 
     }
 
+    @Test
+    @DisplayName("delete promotion quantity and return 204 No content")
+    void deleteProductOkTest() throws Exception {
+
+        promotionQuantityPL.setId(null);
+
+        PromotionQuantityPL promotionQuantityPL1 = promotionQuantityPLRepository.save(promotionQuantityPL);
+
+        mockMvc.perform(delete(uri + "/" + promotionQuantityPL.getId()))
+                .andExpect(status().isNoContent());
+
+        assertThat(promotionQuantityPLRepository.findById(promotionQuantityPL.getId())).isEmpty();
+
+    }
     // *******************************************************
     //
     // Private Methods
