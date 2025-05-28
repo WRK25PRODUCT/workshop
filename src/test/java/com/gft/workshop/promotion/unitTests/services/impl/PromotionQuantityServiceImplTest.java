@@ -132,7 +132,7 @@ class PromotionQuantityServiceImplTest {
 
         String message = ex.getMessage();
 
-        assertEquals("In order to update a promotion quantity, the id must not be null", ex.getMessage());
+        assertEquals("In order to update a promotion quantity, the id must not be null", message);
 
     }
 

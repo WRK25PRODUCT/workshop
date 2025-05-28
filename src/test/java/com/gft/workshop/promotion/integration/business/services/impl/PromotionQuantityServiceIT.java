@@ -18,9 +18,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -72,6 +74,19 @@ class PromotionQuantityServiceIT {
 
         assertEquals(id, promotionQuantity.getId());
     }
+
+    @Test
+    @DisplayName("update promotion quantity")
+    void updatePromotionQuantityOkTest(){
+
+        promotionQuantityService.updatePromotionQuantity(promotionQuantity1);
+
+        Optional<PromotionQuantityPL> optional = promotionQuantityPLRepository.findById(promotionQuantity1.getId());
+
+        assertTrue(optional.isPresent());
+        assertEquals(optional.get().getId(), promotionQuantity1.getId());
+    }
+
 
     // *******************************************************
     //
