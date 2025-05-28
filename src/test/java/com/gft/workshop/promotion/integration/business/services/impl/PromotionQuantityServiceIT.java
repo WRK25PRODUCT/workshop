@@ -87,6 +87,15 @@ class PromotionQuantityServiceIT {
         assertEquals(optional.get().getId(), promotionQuantity1.getId());
     }
 
+    @Test
+    @DisplayName("delete promotion quantity")
+    void deletePromotionQuantityOkTest(){
+
+        promotionQuantityService.deletePromotionQuantity(promotionQuantity1.getId());
+
+        assertTrue(promotionQuantityPLRepository.findById(promotionQuantity1.getId()).isEmpty());
+    }
+
 
     // *******************************************************
     //
