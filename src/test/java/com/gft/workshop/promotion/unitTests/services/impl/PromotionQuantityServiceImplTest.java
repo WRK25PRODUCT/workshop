@@ -108,7 +108,7 @@ class PromotionQuantityServiceImplTest {
     @DisplayName("update not found promotion quantity by Id")
     void updateNotFoundPromotionQuantityIdTest(){
 
-        when(promotionQuantityPLRepository.findById(10L)).thenReturn(Optional.empty());
+        when(promotionQuantityPLRepository.findById(1L)).thenReturn(Optional.empty());
 
         BusinessException ex = assertThrows(BusinessException.class, () -> {
             promotionQuantityService.updatePromotionQuantity(promotionQuantity1);

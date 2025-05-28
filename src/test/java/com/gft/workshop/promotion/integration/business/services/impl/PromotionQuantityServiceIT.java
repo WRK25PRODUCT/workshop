@@ -103,7 +103,7 @@ class PromotionQuantityServiceIT {
         Date endDate = cal.getTime();
 
         promotionQuantity1 = new PromotionQuantity();
-        promotionQuantity1.setId(1L);
+        promotionQuantity1.setId(2L);
         promotionQuantity1.setStartDate(startDate);
         promotionQuantity1.setEndDate(endDate);
         promotionQuantity1.setDiscount(15.0);
@@ -112,7 +112,7 @@ class PromotionQuantityServiceIT {
         promotionQuantity1.setCategory(Category.TOYS);
 
         newPromotionQuantity = new PromotionQuantity();
-        newPromotionQuantity.setId(2L);
+        newPromotionQuantity.setId(3L);
         newPromotionQuantity.setStartDate(startDate);
         newPromotionQuantity.setEndDate(endDate);
         newPromotionQuantity.setDiscount(20.0);
@@ -121,7 +121,7 @@ class PromotionQuantityServiceIT {
         newPromotionQuantity.setCategory(Category.BOOKS);
 
         promotionQuantityPL = new PromotionQuantityPL();
-        promotionQuantityPL.setId(1L);
+        promotionQuantityPL.setId(2L);
         promotionQuantityPL.setStartDate(startDate);
         promotionQuantityPL.setEndDate(endDate);
         promotionQuantityPL.setDiscount(15.0);

@@ -5,6 +5,7 @@ import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.services.PromotionQuantityService;
 import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
 import com.gft.workshop.promotion.integration.repositories.PromotionQuantityPLRepository;
+import jakarta.transaction.Transactional;
 import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class PromotionQuantityServiceImpl implements PromotionQuantityService {
     }
 
     @Override
+    @Transactional
     public Long createPromotionQuantity(PromotionQuantity promotionQuantity) {
 
         if (promotionQuantity.getId() != null) {
@@ -48,7 +50,28 @@ public class PromotionQuantityServiceImpl implements PromotionQuantityService {
     }
 
     @Override
+    @Transactional
     public void updatePromotionQuantity(PromotionQuantity promotionQuantity) {
 
+        if(promotionQuantity.getId() == null) {
+            throw new BusinessException("In order to update a promotion quantity, the id must not be null");
+        }
+
+        Optional<PromotionQuantityPL> optional = promotionQuantityPLRepository.findById(promotionQuantity.getId());
+
+        if(optional.isEmpty()){
+            throw new BusinessException("In order to update a promotion quantity, the id must exist in the database");
+        }
+
+        PromotionQuantityPL promotionQuantityPL = optional.get();
+
+        promotionQuantityPL.setCategory(promotionQuantity.getCategory());
+        promotionQuantityPL.setQuantity(promotionQuantity.getQuantity());
+        promotionQuantityPL.setPromotionType(promotionQuantity.getPromotionType());
+        promotionQuantityPL.setDiscount(promotionQuantity.getDiscount());
+        promotionQuantityPL.setEndDate(promotionQuantity.getEndDate());
+        promotionQuantityPL.setStartDate(promotionQuantity.getStartDate());
+
+        promotionQuantityPLRepository.save(promotionQuantityPL);
     }
 }
