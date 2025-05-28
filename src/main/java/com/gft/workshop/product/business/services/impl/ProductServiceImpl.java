@@ -4,6 +4,7 @@ import com.gft.workshop.config.business.BusinessException;
 import com.gft.workshop.product.business.model.InventoryData;
 import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.business.services.ProductService;
+import com.gft.workshop.product.integration.messaging.producer.StockNotificationProducer;
 import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.product.integration.repositories.ProductPLRepository;
 import jakarta.transaction.Transactional;
@@ -18,10 +19,12 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductPLRepository productPLRepository;
     private final DozerBeanMapper mapper;
+    private final StockNotificationProducer stockNotificationProducer;
 
-    public ProductServiceImpl(ProductPLRepository productPLRepository, DozerBeanMapper mapper) {
+    public ProductServiceImpl(ProductPLRepository productPLRepository, DozerBeanMapper mapper, StockNotificationProducer stockNotificationProducer) {
         this.productPLRepository = productPLRepository;
         this.mapper = mapper;
+        this.stockNotificationProducer = stockNotificationProducer;
     }
 
     @Override
@@ -114,8 +117,21 @@ public class ProductServiceImpl implements ProductService {
 
         productPLRepository.save(product);
 
-    }
+        /*
+        int threshold = product.getInventoryData().getThreshold();
 
+        if (currentStock >= threshold && newStock < threshold) {
+            stockNotificationProducer.sendBelowThresholdNotification(productId, quantityChange);
+        }
+
+        if (currentStock < threshold && newStock >= threshold) {
+            stockNotificationProducer.sendRestockNotification(productId, quantityChange);
+        }
+
+        stockNotificationProducer.sendStockUpdateNotification(productId, quantityChange);
+        */
+
+    }
 
     @Override
     @Transactional
