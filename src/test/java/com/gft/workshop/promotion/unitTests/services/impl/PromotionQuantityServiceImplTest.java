@@ -122,7 +122,7 @@ class PromotionQuantityServiceImplTest {
 
     @Test
     @DisplayName("update promotionQuantity id null should throw BusinessException")
-    void updatePromotionQuantityWithIdNull(){
+    void updatePromotionQuantityWithIdNullTest(){
 
         promotionQuantity1.setId(null);
 
@@ -134,6 +134,17 @@ class PromotionQuantityServiceImplTest {
 
         assertEquals("In order to update a promotion quantity, the id must not be null", ex.getMessage());
 
+    }
+
+    @Test
+    @DisplayName("update promotion quantity correctly")
+    void updatePromotionQuantityOkTest(){
+
+        when(promotionQuantityPLRepository.findById(promotionQuantity1.getId())).thenReturn(Optional.of(promotionQuantityPL));
+
+        promotionQuantityService.updatePromotionQuantity(promotionQuantity1);
+
+        verify(promotionQuantityPLRepository).save(promotionQuantityPL);
     }
 
 
