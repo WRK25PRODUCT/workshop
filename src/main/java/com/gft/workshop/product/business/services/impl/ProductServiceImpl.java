@@ -117,19 +117,18 @@ public class ProductServiceImpl implements ProductService {
 
         productPLRepository.save(product);
 
-        /*
+
         int threshold = product.getInventoryData().getThreshold();
 
         if (currentStock >= threshold && newStock < threshold) {
-            stockNotificationProducer.sendBelowThresholdNotification(productId, quantityChange);
+            stockNotificationProducer.sendBelowThresholdNotification(productId, newStock);
         }
 
-        if (currentStock < threshold && newStock >= threshold) {
-            stockNotificationProducer.sendRestockNotification(productId, quantityChange);
+        if (newStock >= threshold && currentStock < threshold) {
+            stockNotificationProducer.sendRestockNotification(productId, newStock);
         }
 
-        stockNotificationProducer.sendStockUpdateNotification(productId, quantityChange);
-        */
+        stockNotificationProducer.sendStockUpdateNotification(productId, newStock);
 
     }
 

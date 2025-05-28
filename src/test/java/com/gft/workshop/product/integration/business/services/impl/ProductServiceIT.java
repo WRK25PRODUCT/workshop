@@ -104,7 +104,7 @@ class ProductServiceIT {
     }
 
     @Test
-    @DisplayName("Should update the stock of a product and return ")
+    @DisplayName("Should update the stock of a product in the database")
     void updateProductStockTest() {
 
         product1.setId(null);
