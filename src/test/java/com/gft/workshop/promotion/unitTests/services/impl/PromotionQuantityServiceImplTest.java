@@ -91,7 +91,7 @@ class PromotionQuantityServiceImplTest {
     }
 
     @Test
-    @DisplayName("readPromotionQuantityById should throw BusinessException when not found")
+    @DisplayName("read promotion quantity by Id should throw BusinessException when not found")
     void readPromotionQuantityByIdNotFoundTest(){
 
         when(promotionQuantityPLRepository.findById(100L)).thenReturn(Optional.empty());
