@@ -91,7 +91,7 @@ class PromotionQuantityServiceImplTest {
     }
 
     @Test
-    @DisplayName("readPromotionQuantityById should throw BusinessException when not found")
+    @DisplayName("read promotion quantity by Id should throw BusinessException when not found")
     void readPromotionQuantityByIdNotFoundTest(){
 
         when(promotionQuantityPLRepository.findById(100L)).thenReturn(Optional.empty());
@@ -103,6 +103,51 @@ class PromotionQuantityServiceImplTest {
         assertEquals("Promotion quantity not found with the id: 100", exception.getMessage());
 
     }
+
+    @Test
+    @DisplayName("update not found promotion quantity by Id")
+    void updateNotFoundPromotionQuantityIdTest(){
+
+        when(promotionQuantityPLRepository.findById(1L)).thenReturn(Optional.empty());
+
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            promotionQuantityService.updatePromotionQuantity(promotionQuantity1);
+        });
+
+        String message = ex.getMessage();
+
+        assertEquals("In order to update a promotion quantity, the id must exist in the database", message);
+
+    }
+
+    @Test
+    @DisplayName("update promotionQuantity id null should throw BusinessException")
+    void updatePromotionQuantityWithIdNullTest(){
+
+        promotionQuantity1.setId(null);
+
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            promotionQuantityService.updatePromotionQuantity(promotionQuantity1);
+        });
+
+        String message = ex.getMessage();
+
+        assertEquals("In order to update a promotion quantity, the id must not be null", message);
+
+    }
+
+    @Test
+    @DisplayName("update promotion quantity correctly")
+    void updatePromotionQuantityOkTest(){
+
+        when(promotionQuantityPLRepository.findById(promotionQuantity1.getId())).thenReturn(Optional.of(promotionQuantityPL));
+
+        promotionQuantityService.updatePromotionQuantity(promotionQuantity1);
+
+        verify(promotionQuantityPLRepository).save(promotionQuantityPL);
+    }
+
+
 
     // *******************************************************
     //

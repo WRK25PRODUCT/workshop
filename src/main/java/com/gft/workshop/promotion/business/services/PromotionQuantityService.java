@@ -9,7 +9,7 @@ public interface PromotionQuantityService {
 
     PromotionQuantity readPromotionQuantityById(Long id);
 
-    //void updatePromotionQuantity(PromotionQuantity promotionQuantity);
+    void updatePromotionQuantity(PromotionQuantity promotionQuantity);
 
     //void deletePromotionQuantity(Long id);
 
