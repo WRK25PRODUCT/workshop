@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -62,6 +63,18 @@ class PromotionQuantityControllerTest {
 
         assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.getBody()).isEqualTo(promotionQuantity1);
+
+    }
+
+    @Test
+    @DisplayName("Should update product and return 204")
+    void updateProductTest() {
+
+        ResponseEntity<?> response = promotionQuantityController.update(promotionQuantity1, 1L);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(204);
+        verify(promotionQuantityService).updatePromotionQuantity(promotionQuantity1);
+        assertThat(promotionQuantity1.getId()).isEqualTo(1L);
 
     }
 

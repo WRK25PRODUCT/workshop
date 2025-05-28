@@ -1,5 +1,6 @@
 package com.gft.workshop.promotion.controlles;
 
+import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.services.PromotionQuantityService;
 import org.springframework.http.ResponseEntity;
@@ -29,5 +30,16 @@ public class PromotionQuantityController {
         PromotionQuantity promotionQuantity = promotionQuantityService.readPromotionQuantityById(id);
 
         return ResponseEntity.ok(promotionQuantity);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@RequestBody PromotionQuantity promotionQuantity, @PathVariable Long id) {
+
+        promotionQuantity.setId(id);
+
+        promotionQuantityService.updatePromotionQuantity(promotionQuantity);
+
+        return ResponseEntity.noContent().build();
+
     }
 }
