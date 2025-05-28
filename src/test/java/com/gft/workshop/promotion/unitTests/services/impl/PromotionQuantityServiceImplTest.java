@@ -158,6 +158,27 @@ class PromotionQuantityServiceImplTest {
         assertEquals("Cannot delete a promotion quantity with a null ID", ex.getMessage());
     }
 
+    @Test
+    @DisplayName("delete promotion quantity by Id not found")
+    void deletePromotionQuantityByIdNotFoundTest() {
+
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            promotionQuantityService.deletePromotionQuantity(promotionQuantity1.getId());
+        });
+
+        assertEquals("Cannot delete the promotion quantity: ID not found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("delete promotion quantity successfully")
+    void deleteProductOkTest() {
+        when(productPLRepository.findById(1L)).thenReturn(Optional.of(productPL1));
+
+        productServiceImpl.deleteProduct(1L);
+
+        verify(productPLRepository).delete(productPL1);
+    }
+
 
 
     // *******************************************************
