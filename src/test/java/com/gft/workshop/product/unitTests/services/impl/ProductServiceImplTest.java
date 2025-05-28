@@ -87,7 +87,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    @DisplayName("read product by Id should throw BusinessException when not found")
+    @DisplayName("readproductbyId should throw BusinessException when not found")
     void readProductByIdNotFoundTest() {
         when(productPLRepository.findById(99L)).thenReturn(Optional.empty());
 
