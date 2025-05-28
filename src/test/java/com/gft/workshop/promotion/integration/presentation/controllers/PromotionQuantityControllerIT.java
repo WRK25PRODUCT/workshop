@@ -2,6 +2,7 @@ package com.gft.workshop.promotion.integration.presentation.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gft.workshop.product.business.model.Category;
+import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionType;
@@ -22,8 +23,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.Calendar;
 import java.util.Date;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,6 +47,7 @@ class PromotionQuantityControllerIT {
 
     private PromotionQuantity promotionQuantity1;
     private PromotionQuantity newPromotionQuantity;
+    private PromotionQuantityPL savePromotionQuantityPL;
 
     private PromotionQuantityPL promotionQuantityPL;
 
@@ -78,6 +79,27 @@ class PromotionQuantityControllerIT {
 
         assertThat(promotionQuantityId).isNotNull();
         assertThat(promotionQuantityPLRepository.findById(promotionQuantityId)).isPresent();
+
+    }
+
+    @Test
+    @DisplayName("Should return existing promotion quantity by ID and 200 OK")
+    void getProductByIdTest() throws Exception {
+
+        promotionQuantityPL.setId(null);
+
+        savePromotionQuantityPL = promotionQuantityPLRepository.save(promotionQuantityPL);
+
+        MvcResult result = mockMvc.perform(get(uri + "/" + savePromotionQuantityPL.getId()))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        PromotionQuantity received = objectMapper.readValue(result.getResponse().getContentAsString(), PromotionQuantity.class);
+
+        promotionQuantity1.setId(received.getId());
+
+        assertThat(received).isNotNull();
+        assertThat(received).isEqualTo(promotionQuantity1);
 
     }
 

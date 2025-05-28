@@ -83,7 +83,6 @@ class PromotionQuantityControllerTest {
     @DisplayName("Should delete promotion quantity and return 204")
     void deletePromotionQuantityOkTest() {
 
-        when(promotionQuantityController.delete(1L)).thenReturn(ResponseEntity.noContent().build());
         ResponseEntity<?> response = promotionQuantityController.delete(1L);
 
         assertThat(response.getStatusCode().value()).isEqualTo(204);
