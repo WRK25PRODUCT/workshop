@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -58,6 +58,19 @@ class PromotionQuantityServiceIT {
         Long id = promotionQuantityService.createPromotionQuantity(promotionQuantity1);
 
         assertNotNull(id);
+    }
+
+    @Test
+    @DisplayName("read product quantity by Id")
+    void readPromotionQuantityByIdTest(){
+
+        promotionQuantity1.setId(null);
+
+        Long id = promotionQuantityService.createPromotionQuantity(promotionQuantity1);
+
+        PromotionQuantity promotionQuantity = promotionQuantityService.readPromotionQuantityById(id);
+
+        assertEquals(id, promotionQuantity.getId());
     }
 
     // *******************************************************
