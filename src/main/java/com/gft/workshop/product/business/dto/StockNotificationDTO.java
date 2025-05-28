@@ -5,5 +5,4 @@ import java.io.Serializable;
 public record StockNotificationDTO(
         Long productId,
         int stock
-) implements Serializable {
-}
+) { }
