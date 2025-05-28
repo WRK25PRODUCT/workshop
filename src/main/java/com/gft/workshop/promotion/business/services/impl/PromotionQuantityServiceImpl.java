@@ -46,4 +46,9 @@ public class PromotionQuantityServiceImpl implements PromotionQuantityService {
 
         return optional.get();
     }
+
+    @Override
+    public void updatePromotionQuantity(PromotionQuantity promotionQuantity) {
+
+    }
 }
