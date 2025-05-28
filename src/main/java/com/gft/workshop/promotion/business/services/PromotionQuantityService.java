@@ -7,7 +7,7 @@ public interface PromotionQuantityService {
 
     Long createPromotionQuantity(PromotionQuantity promotionQuantity);
 
-    //PromotionQuantity readPromotionQuantityById(Long id);
+    PromotionQuantity readPromotionQuantityById(Long id);
 
     //void updatePromotionQuantity(PromotionQuantity promotionQuantity);
 

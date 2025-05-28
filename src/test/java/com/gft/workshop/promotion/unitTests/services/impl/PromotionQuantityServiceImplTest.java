@@ -4,11 +4,8 @@ import com.gft.workshop.config.business.BusinessException;
 import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionType;
-import com.gft.workshop.promotion.business.services.PromotionQuantityService;
 import com.gft.workshop.promotion.business.services.impl.PromotionQuantityServiceImpl;
-import com.gft.workshop.promotion.integration.model.CategoryPL;
 import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
-import com.gft.workshop.promotion.integration.model.PromotionTypePL;
 import com.gft.workshop.promotion.integration.repositories.PromotionQuantityPLRepository;
 import org.dozer.DozerBeanMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,11 +15,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -75,6 +75,33 @@ class PromotionQuantityServiceImplTest {
 
         assertEquals(1L, id);
         verify(promotionQuantityPLRepository).save(promotionQuantityPL);
+    }
+
+    @Test
+    @DisplayName("get promotion quantity by Id")
+    void getPromotionQuantityByIdTest() {
+
+        when(promotionQuantityPLRepository.findById(promotionQuantity1.getId())).thenReturn(Optional.of(promotionQuantityPL));
+        when(mapper.map(promotionQuantityPL, PromotionQuantity.class)).thenReturn(promotionQuantity1);
+
+        PromotionQuantity promotionQuantity = promotionQuantityService.readPromotionQuantityById(promotionQuantity1.getId());
+
+        assertNotNull(promotionQuantity);
+        assertEquals(promotionQuantity1.getId(), promotionQuantity.getId());
+    }
+
+    @Test
+    @DisplayName("readPromotionQuantityById should throw BusinessException when not found")
+    void readPromotionQuantityByIdNotFoundTest(){
+
+        when(promotionQuantityPLRepository.findById(100L)).thenReturn(Optional.empty());
+
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            promotionQuantityService.readPromotionQuantityById(100L);
+        });
+
+        assertEquals("Promotion quantity not found with the id: 100", exception.getMessage());
+
     }
 
     // *******************************************************

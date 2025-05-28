@@ -5,7 +5,6 @@ import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.business.services.PromotionQuantityService;
 import com.gft.workshop.promotion.controlles.PromotionQuantityController;
-import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class PromotionQuantityControllerTest {
+class PromotionQuantityControllerTest {
 
     @InjectMocks
     private PromotionQuantityController promotionQuantityController;
@@ -50,6 +49,19 @@ public class PromotionQuantityControllerTest {
 
         assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.getBody()).isEqualTo(1L);
+
+    }
+
+    @Test
+    @DisplayName("Should return promotion quantity by ID and 200")
+    void getPromotionQuantityByIdTest() {
+
+        when(promotionQuantityService.readPromotionQuantityById(1L)).thenReturn(promotionQuantity1);
+
+        ResponseEntity<?> response = promotionQuantityController.getPromotionQuantityById(1L);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isEqualTo(promotionQuantity1);
 
     }
 
