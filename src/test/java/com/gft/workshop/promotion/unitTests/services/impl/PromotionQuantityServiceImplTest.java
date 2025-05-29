@@ -2,6 +2,7 @@ package com.gft.workshop.promotion.unitTests.services.impl;
 
 import com.gft.workshop.config.ExceptionHandler.BusinessException;
 import com.gft.workshop.product.business.model.Category;
+import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.business.services.impl.PromotionQuantityServiceImpl;
@@ -20,7 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -192,7 +196,6 @@ class PromotionQuantityServiceImplTest {
 
         assertEquals(2, result.size());
         assertEquals(promotionQuantity1, result.get(0));
-
     }
 
 

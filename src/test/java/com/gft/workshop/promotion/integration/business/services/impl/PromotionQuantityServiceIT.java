@@ -1,6 +1,7 @@
 package com.gft.workshop.promotion.integration.business.services.impl;
 
 import com.gft.workshop.product.business.model.Category;
+import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.business.services.impl.PromotionQuantityServiceImpl;
@@ -16,9 +17,11 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
@@ -36,6 +39,7 @@ class PromotionQuantityServiceIT {
     private PromotionQuantity newPromotionQuantity;
 
     private PromotionQuantityPL promotionQuantityPL;
+    private PromotionQuantityPL newPromotionQuantityPL;
 
     @BeforeEach
     void init(){
@@ -70,6 +74,9 @@ class PromotionQuantityServiceIT {
     @DisplayName("update promotion quantity")
     void updatePromotionQuantityOkTest(){
 
+        List<PromotionQuantityPL> promotionQuantities = List.of(promotionQuantityPL, newPromotionQuantityPL);
+
+        when(promotionQuantityPLRepository.findAll()).thenReturn(promotionQuantities);
         promotionQuantityService.updatePromotionQuantity(promotionQuantity1);
 
         Optional<PromotionQuantityPL> optional = promotionQuantityPLRepository.findById(promotionQuantity1.getId());
@@ -85,6 +92,17 @@ class PromotionQuantityServiceIT {
         promotionQuantityService.deletePromotionQuantity(promotionQuantity1.getId());
 
         assertTrue(promotionQuantityPLRepository.findById(promotionQuantity1.getId()).isEmpty());
+
+    }
+
+    @Test
+    @DisplayName("get all promotions quantities")
+    void getAllTest() {
+
+        List<PromotionQuantity> result = promotionQuantityService.getAllPromotionQuantities();
+
+        assertTrue(result.size() == 2);
+
     }
 
 
@@ -128,5 +146,14 @@ class PromotionQuantityServiceIT {
         promotionQuantityPL.setPromotionType(PromotionType.QUANTITY);
         promotionQuantityPL.setQuantity(10);
         promotionQuantityPL.setCategory(Category.TOYS);
+
+        newPromotionQuantityPL = new PromotionQuantityPL();
+        newPromotionQuantityPL.setId(2L);
+        newPromotionQuantityPL.setStartDate(startDate);
+        newPromotionQuantityPL.setEndDate(endDate);
+        newPromotionQuantityPL.setDiscount(20.0);
+        newPromotionQuantityPL.setPromotionType(PromotionType.QUANTITY);
+        newPromotionQuantityPL.setQuantity(5);
+        newPromotionQuantityPL.setCategory(Category.BOOKS);
     }
 }
