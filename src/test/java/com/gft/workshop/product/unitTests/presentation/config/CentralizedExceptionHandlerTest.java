@@ -1,8 +1,8 @@
 package com.gft.workshop.product.unitTests.presentation.config;
 
 
-import com.gft.workshop.config.business.BusinessException;
-import com.gft.workshop.product.presentation.config.CentralizedExceptionHandler;
+import com.gft.workshop.config.ExceptionHandler.BusinessException;
+import com.gft.workshop.config.ExceptionHandler.CentralizedExceptionHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -2,8 +2,6 @@ package com.gft.workshop.promotion.integration.presentation.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gft.workshop.product.business.model.Category;
-import com.gft.workshop.product.business.model.Product;
-import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
@@ -24,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -104,6 +103,20 @@ class PromotionQuantityControllerIT {
     }
 
     @Test
+    @DisplayName("Should not find the promotion quantity by ID and return 404 Not Found")
+    void getPromotionQuantityByIdNotFoundTest() throws Exception {
+
+        mockMvc.perform(get(uri + "/20"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.error").value("Not Found"))
+                .andExpect(jsonPath("$.message").value("Promotion quantity not found with the id: 20"))
+                .andExpect(jsonPath("$.path").value("/api/v1/promotionsQuantity/20"));
+
+    }
+
+    @Test
     @DisplayName("delete promotion quantity and return 204 No content")
     void deleteProductOkTest() throws Exception {
 
@@ -117,6 +130,8 @@ class PromotionQuantityControllerIT {
         assertThat(promotionQuantityPLRepository.findById(promotionQuantityPL.getId())).isEmpty();
 
     }
+
+
     // *******************************************************
     //
     // Private Methods

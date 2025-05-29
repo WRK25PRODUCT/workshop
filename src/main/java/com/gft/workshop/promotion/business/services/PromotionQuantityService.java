@@ -1,7 +1,10 @@
 package com.gft.workshop.promotion.business.services;
 
 
+import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
+
+import java.util.List;
 
 public interface PromotionQuantityService {
 
@@ -12,5 +15,7 @@ public interface PromotionQuantityService {
     void updatePromotionQuantity(PromotionQuantity promotionQuantity);
 
     void deletePromotionQuantity(Long id);
+
+    List<PromotionQuantity> getAllPromotionQuantities();
 
 }

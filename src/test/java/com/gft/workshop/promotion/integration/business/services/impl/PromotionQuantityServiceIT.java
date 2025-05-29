@@ -6,10 +6,7 @@ import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.business.services.impl.PromotionQuantityServiceImpl;
 import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
 import com.gft.workshop.promotion.integration.repositories.PromotionQuantityPLRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-import org.dozer.DozerBeanMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,12 +31,6 @@ class PromotionQuantityServiceIT {
 
     @Autowired
     private PromotionQuantityPLRepository promotionQuantityPLRepository;
-
-    @Autowired
-    private DozerBeanMapper mapper;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     private PromotionQuantity promotionQuantity1;
     private PromotionQuantity newPromotionQuantity;

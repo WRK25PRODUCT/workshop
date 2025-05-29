@@ -1,4 +1,4 @@
-package com.gft.workshop.promotion.controlles;
+package com.gft.workshop.promotion.presentation.controlles;
 
 import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
