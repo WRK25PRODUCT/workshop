@@ -42,4 +42,12 @@ public class PromotionQuantityController {
         return ResponseEntity.noContent().build();
 
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id){
+
+        promotionQuantityService.deletePromotionQuantity(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }

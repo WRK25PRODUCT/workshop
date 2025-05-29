@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
@@ -73,5 +74,23 @@ public class PromotionQuantityServiceImpl implements PromotionQuantityService {
         promotionQuantityPL.setStartDate(promotionQuantity.getStartDate());
 
         promotionQuantityPLRepository.save(promotionQuantityPL);
+    }
+
+    @Override
+    @Transactional
+    public void deletePromotionQuantity(Long id) {
+
+        if(id == null){
+            throw new BusinessException("Cannot delete a promotion quantity with a null ID");
+        }
+
+        Optional<PromotionQuantityPL> optional = promotionQuantityPLRepository.findById(id);
+
+        if(optional.isEmpty()){
+            throw new BusinessException("Cannot delete the promotion quantity: ID not found");
+        }
+
+        promotionQuantityPLRepository.delete(optional.get());
+
     }
 }

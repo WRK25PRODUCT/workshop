@@ -147,6 +147,40 @@ class PromotionQuantityServiceImplTest {
         verify(promotionQuantityPLRepository).save(promotionQuantityPL);
     }
 
+    @Test
+    @DisplayName("delete promotion quantity by Id null")
+    void deletePromotionQuantityByIdNullTest(){
+
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            promotionQuantityService.deletePromotionQuantity(null);
+        });
+
+        assertEquals("Cannot delete a promotion quantity with a null ID", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("delete promotion quantity by Id not found")
+    void deletePromotionQuantityByIdNotFoundTest() {
+
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            promotionQuantityService.deletePromotionQuantity(promotionQuantity1.getId());
+        });
+
+        assertEquals("Cannot delete the promotion quantity: ID not found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("delete promotion quantity successfully")
+    void deleteProductOkTest() {
+
+        when(promotionQuantityPLRepository.findById(1L)).thenReturn(Optional.of(promotionQuantityPL));
+
+        promotionQuantityService.deletePromotionQuantity(1L);
+
+        verify(promotionQuantityPLRepository).delete(promotionQuantityPL);
+
+    }
+
 
 
     // *******************************************************

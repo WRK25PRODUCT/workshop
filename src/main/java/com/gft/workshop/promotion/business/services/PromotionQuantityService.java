@@ -11,6 +11,6 @@ public interface PromotionQuantityService {
 
     void updatePromotionQuantity(PromotionQuantity promotionQuantity);
 
-    //void deletePromotionQuantity(Long id);
+    void deletePromotionQuantity(Long id);
 
 }
