@@ -6,23 +6,20 @@ import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.business.services.impl.PromotionQuantityServiceImpl;
 import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
 import com.gft.workshop.promotion.integration.repositories.PromotionQuantityPLRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-import org.dozer.DozerBeanMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -34,12 +31,6 @@ class PromotionQuantityServiceIT {
 
     @Autowired
     private PromotionQuantityPLRepository promotionQuantityPLRepository;
-
-    @Autowired
-    private DozerBeanMapper mapper;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     private PromotionQuantity promotionQuantity1;
     private PromotionQuantity newPromotionQuantity;
@@ -88,14 +79,31 @@ class PromotionQuantityServiceIT {
     }
 
     @Test
+    @DisplayName("get promotions by categories")
+    void getPromotionsByCategoriesTest() {
+
+        promotionQuantity1.setId(null);
+        newPromotionQuantity.setId(null);
+        promotionQuantityService.createPromotionQuantity(promotionQuantity1);
+        promotionQuantityService.createPromotionQuantity(newPromotionQuantity);
+
+        List<PromotionQuantity> promotions = promotionQuantityService.getPromotionsByCategories(List.of(Category.TOYS, Category.BOOKS));
+
+        assertEquals(2, promotions.size());
+        assertTrue(promotions.stream().anyMatch(p -> p.getCategory() == Category.TOYS));
+        assertTrue(promotions.stream().anyMatch(p -> p.getCategory() == Category.BOOKS));
+
+    }
+
+    @Test
     @DisplayName("delete promotion quantity")
     void deletePromotionQuantityOkTest(){
 
         promotionQuantityService.deletePromotionQuantity(promotionQuantity1.getId());
 
         assertTrue(promotionQuantityPLRepository.findById(promotionQuantity1.getId()).isEmpty());
-    }
 
+    }
 
     // *******************************************************
     //
