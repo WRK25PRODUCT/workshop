@@ -146,6 +146,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void updateProductStock(Long productId, int quantityChange) {
+
+        //TODO añadir excepcion  comprar más de los que hay
+
         logger.info("Updating stock for product ID={} with quantityChange={}", productId, quantityChange);
 
         if (productId == null) {
