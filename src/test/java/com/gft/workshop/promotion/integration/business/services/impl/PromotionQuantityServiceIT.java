@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
@@ -34,12 +35,6 @@ class PromotionQuantityServiceIT {
 
     @Autowired
     private PromotionQuantityPLRepository promotionQuantityPLRepository;
-
-    @Autowired
-    private DozerBeanMapper mapper;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     private PromotionQuantity promotionQuantity1;
     private PromotionQuantity newPromotionQuantity;
@@ -87,6 +82,22 @@ class PromotionQuantityServiceIT {
         assertEquals(optional.get().getId(), promotionQuantity1.getId());
     }
 
+    @Test
+    @DisplayName("get promotions by categories")
+    void getPromotionsByCategoriesTest() {
+
+        promotionQuantity1.setId(null);
+        newPromotionQuantity.setId(null);
+        promotionQuantityService.createPromotionQuantity(promotionQuantity1);
+        promotionQuantityService.createPromotionQuantity(newPromotionQuantity);
+
+        List<PromotionQuantity> promotions = promotionQuantityService.getPromotionsByCategories(List.of(Category.TOYS, Category.BOOKS));
+
+        assertEquals(2, promotions.size());
+        assertTrue(promotions.stream().anyMatch(p -> p.getCategory() == Category.TOYS));
+        assertTrue(promotions.stream().anyMatch(p -> p.getCategory() == Category.BOOKS));
+
+    }
 
     // *******************************************************
     //

@@ -4,7 +4,8 @@ import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.business.services.PromotionQuantityService;
-import com.gft.workshop.promotion.controlles.PromotionQuantityController;
+import com.gft.workshop.promotion.presentation.controlles.PromotionQuantityController;
+import com.gft.workshop.promotion.presentation.dto.CategoryRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -78,6 +80,23 @@ class PromotionQuantityControllerTest {
 
     }
 
+    @Test
+    @DisplayName("Should return active promotions by categories and 200")
+    void getPromotionsByCategoriesTest() {
+
+        List<Category> categoryList = List.of(Category.TOYS, Category.BOOKS);
+        List<PromotionQuantity> promotions = List.of(promotionQuantity1, newPromotionQuantity);
+
+        CategoryRequest request = new CategoryRequest();
+        request.setCategories(categoryList);
+
+        when(promotionQuantityService.getPromotionsByCategories(categoryList)).thenReturn(promotions);
+
+        ResponseEntity<List<PromotionQuantity>> response = promotionQuantityController.getActivePromotionsByCategory(request);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isEqualTo(promotions);
+    }
     // *******************************************************
     //
     // Private Methods

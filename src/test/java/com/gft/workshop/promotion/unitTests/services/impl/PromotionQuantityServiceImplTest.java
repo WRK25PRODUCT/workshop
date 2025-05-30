@@ -22,6 +22,7 @@ import static org.mockito.Mockito.verify;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -147,6 +148,34 @@ class PromotionQuantityServiceImplTest {
         verify(promotionQuantityPLRepository).save(promotionQuantityPL);
     }
 
+    @Test
+    @DisplayName("get promotions by categories")
+    void getPromotionsByCategoriesTest(){
+
+        List<Category> categories = List.of(Category.TOYS, Category.BOOKS);
+
+        List<PromotionQuantityPL> promotionPLList = List.of(promotionQuantityPL);
+
+        when(promotionQuantityPLRepository.findActivePromotionsByCategory(
+                org.mockito.ArgumentMatchers.eq(categories),
+                org.mockito.ArgumentMatchers.any(Date.class)
+        )).thenReturn(promotionPLList);
+
+        when(mapper.map(promotionQuantityPL, PromotionQuantity.class)).thenReturn(promotionQuantity1);
+
+        List<PromotionQuantity> result = promotionQuantityService.getPromotionsByCategories(categories);
+
+        assertEquals(1, result.size());
+        assertEquals(promotionQuantity1.getId(), result.get(0).getId());
+
+        verify(promotionQuantityPLRepository).findActivePromotionsByCategory(
+                org.mockito.ArgumentMatchers.eq(categories),
+                org.mockito.ArgumentMatchers.any(Date.class)
+        );
+
+        verify(mapper).map(promotionQuantityPL, PromotionQuantity.class);
+
+    }
 
 
     // *******************************************************

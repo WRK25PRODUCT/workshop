@@ -1,6 +1,7 @@
 package com.gft.workshop.promotion.business.services.impl;
 
 import com.gft.workshop.config.business.BusinessException;
+import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.services.PromotionQuantityService;
 import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
@@ -9,10 +10,12 @@ import jakarta.transaction.Transactional;
 import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PromotionQuantityServiceImpl implements PromotionQuantityService {
+public  class PromotionQuantityServiceImpl implements PromotionQuantityService {
 
     private final PromotionQuantityPLRepository promotionQuantityPLRepository;
 
@@ -74,4 +77,15 @@ public class PromotionQuantityServiceImpl implements PromotionQuantityService {
 
         promotionQuantityPLRepository.save(promotionQuantityPL);
     }
+
+    @Override
+    public List<PromotionQuantity> getPromotionsByCategories(List<Category> categories) {
+        List<PromotionQuantityPL> promotionPLs = promotionQuantityPLRepository
+                .findActivePromotionsByCategory(categories, new Date());
+
+        return promotionPLs.stream()
+                .map(pl -> mapper.map(pl, PromotionQuantity.class))
+                .toList();
+    }
+
 }
