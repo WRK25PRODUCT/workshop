@@ -9,7 +9,6 @@ import com.gft.workshop.promotion.integration.repositories.PromotionQuantityPLRe
 import jakarta.transaction.Transactional;
 import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -88,4 +87,20 @@ public  class PromotionQuantityServiceImpl implements PromotionQuantityService {
                 .toList();
     }
 
+    @Transactional
+    public void deletePromotionQuantity(Long id) {
+
+        if(id == null){
+            throw new BusinessException("Cannot delete a promotion quantity with a null ID");
+        }
+
+        Optional<PromotionQuantityPL> optional = promotionQuantityPLRepository.findById(id);
+
+        if(optional.isEmpty()){
+            throw new BusinessException("Cannot delete the promotion quantity: ID not found");
+        }
+
+        promotionQuantityPLRepository.delete(optional.get());
+
+    }
 }
