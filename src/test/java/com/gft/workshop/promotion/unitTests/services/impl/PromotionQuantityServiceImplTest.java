@@ -15,8 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
@@ -24,9 +24,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class PromotionQuantityServiceImplTest {
@@ -177,6 +174,39 @@ class PromotionQuantityServiceImplTest {
 
     }
 
+    @Test
+    @DisplayName("delete promotion quantity by Id null")
+    void deletePromotionQuantityByIdNullTest(){
+
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            promotionQuantityService.deletePromotionQuantity(null);
+        });
+
+        assertEquals("Cannot delete a promotion quantity with a null ID", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("delete promotion quantity by Id not found")
+    void deletePromotionQuantityByIdNotFoundTest() {
+
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            promotionQuantityService.deletePromotionQuantity(promotionQuantity1.getId());
+        });
+
+        assertEquals("Cannot delete the promotion quantity: ID not found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("delete promotion quantity successfully")
+    void deleteProductOkTest() {
+
+        when(promotionQuantityPLRepository.findById(1L)).thenReturn(Optional.of(promotionQuantityPL));
+
+        promotionQuantityService.deletePromotionQuantity(1L);
+
+        verify(promotionQuantityPLRepository).delete(promotionQuantityPL);
+
+    }
 
     // *******************************************************
     //
