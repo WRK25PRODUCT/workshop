@@ -168,6 +168,19 @@ class ProductServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should throw Business Exception: Some ids were duplicated")
+    void getAllProductsByIdWithDuplicates() {
+
+        List<Long> ids = List.of(3L, 3L, 3L);
+
+        BusinessException exception = assertThrows(BusinessException.class, () ->
+                productServiceImpl.getAllProductsById(ids)
+        );
+
+        assertEquals("List of IDs should not contain duplicates", exception.getMessage());
+    }
+
+    @Test
     @DisplayName("update not found product Id")
     void updateNotFoundProductIdTest(){
 
