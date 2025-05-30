@@ -13,8 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -85,6 +87,10 @@ public class ProductServiceImpl implements ProductService {
 
         if (ids.isEmpty()) {
             throw new BusinessException("The list of product IDs must not be empty");
+        }
+
+        if (hasDuplicates(ids)) {
+            throw new BusinessException("List of IDs should not contain duplicates");
         }
 
         List<ProductPL> products = productPLRepository.findAllById(ids);
@@ -201,4 +207,19 @@ public class ProductServiceImpl implements ProductService {
         productPLRepository.delete(optional.get());
         logger.info("Product deleted with ID={}", id);
     }
+
+    // *******************************************************
+    //
+    // Private Methods
+    //
+    // *******************************************************
+
+    private boolean hasDuplicates(List<Long> list) {
+
+        Set<Long> set = new HashSet<>(list);
+
+        return set.size() != list.size();
+
+    }
+
 }
