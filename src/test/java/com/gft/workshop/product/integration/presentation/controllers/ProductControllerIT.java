@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -133,6 +134,32 @@ class ProductControllerIT {
                 .andReturn();
 
         Product[] products = objectMapper.readValue(result.getResponse().getContentAsString(), Product[].class);
+        assertThat(products).hasSize(2);
+
+    }
+
+    @Test
+    @DisplayName("Should return products by a list of IDs and 200 OK")
+    void getProductsByIdsTest() throws Exception {
+
+        productPL1.setId(null);
+        productPL2.setId(null);
+
+        ProductPL saved1 = repository.save(productPL1);
+        ProductPL saved2 = repository.save(productPL2);
+
+        List<Long> ids = List.of(saved1.getId(), saved2.getId());
+
+        String requestJson = objectMapper.writeValueAsString(ids);
+
+        MvcResult result = mockMvc.perform(post(uri + "/list-by-ids")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Product[] products = objectMapper.readValue(result.getResponse().getContentAsString(), Product[].class);
+
         assertThat(products).hasSize(2);
 
     }

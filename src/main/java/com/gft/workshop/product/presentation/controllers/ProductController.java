@@ -28,7 +28,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id, HttpServletRequest request) {
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
 
         Product product = productService.readProductById(id);
 
@@ -39,6 +39,13 @@ public class ProductController {
     @GetMapping
     public List<Product> getAllProducts(){
         return productService.getAllProducts();
+    }
+
+    @PostMapping("/list-by-ids")
+    public List<Product> getAllProductsById(@RequestBody List<Long> ids) {
+
+        return productService.getAllProductsById(ids);
+
     }
 
     @PutMapping("/{id}")
