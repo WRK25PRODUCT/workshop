@@ -60,7 +60,7 @@ public class ProductControllerTest {
 
         when(productService.readProductById(1L)).thenReturn(product1);
 
-        ResponseEntity<?> response = productController.getProductById(1L, null);
+        ResponseEntity<?> response = productController.getProductById(1L);
 
         assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.getBody()).isEqualTo(product1);
@@ -80,6 +80,21 @@ public class ProductControllerTest {
 
     }
 
+    @Test
+    @DisplayName("Should return products list and 200")
+    void getAllProductsByIdTest() {
+
+        List<Long> ids = List.of(1L, 2L);
+        List<Product> expectedProducts = List.of(product1, product2);
+
+        when(productService.getAllProductsById(ids)).thenReturn(expectedProducts);
+
+        List<Product> result = productController.getAllProductsById(ids);
+
+        assertThat(result).containsExactly(product1, product2);
+        verify(productService).getAllProductsById(ids);
+
+    }
 
 
     @Test
