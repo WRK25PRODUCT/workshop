@@ -63,8 +63,8 @@ class ProductServiceImplTest {
         assertEquals("In order to create a product, the id must be null", message);
     }
 
-    @DisplayName("create product successfully")
     @Test
+    @DisplayName("create product successfully")
     void createProductOkTest() {
         product1.setId(null);
         ProductPL mappedPL = new ProductPL();
@@ -101,8 +101,8 @@ class ProductServiceImplTest {
         assertEquals("Product not found with the id: 99", exception.getMessage());
     }
 
-    @DisplayName("get all products")
     @Test
+    @DisplayName("get all products")
     void getAllProductsTest() {
         when(productPLRepository.findAll()).thenReturn(List.of(productPL1));
         when(mapper.map(productPL1, Product.class)).thenReturn(product1);
@@ -111,6 +111,60 @@ class ProductServiceImplTest {
 
         assertEquals(1, result.size());
         assertEquals(product1, result.get(0));
+    }
+
+    @Test
+    @DisplayName("Should return valid list of products")
+    void getAllProductsByIdOkTest() {
+
+        List<Long> ids = List.of(1L);
+        when(productPLRepository.findAllById(ids)).thenReturn(List.of(productPL1));
+        when(mapper.map(productPL1, Product.class)).thenReturn(product1);
+
+        List<Product> result = productServiceImpl.getAllProductsById(ids);
+
+        assertEquals(1, result.size());
+        assertEquals(product1, result.get(0));
+
+    }
+
+    @Test
+    @DisplayName("Should throw Business Exception: ids are null")
+    void getAllProductsByIdListIsNullTest() {
+
+        BusinessException exception = assertThrows(BusinessException.class, () ->
+            productServiceImpl.getAllProductsById(null)
+        );
+
+        assertEquals("The list of product IDs must not be null", exception.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("Should throw Business Exception: id list is empty")
+    void getAllProductsByIdListIsEmptyTest() {
+
+        BusinessException exception = assertThrows(BusinessException.class, () ->
+                productServiceImpl.getAllProductsById(List.of())
+        );
+
+        assertEquals("The list of product IDs must not be empty", exception.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("Should throw Business Exception: ids not found in the database")
+    void getAllProductsByIdListIsNotFound() {
+
+        List<Long> ids = List.of(1L, 2L, 3L);
+        when(productPLRepository.findAllById(ids)).thenReturn(List.of());
+
+        BusinessException exception = assertThrows(BusinessException.class, () ->
+                productServiceImpl.getAllProductsById(ids)
+        );
+
+        assertEquals("No products found with the provided IDs", exception.getMessage());
+
     }
 
     @Test

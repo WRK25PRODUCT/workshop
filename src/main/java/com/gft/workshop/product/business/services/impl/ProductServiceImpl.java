@@ -75,6 +75,32 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> getAllProductsById(List<Long> ids) {
+
+        logger.info("Fetching all products with the IDs: {}", ids);
+
+        if (ids == null) {
+            throw new BusinessException("The list of product IDs must not be null");
+        }
+
+        if (ids.isEmpty()) {
+            throw new BusinessException("The list of product IDs must not be empty");
+        }
+
+        List<ProductPL> products = productPLRepository.findAllById(ids);
+
+        if (products.isEmpty()) {
+            throw new BusinessException("No products found with the provided IDs");
+        }
+
+        logger.debug("Total products fetched: {}", products.size());
+        return products.stream()
+                .map(p -> mapper.map(p, Product.class))
+                .toList();
+
+    }
+
+    @Override
     @Transactional
     public void updateProduct(Product product) {
         logger.info("Updating product: {}", product);
