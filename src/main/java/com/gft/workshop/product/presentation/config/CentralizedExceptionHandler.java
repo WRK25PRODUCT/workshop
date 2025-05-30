@@ -16,12 +16,8 @@ import java.time.LocalDateTime;
 @ControllerAdvice(basePackages = "com.gft.workshop.product.presentation.controllers")
 public class CentralizedExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(CentralizedExceptionHandler.class);
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleException(Exception ex, HttpServletRequest request){
-
-        //TODO IMPLEMENT A LOGGER
 
         ErrorResponse error = new ErrorResponse(
                 LocalDateTime.now(),
