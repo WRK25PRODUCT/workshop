@@ -17,4 +17,5 @@ public abstract class Promotion {
     private Date endDate;
     private Double discount;
     private PromotionType promotionType;
+
 }

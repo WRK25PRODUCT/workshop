@@ -104,6 +104,24 @@ class ProductServiceIT {
     }
 
     @Test
+    @DisplayName("Get all products with the same id")
+    void getAllProductsByIdTest() {
+
+        product1.setId(null);
+        product2.setId(null);
+        Long id1 = productServiceImpl.createProduct(product1);
+        Long id2 = productServiceImpl.createProduct(product2);
+
+        List<Product> products = productServiceImpl.getAllProductsById(List.of(id1, id2));
+
+        assertEquals(2, products.size());
+
+        List<Long> listIds = products.stream().map(product -> product.getId()).toList();
+        assertTrue(listIds.containsAll(List.of(id1, id2)));
+
+    }
+
+    @Test
     @DisplayName("Should update the stock of a product in the database")
     void updateProductStockTest() {
 
