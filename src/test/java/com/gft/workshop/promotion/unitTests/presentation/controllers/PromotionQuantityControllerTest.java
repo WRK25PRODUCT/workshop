@@ -112,8 +112,8 @@ class PromotionQuantityControllerTest {
     }
 
     @Test
-    @DisplayName("Should delete product and return 204")
-    void deleteProductTest() {
+    @DisplayName("Should delete PromotionQuantity and return 204")
+    void deletePromotionQuantityTest() {
 
         ResponseEntity<?> response = promotionQuantityController.delete(2L);
 
