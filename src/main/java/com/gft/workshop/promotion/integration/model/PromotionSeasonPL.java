@@ -2,6 +2,7 @@ package com.gft.workshop.promotion.integration.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.gft.workshop.product.business.model.Category;
 
 import java.util.List;
 
@@ -20,6 +21,6 @@ public class PromotionSeasonPL extends PromotionPL{
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "promotion_season_categories", joinColumns = @JoinColumn(name = "promotion_season_id"))
     @Column(name = "category")
-    private List<CategoryPL> affectedCategories;
+    private List<Category> affectedCategories;
 
 }

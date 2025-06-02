@@ -91,9 +91,9 @@ class PromotionQuantityControllerTest {
         CategoryRequest request = new CategoryRequest();
         request.setCategories(categoryList);
 
-        when(promotionQuantityService.getPromotionsByCategories(categoryList)).thenReturn(promotions);
+        when(promotionQuantityService.getPromotionQuantityByCategories(categoryList)).thenReturn(promotions);
 
-        ResponseEntity<List<PromotionQuantity>> response = promotionQuantityController.getActivePromotionsByCategory(request);
+        ResponseEntity<List<PromotionQuantity>> response = promotionQuantityController.getActivePromotionQuantityByCategory(request);
 
         assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.getBody()).isEqualTo(promotions);

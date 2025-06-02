@@ -162,7 +162,7 @@ class PromotionQuantityServiceImplTest {
 
         when(mapper.map(promotionQuantityPL, PromotionQuantity.class)).thenReturn(promotionQuantity1);
 
-        List<PromotionQuantity> result = promotionQuantityService.getPromotionsByCategories(categories);
+        List<PromotionQuantity> result = promotionQuantityService.getPromotionQuantityByCategories(categories);
 
         assertEquals(1, result.size());
         assertEquals(promotionQuantity1.getId(), result.get(0).getId());

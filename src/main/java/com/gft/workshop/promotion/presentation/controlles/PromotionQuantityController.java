@@ -51,8 +51,8 @@ public class PromotionQuantityController {
     }
 
     @PostMapping("/get-by-category")
-    public ResponseEntity<List<PromotionQuantity>> getActivePromotionsByCategory(@RequestBody CategoryRequest request){
-        List<PromotionQuantity> promotions = promotionQuantityService.getPromotionsByCategories(request.getCategories());
+public ResponseEntity<List<PromotionQuantity>> getActivePromotionQuantityByCategory(@RequestBody CategoryRequest request){
+        List<PromotionQuantity> promotions = promotionQuantityService.getPromotionQuantityByCategories(request.getCategories());
         return ResponseEntity.ok(promotions);
     }
 
