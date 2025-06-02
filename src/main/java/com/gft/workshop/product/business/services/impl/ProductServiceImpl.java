@@ -169,6 +169,12 @@ public class ProductServiceImpl implements ProductService {
 
         int currentStock = product.getInventoryData().getStock();
         int newStock = currentStock + quantityChange;
+
+        if (newStock < 0) {
+            logger.warn("Stock update failed: new stock is below 0");
+            throw new BusinessException("In order to update the stock of a product, the stock can't drop below 0");
+        }
+
         int threshold = product.getInventoryData().getThreshold();
 
         product.getInventoryData().setStock(newStock);

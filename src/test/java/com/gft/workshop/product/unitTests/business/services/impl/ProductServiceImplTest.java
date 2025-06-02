@@ -268,6 +268,27 @@ class ProductServiceImplTest {
 
     }
 
+    @Test
+    @DisplayName("Should throw Business Exception: new stock is below 0")
+    void updateProductStockNewStockBelowZero() {
+
+        InventoryData inventoryData = new InventoryData();
+        inventoryData.setStock(10);
+
+        ProductPL productPL = new ProductPL();
+        productPL.setId(1L);
+        productPL.setInventoryData(inventoryData);
+
+        when(productPLRepository.findById(1L)).thenReturn(Optional.of(productPL));
+
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            productServiceImpl.updateProductStock(1L, -20);
+        });
+
+        String message = ex.getMessage();
+        assertEquals("In order to update the stock of a product, the stock can't drop below 0", message);
+
+    }
 
     @Test
     @DisplayName("Should throw Business Exception: productId is null")
@@ -400,11 +421,13 @@ class ProductServiceImplTest {
     @DisplayName("delete product successfully")
     @Test
     void deleteProductOkTest() {
+
         when(productPLRepository.findById(1L)).thenReturn(Optional.of(productPL1));
 
         productServiceImpl.deleteProduct(1L);
 
         verify(productPLRepository).delete(productPL1);
+
     }
 
     // *******************************************************
