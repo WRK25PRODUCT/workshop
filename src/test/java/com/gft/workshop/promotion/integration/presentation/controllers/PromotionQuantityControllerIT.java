@@ -2,6 +2,7 @@ package com.gft.workshop.promotion.integration.presentation.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gft.workshop.product.business.model.Category;
+import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
@@ -47,6 +48,7 @@ class PromotionQuantityControllerIT {
     private PromotionQuantity promotionQuantity1;
     private PromotionQuantity newPromotionQuantity;
     private PromotionQuantityPL savePromotionQuantityPL;
+    private PromotionQuantityPL newPromotionQuantityPL;
 
     private PromotionQuantityPL promotionQuantityPL;
 
@@ -131,6 +133,25 @@ class PromotionQuantityControllerIT {
 
     }
 
+    @Test
+    @DisplayName("Should return all promotion quantities and 200 OK")
+    void getAllProductsTest() throws Exception {
+
+        promotionQuantityPL.setId(null);
+        newPromotionQuantityPL.setId(null);
+
+        promotionQuantityPLRepository.save(promotionQuantityPL);
+        promotionQuantityPLRepository.save(newPromotionQuantityPL);
+
+        MvcResult result = mockMvc.perform(get(uri))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        PromotionQuantity[] promotionQuantities = objectMapper.readValue(result.getResponse().getContentAsString(), PromotionQuantity[].class);
+        assertThat(promotionQuantities).hasSize(2);
+
+    }
+
 
     // *******************************************************
     //
@@ -172,5 +193,14 @@ class PromotionQuantityControllerIT {
         promotionQuantityPL.setPromotionType(PromotionType.QUANTITY);
         promotionQuantityPL.setQuantity(10);
         promotionQuantityPL.setCategory(Category.TOYS);
+
+        newPromotionQuantityPL = new PromotionQuantityPL();
+        newPromotionQuantityPL.setId(2L);
+        newPromotionQuantityPL.setStartDate(startDate);
+        newPromotionQuantityPL.setEndDate(endDate);
+        newPromotionQuantityPL.setDiscount(20.0);
+        newPromotionQuantityPL.setPromotionType(PromotionType.QUANTITY);
+        newPromotionQuantityPL.setQuantity(5);
+        newPromotionQuantityPL.setCategory(Category.BOOKS);
     }
 }

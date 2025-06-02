@@ -6,6 +6,8 @@ import com.gft.workshop.promotion.business.services.PromotionQuantityService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/promotionsQuantity")
 public class PromotionQuantityController {
@@ -30,6 +32,11 @@ public class PromotionQuantityController {
         PromotionQuantity promotionQuantity = promotionQuantityService.readPromotionQuantityById(id);
 
         return ResponseEntity.ok(promotionQuantity);
+    }
+
+    @GetMapping
+    public List<PromotionQuantity> getAllPromotionQuantities(){
+        return promotionQuantityService.getAllPromotionQuantities();
     }
 
     @PutMapping("/{id}")

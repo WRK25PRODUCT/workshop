@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -87,6 +88,18 @@ class PromotionQuantityControllerTest {
         assertThat(response.getStatusCode().value()).isEqualTo(204);
         verify(promotionQuantityService).deletePromotionQuantity(1L);
 
+    }
+
+    @Test
+    @DisplayName("Should return all promotion quantities and 200")
+    void getAllPromotionQuantitiesTest() {
+
+        when(promotionQuantityService.getAllPromotionQuantities())
+                .thenReturn(List.of(promotionQuantity1, newPromotionQuantity));
+
+        List<PromotionQuantity> response = promotionQuantityController.getAllPromotionQuantities();
+
+        assertThat(response).hasSize(2);
     }
 
     // *******************************************************
