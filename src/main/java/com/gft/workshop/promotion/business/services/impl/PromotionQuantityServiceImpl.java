@@ -80,7 +80,7 @@ public  class PromotionQuantityServiceImpl implements PromotionQuantityService {
     }
 
     @Override
-    public List<PromotionQuantity> getPromotionsByCategories(List<Category> categories) {
+    public List<PromotionQuantity> getPromotionQuantityByCategories(List<Category> categories) {
         List<PromotionQuantityPL> promotionPLs = promotionQuantityPLRepository
                 .findActivePromotionsByCategory(categories, new Date());
 
