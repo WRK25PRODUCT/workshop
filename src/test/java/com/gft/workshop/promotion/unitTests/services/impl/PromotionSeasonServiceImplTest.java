@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -85,6 +86,13 @@ public class PromotionSeasonServiceImplTest {
     @DisplayName("Get PromotionSeason by Id")
     void getPromotionSeasonByIdTest() {
 
+        when(promotionSeasonPLRepository.findById(promotionSeasonPL.getId())).thenReturn(Optional.of(promotionSeasonPL));
+        when(mapper.map(promotionSeasonPL, PromotionSeason.class)).thenReturn(promotionSeason1);
+
+        PromotionSeason promotionSeason = promotionSeasonService.readPromotionSeasonById(promotionSeason1.getId());
+
+        assertNotNull(promotionSeason);
+        assertEquals(promotionSeason1.getId(), promotionSeason.getId());
 
 
     }
@@ -93,7 +101,13 @@ public class PromotionSeasonServiceImplTest {
     @DisplayName("Read PromotionSeason by Id should throw BusinessException when not found")
     void readPromotionSeasonByIdNotFoundTest(){
 
+        when(promotionSeasonPLRepository.findById(100L)).thenReturn(Optional.empty());
 
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            promotionSeasonService.readPromotionSeasonById(100L);
+        });
+
+        assertEquals("Promotion season not found with the id: 100", exception.getMessage());
 
     }
 

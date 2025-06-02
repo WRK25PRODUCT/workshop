@@ -8,6 +8,8 @@ import com.gft.workshop.promotion.integration.repositories.PromotionSeasonPLRepo
 import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class PromotionSeasonServiceImpl implements PromotionSeasonService {
 
@@ -33,4 +35,36 @@ public class PromotionSeasonServiceImpl implements PromotionSeasonService {
         return promotionSeasonPLRepository.save(promotionSeasonPL).getId();
 
     }
+
+    @Override
+    public void deletePromotionSeason(Long id) {
+
+        if (id == null){
+            throw new BusinessException("Cannot delete a PromotionSeason with a null ID");
+        }
+
+        Optional<PromotionSeasonPL> optional = promotionSeasonPLRepository.findById(id);
+
+        if (optional.isEmpty()){
+            throw new BusinessException("Cannot delete the PromotionSeason: ID not found");
+        }
+
+        promotionSeasonPLRepository.delete(optional.get());
+
+    }
+
+    @Override
+    public PromotionSeason readPromotionSeasonById(Long id) {
+
+        Optional<PromotionSeason> optional = promotionSeasonPLRepository.findById(id)
+                .map(p-> mapper.map(p, PromotionSeason.class));
+
+        if(optional.isEmpty()){
+            throw new BusinessException("Promotion season not found with the id: " + id);
+        }
+
+        return optional.get();
+
+    }
+
 }
