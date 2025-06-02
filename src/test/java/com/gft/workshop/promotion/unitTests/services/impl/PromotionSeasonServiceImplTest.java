@@ -1,5 +1,6 @@
 package com.gft.workshop.promotion.unitTests.services.impl;
 
+import com.gft.workshop.config.ExceptionHandler.BusinessException;
 import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionSeason;
@@ -20,6 +21,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 public class PromotionSeasonServiceImplTest {
@@ -45,19 +51,32 @@ public class PromotionSeasonServiceImplTest {
     }
 
     @Test
-    @DisplayName("create promotionQuantity Id not null")
-    void createNotNullPromotionQuantityTest(){
+    @DisplayName("create promotionSeason Id not null")
+    void createNotNullPromotionSeasonTest(){
 
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            promotionSeasonService.createPromotionSeason(newPromotionSeason);
+        });
 
+        String message = ex.getMessage();
+        assertEquals("In order to create a promotion season, the id must be null", message);
 
     }
 
     @Test
-    @DisplayName("create promotion quantity successfully")
-    void createPromotionQuantityOkTest(){
+    @DisplayName("create promotion season successfully")
+    void createPromotionSeasonOkTest(){
 
+    promotionSeason1.setId(null);
 
+    when(mapper.map(promotionSeason1, PromotionSeasonPL.class)).thenReturn(promotionSeasonPL);
 
+    when(promotionSeasonPLRepository.save(promotionSeasonPL)).thenReturn(promotionSeasonPL);
+
+    Long id = promotionSeasonService.createPromotionSeason(promotionSeason1);
+
+    assertEquals(1L, id);
+    verify(promotionSeasonPLRepository).save(promotionSeasonPL);
     }
 
     @Test

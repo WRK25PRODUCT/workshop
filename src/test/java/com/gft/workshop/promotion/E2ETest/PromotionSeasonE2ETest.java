@@ -1,13 +1,10 @@
-package com.gft.workshop.promotion.integration.presentation.controllers;
+package com.gft.workshop.promotion.E2ETest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gft.workshop.product.business.model.Category;
-import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionSeason;
 import com.gft.workshop.promotion.business.model.PromotionType;
-import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
 import com.gft.workshop.promotion.integration.model.PromotionSeasonPL;
-import com.gft.workshop.promotion.integration.repositories.PromotionQuantityPLRepository;
 import com.gft.workshop.promotion.integration.repositories.PromotionSeasonPLRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,16 +23,14 @@ import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ActiveProfiles("application-dev.properties")
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
 @Transactional
-public class PromotionSeasonControllerIT {
+class PromotionSeasonE2ETest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -62,36 +57,29 @@ public class PromotionSeasonControllerIT {
     }
 
     @Test
-    @DisplayName("Should return existing PromotionSeason by ID and 200 OK")
-    void getPromotionSeasonByIdTest() throws Exception {
+    @DisplayName(("should create a promotion season and return 201"))
+    void createPromotionSeasonOkTest() throws Exception{
 
+        promotionSeason1.setId(null);
 
-    }
+        String requestJson = objectMapper.writeValueAsString(promotionSeason1);
 
-    @Test
-    @DisplayName("Should not find the PromotionSeason by ID and return 404 Not Found")
-    void getPromotionSeasonByIdNotFoundTest() throws Exception {
+        MvcResult result = mockMvc.perform(post(uri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                        .andExpect(status().isOk())
+                        .andReturn();
 
+        String responseBody = result.getResponse().getContentAsString();
 
+        assertThat(responseBody).isNotEmpty();
 
-    }
+        Long promotionSeasonId = objectMapper.readValue(responseBody, Long.class);
 
-    @Test
-    @DisplayName("Delete PromotionSeason and return 204 No content")
-    void deletePromotionSeasonOkTest() throws Exception {
-
-
-
-    }
-
-    @Test
-    @DisplayName("Should return all PromotionSeason and 200 OK")
-    void getAllPromotionSeasonTest() throws Exception {
-
-
+        assertThat(promotionSeasonId).isNotNull();
+        assertThat(promotionSeasonPLRepository.findById(promotionSeasonId));
 
     }
-
 
     // *******************************************************
     //

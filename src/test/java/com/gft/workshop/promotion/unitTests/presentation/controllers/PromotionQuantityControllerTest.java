@@ -111,6 +111,16 @@ class PromotionQuantityControllerTest {
         assertThat(response).hasSize(2);
     }
 
+    @Test
+    @DisplayName("Should delete PromotionQuantity and return 204")
+    void deletePromotionQuantityTest() {
+
+        ResponseEntity<?> response = promotionQuantityController.delete(2L);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(204);
+        verify(promotionQuantityService).deletePromotionQuantity(2L);
+
+    }
     // *******************************************************
     //
     // Private Methods

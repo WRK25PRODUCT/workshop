@@ -56,5 +56,13 @@ public ResponseEntity<List<PromotionQuantity>> getActivePromotionQuantityByCateg
         return ResponseEntity.ok(promotions);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+
+        promotionQuantityService.deletePromotionQuantity(id);
+
+        return ResponseEntity.noContent().build();
+
+    }
 
 }
