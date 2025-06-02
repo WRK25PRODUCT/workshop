@@ -10,6 +10,7 @@ import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
 import com.gft.workshop.promotion.integration.model.PromotionSeasonPL;
 import com.gft.workshop.promotion.integration.repositories.PromotionSeasonPLRepository;
 import org.dozer.DozerBeanMapper;
+import org.hibernate.usertype.BaseUserTypeSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -99,7 +100,7 @@ public class PromotionSeasonServiceImplTest {
 
     @Test
     @DisplayName("read promotion season by Id should throw BusinessException when not found")
-    void readPromotionQuantityByIdNotFoundTest(){
+    void readPromotionSeasonByIdNotFoundTest(){
 
         when(promotionSeasonPLRepository.findById(100L)).thenReturn(Optional.empty());
 
@@ -112,27 +113,46 @@ public class PromotionSeasonServiceImplTest {
     }
 
     @Test
-    @DisplayName("update not found promotion quantity by Id")
-    void updateNotFoundPromotionQuantityIdTest(){
+    @DisplayName("update not found promotion season by Id")
+    void updateNotFoundPromotionSeasonIdTest(){
 
+        when(promotionSeasonPLRepository.findById(1L)).thenReturn(Optional.empty());
 
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            promotionSeasonService.updatePromotionSeason(promotionSeason1);
+        });
+
+        String message = ex.getMessage();
+
+        assertEquals("In order to update a promotion sesion, the id must exist in the database", message);
 
     }
 
     @Test
-    @DisplayName("update promotionQuantity id null should throw BusinessException")
-    void updatePromotionQuantityWithIdNullTest(){
+    @DisplayName("update promotionSeason id null should throw BusinessException")
+    void updatePromotionSeasonWithIdNullTest(){
 
+        promotionSeason1.setId(null);
 
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            promotionSeasonService.updatePromotionSeason(promotionSeason1);
+        });
+
+        String message = ex.getMessage();
+
+        assertEquals("In order to update a promotion season, the id must not be null", message);
 
     }
 
     @Test
     @DisplayName("update promotion quantity correctly")
-    void updatePromotionQuantityOkTest(){
+    void updatePromotionSeasonOkTest(){
 
+        when(promotionSeasonPLRepository.findById(promotionSeasonPL.getId())).thenReturn(Optional.of(promotionSeasonPL));
 
+        promotionSeasonService.updatePromotionSeason(promotionSeason1);
 
+        verify(promotionSeasonPLRepository).save(promotionSeasonPL);
     }
 
     @Test

@@ -53,7 +53,29 @@ public class PromotionSeasonServiceImpl implements PromotionSeasonService {
     }
 
     @Override
+    @Transactional
     public void updatePromotionSeason(PromotionSeason promotionSeason) {
+
+        if(promotionSeason.getId() == null){
+            throw new BusinessException("In order to update a promotion season, the id must not be null");
+        }
+
+        Optional<PromotionSeasonPL> optional = promotionSeasonPLRepository.findById(promotionSeason.getId());
+
+        if(optional.isEmpty()){
+            throw new BusinessException("In order to update a promotion season, the id must exist in the database");
+        }
+
+        PromotionSeasonPL promotionSeasonPL = optional.get();
+
+        promotionSeasonPL.setName(promotionSeason.getName());
+        promotionSeasonPL.setDiscount(promotionSeason.getDiscount());
+        promotionSeasonPL.setPromotionType(promotionSeason.getPromotionType());
+        promotionSeasonPL.setStartDate(promotionSeason.getStartDate());
+        promotionSeasonPL.setEndDate(promotionSeason.getEndDate());
+        promotionSeasonPL.setAffectedCategories(promotionSeason.getAffectedCategories());
+
+        promotionSeasonPLRepository.save(promotionSeasonPL);
 
     }
 }
