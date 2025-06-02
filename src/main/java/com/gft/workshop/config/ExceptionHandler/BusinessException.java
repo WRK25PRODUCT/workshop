@@ -1,4 +1,4 @@
-package com.gft.workshop.config.business;
+package com.gft.workshop.config.ExceptionHandler;
 
 import lombok.Generated;
 

@@ -1,6 +1,6 @@
 package com.gft.workshop.product.business.services.impl;
 
-import com.gft.workshop.config.business.BusinessException;
+import com.gft.workshop.config.ExceptionHandler.BusinessException;
 import com.gft.workshop.product.business.model.InventoryData;
 import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.business.services.ProductService;

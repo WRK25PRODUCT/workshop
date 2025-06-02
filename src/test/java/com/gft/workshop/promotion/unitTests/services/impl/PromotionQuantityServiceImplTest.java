@@ -1,7 +1,8 @@
 package com.gft.workshop.promotion.unitTests.services.impl;
 
-import com.gft.workshop.config.business.BusinessException;
+import com.gft.workshop.config.ExceptionHandler.BusinessException;
 import com.gft.workshop.product.business.model.Category;
+import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.business.services.impl.PromotionQuantityServiceImpl;
@@ -41,6 +42,7 @@ class PromotionQuantityServiceImplTest {
     private PromotionQuantity newPromotionQuantity;
 
     private PromotionQuantityPL promotionQuantityPL;
+    private PromotionQuantityPL newPromotionQuantityPL;
 
     @BeforeEach
     void init(){
@@ -208,6 +210,20 @@ class PromotionQuantityServiceImplTest {
 
     }
 
+    @Test
+    @DisplayName("get all promotion quantities")
+    void getAllPromotionQuantitiesTest(){
+
+        when(promotionQuantityPLRepository.findAll()).thenReturn(List.of(promotionQuantityPL, newPromotionQuantityPL));
+        when(mapper.map(promotionQuantityPL, PromotionQuantity.class)).thenReturn(promotionQuantity1);
+        when(mapper.map(newPromotionQuantityPL, PromotionQuantity.class)).thenReturn(newPromotionQuantity);
+
+        List<PromotionQuantity> result = promotionQuantityService.getAllPromotionQuantities();
+
+        assertEquals(2, result.size());
+        assertEquals(promotionQuantity1, result.get(0));
+    }
+
     // *******************************************************
     //
     // Private Methods
@@ -248,6 +264,15 @@ class PromotionQuantityServiceImplTest {
         promotionQuantityPL.setPromotionType(PromotionType.QUANTITY);
         promotionQuantityPL.setQuantity(10);
         promotionQuantityPL.setCategory(Category.TOYS);
+
+        newPromotionQuantityPL = new PromotionQuantityPL();
+        newPromotionQuantityPL.setId(2L);
+        newPromotionQuantityPL.setStartDate(startDate);
+        newPromotionQuantityPL.setEndDate(endDate);
+        newPromotionQuantityPL.setDiscount(20.0);
+        newPromotionQuantityPL.setPromotionType(PromotionType.QUANTITY);
+        newPromotionQuantityPL.setQuantity(5);
+        newPromotionQuantityPL.setCategory(Category.BOOKS);
 
     }
 }

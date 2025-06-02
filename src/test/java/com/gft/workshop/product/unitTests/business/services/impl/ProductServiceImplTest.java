@@ -1,7 +1,7 @@
 package com.gft.workshop.product.unitTests.business.services.impl;
 
 
-import com.gft.workshop.config.business.BusinessException;
+import com.gft.workshop.config.ExceptionHandler.BusinessException;
 import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.product.business.model.InventoryData;
 import com.gft.workshop.product.business.model.Product;

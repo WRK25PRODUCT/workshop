@@ -1,19 +1,17 @@
-package com.gft.workshop.product.presentation.config;
+package com.gft.workshop.config.ExceptionHandler;
 
-import com.gft.workshop.config.business.BusinessException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
 
-@ControllerAdvice(basePackages = "com.gft.workshop.product.presentation.controllers")
+@ControllerAdvice
 public class CentralizedExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)

@@ -34,6 +34,11 @@ public class PromotionQuantityController {
         return ResponseEntity.ok(promotionQuantity);
     }
 
+    @GetMapping
+    public List<PromotionQuantity> getAllPromotionQuantities(){
+        return promotionQuantityService.getAllPromotionQuantities();
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody PromotionQuantity promotionQuantity, @PathVariable Long id) {
 

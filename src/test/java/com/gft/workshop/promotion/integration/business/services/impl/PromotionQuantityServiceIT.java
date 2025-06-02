@@ -14,12 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -36,6 +38,7 @@ class PromotionQuantityServiceIT {
     private PromotionQuantity newPromotionQuantity;
 
     private PromotionQuantityPL promotionQuantityPL;
+    private PromotionQuantityPL newPromotionQuantityPL;
 
     @BeforeEach
     void init(){
@@ -69,6 +72,8 @@ class PromotionQuantityServiceIT {
     @Test
     @DisplayName("update promotion quantity")
     void updatePromotionQuantityOkTest(){
+
+        promotionQuantityPLRepository.save(promotionQuantityPL);
 
         promotionQuantityService.updatePromotionQuantity(promotionQuantity1);
 
@@ -145,5 +150,14 @@ class PromotionQuantityServiceIT {
         promotionQuantityPL.setPromotionType(PromotionType.QUANTITY);
         promotionQuantityPL.setQuantity(10);
         promotionQuantityPL.setCategory(Category.TOYS);
+
+        newPromotionQuantityPL = new PromotionQuantityPL();
+        newPromotionQuantityPL.setId(2L);
+        newPromotionQuantityPL.setStartDate(startDate);
+        newPromotionQuantityPL.setEndDate(endDate);
+        newPromotionQuantityPL.setDiscount(20.0);
+        newPromotionQuantityPL.setPromotionType(PromotionType.QUANTITY);
+        newPromotionQuantityPL.setQuantity(5);
+        newPromotionQuantityPL.setCategory(Category.BOOKS);
     }
 }

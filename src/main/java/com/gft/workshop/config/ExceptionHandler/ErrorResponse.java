@@ -1,4 +1,4 @@
-package com.gft.workshop.product.presentation.config;
+package com.gft.workshop.config.ExceptionHandler;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

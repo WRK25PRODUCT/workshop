@@ -6,6 +6,7 @@ import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.business.services.PromotionQuantityService;
 import com.gft.workshop.promotion.presentation.controlles.PromotionQuantityController;
 import com.gft.workshop.promotion.presentation.dto.CategoryRequest;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -97,6 +98,19 @@ class PromotionQuantityControllerTest {
         assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.getBody()).isEqualTo(promotions);
     }
+
+    @Test
+    @DisplayName("Should return all promotion quantities and 200")
+    void getAllPromotionQuantitiesTest() {
+
+        when(promotionQuantityService.getAllPromotionQuantities())
+                .thenReturn(List.of(promotionQuantity1, newPromotionQuantity));
+
+        List<PromotionQuantity> response = promotionQuantityController.getAllPromotionQuantities();
+
+        assertThat(response).hasSize(2);
+    }
+
     // *******************************************************
     //
     // Private Methods

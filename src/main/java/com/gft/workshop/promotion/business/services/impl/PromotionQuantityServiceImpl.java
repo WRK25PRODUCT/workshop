@@ -1,7 +1,8 @@
 package com.gft.workshop.promotion.business.services.impl;
 
-import com.gft.workshop.config.business.BusinessException;
+import com.gft.workshop.config.ExceptionHandler.BusinessException;
 import com.gft.workshop.product.business.model.Category;
+
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.services.PromotionQuantityService;
 import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
@@ -10,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Service;
 import java.util.Date;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -101,6 +103,14 @@ public  class PromotionQuantityServiceImpl implements PromotionQuantityService {
         }
 
         promotionQuantityPLRepository.delete(optional.get());
+
+    }
+
+    @Override
+    public List<PromotionQuantity> getAllPromotionQuantities() {
+        return promotionQuantityPLRepository.findAll().stream()
+               .map(p-> mapper.map(p, PromotionQuantity.class))
+               .toList();
 
     }
 }
