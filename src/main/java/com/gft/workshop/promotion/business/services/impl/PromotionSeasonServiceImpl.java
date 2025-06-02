@@ -33,4 +33,9 @@ public class PromotionSeasonServiceImpl implements PromotionSeasonService {
         return promotionSeasonPLRepository.save(promotionSeasonPL).getId();
 
     }
+
+    @Override
+    public PromotionSeason readPromotionSeasonById(Long id) {
+        return null;
+    }
 }
