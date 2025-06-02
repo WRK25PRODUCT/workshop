@@ -17,6 +17,6 @@ public interface PromotionQuantityService {
     
     List<PromotionQuantity> getAllPromotionQuantities();
 
-    List<PromotionQuantity> getPromotionsByCategories(List<Category> categories);
+    List<PromotionQuantity> getPromotionQuantityByCategories(List<Category> categories);
 
 }

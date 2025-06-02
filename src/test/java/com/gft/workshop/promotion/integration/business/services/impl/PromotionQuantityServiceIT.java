@@ -85,14 +85,14 @@ class PromotionQuantityServiceIT {
 
     @Test
     @DisplayName("get promotions by categories")
-    void getPromotionsByCategoriesTest() {
+    void getPromotionQuantityByCategoriesTest() {
 
         promotionQuantity1.setId(null);
         newPromotionQuantity.setId(null);
         promotionQuantityService.createPromotionQuantity(promotionQuantity1);
         promotionQuantityService.createPromotionQuantity(newPromotionQuantity);
 
-        List<PromotionQuantity> promotions = promotionQuantityService.getPromotionsByCategories(List.of(Category.TOYS, Category.BOOKS));
+        List<PromotionQuantity> promotions = promotionQuantityService.getPromotionQuantityByCategories(List.of(Category.TOYS, Category.BOOKS));
 
         assertEquals(2, promotions.size());
         assertTrue(promotions.stream().anyMatch(p -> p.getCategory() == Category.TOYS));
