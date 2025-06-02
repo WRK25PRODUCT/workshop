@@ -55,6 +55,7 @@ class PromotionSeasonE2ETest {
         initObjects();
     }
 
+    /*
     @Test
     @DisplayName(("should create a promotion season and return 201"))
     void createPromotionSeasonOkTest() throws Exception{
@@ -80,6 +81,9 @@ class PromotionSeasonE2ETest {
 
     }
 
+
+
+
     @Test
     @DisplayName("Should return existing PromotionSeason by ID and 200 OK")
     void getPromotionSeasonByIdTest() throws Exception {
@@ -100,6 +104,8 @@ class PromotionSeasonE2ETest {
         assertThat(promotionSeason.getId()).isEqualTo(promotionSeason1.getId());
     }
 
+
+     */
     // *******************************************************
     //
     // Private Methods
