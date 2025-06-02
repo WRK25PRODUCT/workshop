@@ -62,14 +62,6 @@ public class PromotionSeasonControllerIT {
     }
 
     @Test
-    @DisplayName("Should create a PromotionSeason and return 201")
-    void createPromotionSeasonOkTest() throws Exception{
-
-
-
-    }
-
-    @Test
     @DisplayName("Should return existing PromotionSeason by ID and 200 OK")
     void getPromotionSeasonByIdTest() throws Exception {
 
