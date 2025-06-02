@@ -10,9 +10,8 @@ public interface PromotionSeasonService {
 
     Long createPromotionSeason(PromotionSeason promotionSeason);
 
-    /*
     PromotionSeason readPromotionSeasonById(Long id);
-
+/*
     void updatePromotionSeason(PromotionSeason promotionSeason);
 
     */

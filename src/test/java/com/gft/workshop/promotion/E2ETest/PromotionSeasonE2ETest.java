@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -77,6 +78,26 @@ class PromotionSeasonE2ETest {
         assertThat(promotionSeasonId).isNotNull();
         assertThat(promotionSeasonPLRepository.findById(promotionSeasonId));
 
+    }
+
+    @Test
+    @DisplayName("Should return existing PromotionSeason by ID and 200 OK")
+    void getPromotionSeasonByIdTest() throws Exception {
+
+        promotionSeasonPL.setId(null);
+
+        savePromotionSeasonPL = promotionSeasonPLRepository.save(promotionSeasonPL);
+
+        MvcResult result = mockMvc.perform(get(uri + "/" + savePromotionSeasonPL.getId()))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        PromotionSeason promotionSeason = objectMapper.readValue(result.getResponse().getContentAsString(), PromotionSeason.class);
+
+        promotionSeason1.setId(promotionSeason.getId());
+
+        assertThat(promotionSeason).isNotNull();
+        assertThat(promotionSeason.getId()).isEqualTo(promotionSeason1.getId());
     }
 
     // *******************************************************

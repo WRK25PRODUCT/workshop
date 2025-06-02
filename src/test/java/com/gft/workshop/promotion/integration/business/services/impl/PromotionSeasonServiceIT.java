@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -58,6 +59,13 @@ public class PromotionSeasonServiceIT {
     @DisplayName("Read PromotionSeason by Id")
     void readPromotionSeasonByIdTest(){
 
+        promotionSeason1.setId(null);
+
+        Long id = promotionSeasonService.createPromotionSeason(promotionSeason1);
+
+        PromotionSeason promotionSeason = promotionSeasonService.readPromotionSeasonById(id);
+
+        assertEquals(id, promotionSeason.getId());
 
     }
 

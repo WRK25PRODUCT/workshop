@@ -53,4 +53,18 @@ public class PromotionSeasonServiceImpl implements PromotionSeasonService {
 
     }
 
+    @Override
+    public PromotionSeason readPromotionSeasonById(Long id) {
+
+        Optional<PromotionSeason> optional = promotionSeasonPLRepository.findById(id)
+                .map(p-> mapper.map(p, PromotionSeason.class));
+
+        if(optional.isEmpty()){
+            throw new BusinessException("Promotion season not found with the id: " + id);
+        }
+
+        return optional.get();
+
+    }
+
 }
