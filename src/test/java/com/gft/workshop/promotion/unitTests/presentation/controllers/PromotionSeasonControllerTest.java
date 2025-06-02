@@ -22,6 +22,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 public class PromotionSeasonControllerTest {
 
@@ -43,7 +46,14 @@ public class PromotionSeasonControllerTest {
     @DisplayName("Should create a PromotionSeason successfully and return 200 with ID")
     void createPromotionSeasonOkTest() {
 
+        promotionSeason1.setId(null);
 
+        when(promotionSeasonService.createPromotionSeason(promotionSeason1)).thenReturn(1L);
+
+        ResponseEntity<Long> response = promotionSeasonController.create(promotionSeason1);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isEqualTo(1L);
 
     }
 
