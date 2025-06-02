@@ -1,14 +1,10 @@
 package com.gft.workshop.promotion.unitTests.presentation.controllers;
 
 import com.gft.workshop.product.business.model.Category;
-import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionSeason;
 import com.gft.workshop.promotion.business.model.PromotionType;
-import com.gft.workshop.promotion.business.services.PromotionQuantityService;
 import com.gft.workshop.promotion.business.services.PromotionSeasonService;
-import com.gft.workshop.promotion.presentation.controlles.PromotionQuantityController;
 import com.gft.workshop.promotion.presentation.controlles.PromotionSeasonController;
-import com.gft.workshop.promotion.presentation.dto.CategoryRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -86,6 +83,17 @@ public class PromotionSeasonControllerTest {
     void getAllPromotionSeasonTest() {
 
 
+
+    }
+
+    @Test
+    @DisplayName("Should delete PromotionSeason and return 204")
+    void deletePromotionQuantityTest() {
+
+        ResponseEntity<?> response = promotionSeasonController.delete(2L);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(204);
+        verify(promotionSeasonService).deletePromotionSeason(2L);
 
     }
 

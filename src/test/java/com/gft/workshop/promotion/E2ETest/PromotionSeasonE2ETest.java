@@ -45,9 +45,7 @@ class PromotionSeasonE2ETest {
 
     private PromotionSeason promotionSeason1;
     private PromotionSeason newPromotionSeason;
-    private PromotionSeasonPL savePromotionSeasonPL;
     private PromotionSeasonPL newPromotionSeasonPL;
-
     private PromotionSeasonPL promotionSeasonPL;
 
     @BeforeEach

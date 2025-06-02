@@ -57,4 +57,13 @@ public class PromotionSeasonController {
 
     */
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+
+        promotionSeasonService.deletePromotionSeason(id);
+
+        return ResponseEntity.noContent().build();
+
+    }
+
 }

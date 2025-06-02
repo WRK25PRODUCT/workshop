@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -77,10 +78,16 @@ public class PromotionSeasonServiceIT {
     }
 
     @Test
-    @DisplayName("Delete PromotionSeasion")
+    @DisplayName("Delete PromotionSeason")
     void deletePromotionSeasonOkTest(){
 
+        promotionSeason1.setId(null);
 
+        Long id = promotionSeasonService.createPromotionSeason(promotionSeason1);
+
+        promotionSeasonService.deletePromotionSeason(id);
+
+        assertTrue(promotionSeasonPLRepository.findById(id).isEmpty());
 
     }
 
