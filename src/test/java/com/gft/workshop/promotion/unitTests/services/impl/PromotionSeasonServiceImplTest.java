@@ -17,10 +17,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
@@ -80,18 +83,31 @@ public class PromotionSeasonServiceImplTest {
     }
 
     @Test
-    @DisplayName("get promotion quantity by Id")
-    void getPromotionQuantityByIdTest() {
+    @DisplayName("get promotion season by Id")
+    void getPromotionSeasonByIdTest() {
 
+        when(promotionSeasonPLRepository.findById(promotionSeasonPL.getId())).thenReturn(Optional.of(promotionSeasonPL));
+        when(mapper.map(promotionSeasonPL, PromotionSeason.class)).thenReturn(promotionSeason1);
+
+        PromotionSeason promotionSeason = promotionSeasonService.readPromotionSeasonById(promotionSeason1.getId());
+
+        assertNotNull(promotionSeason);
+        assertEquals(promotionSeason1.getId(), promotionSeason.getId());
 
 
     }
 
     @Test
-    @DisplayName("read promotion quantity by Id should throw BusinessException when not found")
+    @DisplayName("read promotion season by Id should throw BusinessException when not found")
     void readPromotionQuantityByIdNotFoundTest(){
 
+        when(promotionSeasonPLRepository.findById(100L)).thenReturn(Optional.empty());
 
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            promotionSeasonService.readPromotionSeasonById(100L);
+        });
+
+        assertEquals("Promotion season not found with the id: 100", exception.getMessage());
 
     }
 

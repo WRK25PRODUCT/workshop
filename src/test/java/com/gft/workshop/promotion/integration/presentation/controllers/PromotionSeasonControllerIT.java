@@ -62,17 +62,16 @@ public class PromotionSeasonControllerIT {
     }
 
     @Test
-    @DisplayName("Should return existing PromotionSeason by ID and 200 OK")
-    void getPromotionSeasonByIdTest() throws Exception {
-
-
-    }
-
-    @Test
     @DisplayName("Should not find the PromotionSeason by ID and return 404 Not Found")
     void getPromotionSeasonByIdNotFoundTest() throws Exception {
 
-
+        mockMvc.perform(get(uri + "/20"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.error").value("Not Found"))
+                .andExpect(jsonPath("$.message").value("Promotion season not found with the id: 20"))
+                .andExpect(jsonPath("$.path").value("/api/v1/promotionsSeason/20"));
 
     }
 

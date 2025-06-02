@@ -26,14 +26,17 @@ public class PromotionSeasonController {
 
     }
 
-    /*
+
     @GetMapping("/{id}")
     public ResponseEntity<PromotionSeason> getPromotionSeasonById(@PathVariable Long id){
 
-        return null;
+        PromotionSeason promotionSeason = promotionSeasonService.readPromotionSeasonById(id);
+
+        return ResponseEntity.ok(promotionSeason);
 
     }
 
+    /*
     @GetMapping
     public List<PromotionSeason> getAllPromotionQuantities(){
 
