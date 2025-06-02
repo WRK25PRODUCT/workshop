@@ -96,6 +96,9 @@ public class PromotionQuantityServiceImpl implements PromotionQuantityService {
 
     @Override
     public List<PromotionQuantity> getAllPromotionQuantities() {
-        return List.of();
+        return promotionQuantityPLRepository.findAll().stream()
+               .map(p-> mapper.map(p, PromotionQuantity.class))
+               .toList();
+
     }
 }

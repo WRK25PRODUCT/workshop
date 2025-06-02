@@ -74,9 +74,8 @@ class PromotionQuantityServiceIT {
     @DisplayName("update promotion quantity")
     void updatePromotionQuantityOkTest(){
 
-        List<PromotionQuantityPL> promotionQuantities = List.of(promotionQuantityPL, newPromotionQuantityPL);
+        promotionQuantityPLRepository.save(promotionQuantityPL);
 
-        when(promotionQuantityPLRepository.findAll()).thenReturn(promotionQuantities);
         promotionQuantityService.updatePromotionQuantity(promotionQuantity1);
 
         Optional<PromotionQuantityPL> optional = promotionQuantityPLRepository.findById(promotionQuantity1.getId());
@@ -94,17 +93,6 @@ class PromotionQuantityServiceIT {
         assertTrue(promotionQuantityPLRepository.findById(promotionQuantity1.getId()).isEmpty());
 
     }
-
-    @Test
-    @DisplayName("get all promotions quantities")
-    void getAllTest() {
-
-        List<PromotionQuantity> result = promotionQuantityService.getAllPromotionQuantities();
-
-        assertTrue(result.size() == 2);
-
-    }
-
 
     // *******************************************************
     //

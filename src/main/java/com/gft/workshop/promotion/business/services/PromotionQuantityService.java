@@ -17,5 +17,4 @@ public interface PromotionQuantityService {
     void deletePromotionQuantity(Long id);
 
     List<PromotionQuantity> getAllPromotionQuantities();
-
 }
