@@ -3,6 +3,7 @@ package com.gft.workshop.promotion.integration.model;
 import jakarta.persistence.*;
 import lombok.*;
 import com.gft.workshop.product.business.model.Category;
+import jakarta.persistence.Entity;
 
 import java.util.List;
 

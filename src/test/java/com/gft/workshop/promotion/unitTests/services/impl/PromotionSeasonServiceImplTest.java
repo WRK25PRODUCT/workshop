@@ -124,7 +124,7 @@ public class PromotionSeasonServiceImplTest {
 
         String message = ex.getMessage();
 
-        assertEquals("In order to update a promotion sesion, the id must exist in the database", message);
+        assertEquals("In order to update a promotion season, the id must exist in the database", message);
 
     }
 
