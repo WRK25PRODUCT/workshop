@@ -61,7 +61,12 @@ public class PromotionSeasonControllerTest {
     @DisplayName("Should return PromotionSeason by ID and 200")
     void getPromotionSeasonByIdTest() {
 
+        when(promotionSeasonService.readPromotionSeasonById(1L)).thenReturn(promotionSeason1);
 
+        ResponseEntity<?> response = promotionSeasonController.getPromotionSeasonById(1L);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isEqualTo(promotionSeason1);
 
     }
 
