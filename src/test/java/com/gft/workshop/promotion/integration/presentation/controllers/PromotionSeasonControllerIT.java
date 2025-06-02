@@ -79,7 +79,14 @@ public class PromotionSeasonControllerIT {
     @DisplayName("Delete PromotionSeason and return 204 No content")
     void deletePromotionSeasonOkTest() throws Exception {
 
+        promotionSeasonPL.setId(null);
 
+        PromotionSeasonPL promotionSeasonPL1 = promotionSeasonPLRepository.save(promotionSeasonPL);
+
+        mockMvc.perform(delete(uri + "/" + promotionSeasonPL1.getId()))
+                .andExpect(status().isNoContent());
+
+        assertThat(promotionSeasonPLRepository.findById(promotionSeasonPL.getId())).isEmpty();
 
     }
 

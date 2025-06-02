@@ -83,7 +83,7 @@ public class PromotionSeasonServiceImplTest {
     }
 
     @Test
-    @DisplayName("get promotion season by Id")
+    @DisplayName("Get PromotionSeason by Id")
     void getPromotionSeasonByIdTest() {
 
         when(promotionSeasonPLRepository.findById(promotionSeasonPL.getId())).thenReturn(Optional.of(promotionSeasonPL));
@@ -98,8 +98,8 @@ public class PromotionSeasonServiceImplTest {
     }
 
     @Test
-    @DisplayName("read promotion season by Id should throw BusinessException when not found")
-    void readPromotionQuantityByIdNotFoundTest(){
+    @DisplayName("Read PromotionSeason by Id should throw BusinessException when not found")
+    void readPromotionSeasonByIdNotFoundTest(){
 
         when(promotionSeasonPLRepository.findById(100L)).thenReturn(Optional.empty());
 
@@ -112,58 +112,70 @@ public class PromotionSeasonServiceImplTest {
     }
 
     @Test
-    @DisplayName("update not found promotion quantity by Id")
-    void updateNotFoundPromotionQuantityIdTest(){
+    @DisplayName("Update not found PromotionSeason by Id")
+    void updateNotFoundPromotionSeasonIdTest(){
 
 
 
     }
 
     @Test
-    @DisplayName("update promotionQuantity id null should throw BusinessException")
-    void updatePromotionQuantityWithIdNullTest(){
+    @DisplayName("Update PromotionSeason id null should throw BusinessException")
+    void updatePromotionSeasonWithIdNullTest(){
 
 
 
     }
 
     @Test
-    @DisplayName("update promotion quantity correctly")
-    void updatePromotionQuantityOkTest(){
+    @DisplayName("Update PromotionSeason correctly")
+    void updatePromotionSeasonOkTest(){
 
 
 
     }
 
     @Test
-    @DisplayName("get promotions by categories")
-    void getPromotionsByCategoriesTest(){
+    @DisplayName("Get PromotionSeasons by categories")
+    void getPromotionSeasonByCategoriesTest(){
 
 
 
     }
 
     @Test
-    @DisplayName("delete promotion quantity by Id null")
-    void deletePromotionQuantityByIdNullTest(){
+    @DisplayName("Delete PromotionSeason by Id null")
+    void deletePromotionSeasonByIdNullTest(){
 
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            promotionSeasonService.deletePromotionSeason(null);
+        });
 
+        assertEquals("Cannot delete a PromotionSeason with a null ID", ex.getMessage());
 
     }
 
     @Test
-    @DisplayName("delete promotion quantity by Id not found")
-    void deletePromotionQuantityByIdNotFoundTest() {
+    @DisplayName("Delete PromotionSeason by Id not found")
+    void deletePromotionSeasonByIdNotFoundTest() {
 
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            promotionSeasonService.deletePromotionSeason(promotionSeason1.getId());
+        });
 
+        assertEquals("Cannot delete the PromotionSeason: ID not found", ex.getMessage());
 
     }
 
     @Test
     @DisplayName("delete promotion quantity successfully")
-    void deleteProductOkTest() {
+    void deletePromotionSeasonOkTest() {
 
+        when(promotionSeasonPLRepository.findById(1L)).thenReturn(Optional.of(promotionSeasonPL));
 
+        promotionSeasonService.deletePromotionSeason(1L);
+
+        verify(promotionSeasonPLRepository).delete(promotionSeasonPL);
 
     }
 

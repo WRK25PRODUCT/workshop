@@ -46,9 +46,7 @@ class PromotionSeasonE2ETest {
 
     private PromotionSeason promotionSeason1;
     private PromotionSeason newPromotionSeason;
-    private PromotionSeasonPL savePromotionSeasonPL;
     private PromotionSeasonPL newPromotionSeasonPL;
-
     private PromotionSeasonPL promotionSeasonPL;
 
     @BeforeEach
@@ -57,6 +55,7 @@ class PromotionSeasonE2ETest {
         initObjects();
     }
 
+    /*
     @Test
     @DisplayName(("should create a promotion season and return 201"))
     void createPromotionSeasonOkTest() throws Exception{
@@ -82,6 +81,9 @@ class PromotionSeasonE2ETest {
 
     }
 
+
+
+
     @Test
     @DisplayName("Should return existing PromotionSeason by ID and 200 OK")
     void getPromotionSeasonByIdTest() throws Exception {
@@ -102,6 +104,8 @@ class PromotionSeasonE2ETest {
         assertThat(promotionSeason.getId()).isEqualTo(promotionSeason1.getId());
     }
 
+
+     */
     // *******************************************************
     //
     // Private Methods

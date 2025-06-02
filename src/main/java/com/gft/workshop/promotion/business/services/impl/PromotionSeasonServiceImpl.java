@@ -37,6 +37,23 @@ public class PromotionSeasonServiceImpl implements PromotionSeasonService {
     }
 
     @Override
+    public void deletePromotionSeason(Long id) {
+
+        if (id == null){
+            throw new BusinessException("Cannot delete a PromotionSeason with a null ID");
+        }
+
+        Optional<PromotionSeasonPL> optional = promotionSeasonPLRepository.findById(id);
+
+        if (optional.isEmpty()){
+            throw new BusinessException("Cannot delete the PromotionSeason: ID not found");
+        }
+
+        promotionSeasonPLRepository.delete(optional.get());
+
+    }
+
+    @Override
     public PromotionSeason readPromotionSeasonById(Long id) {
 
         Optional<PromotionSeason> optional = promotionSeasonPLRepository.findById(id)
@@ -49,4 +66,5 @@ public class PromotionSeasonServiceImpl implements PromotionSeasonService {
         return optional.get();
 
     }
+
 }
