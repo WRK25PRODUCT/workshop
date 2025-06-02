@@ -4,6 +4,7 @@ import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.promotion.business.model.PromotionSeason;
 import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.business.services.impl.PromotionSeasonServiceImpl;
+import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
 import com.gft.workshop.promotion.integration.model.PromotionSeasonPL;
 import com.gft.workshop.promotion.integration.repositories.PromotionSeasonPLRepository;
 import jakarta.transaction.Transactional;
@@ -13,12 +14,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -72,7 +76,14 @@ public class PromotionSeasonServiceIT {
     @DisplayName("Update PromotionSeason")
     void updatePromotionSeasonOkTest(){
 
+        promotionSeasonPLRepository.save(promotionSeasonPL);
 
+        promotionSeasonService.updatePromotionSeason(promotionSeason1);
+
+        Optional<PromotionSeasonPL> optional = promotionSeasonPLRepository.findById(promotionSeason1.getId());
+
+        assertTrue(optional.isPresent());
+        assertEquals(optional.get().getId(), promotionSeason1.getId());
 
     }
 
