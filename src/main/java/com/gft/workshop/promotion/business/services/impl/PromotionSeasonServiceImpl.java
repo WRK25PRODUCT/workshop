@@ -5,6 +5,7 @@ import com.gft.workshop.promotion.business.model.PromotionSeason;
 import com.gft.workshop.promotion.business.services.PromotionSeasonService;
 import com.gft.workshop.promotion.integration.model.PromotionSeasonPL;
 import com.gft.workshop.promotion.integration.repositories.PromotionSeasonPLRepository;
+import jakarta.transaction.Transactional;
 import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ public class PromotionSeasonServiceImpl implements PromotionSeasonService {
 
 
     @Override
+    @Transactional
     public Long createPromotionSeason(PromotionSeason promotionSeason) {
 
         if(promotionSeason.getId() != null){
@@ -47,6 +49,11 @@ public class PromotionSeasonServiceImpl implements PromotionSeasonService {
         }
 
         return optional.get();
+
+    }
+
+    @Override
+    public void updatePromotionSeason(PromotionSeason promotionSeason) {
 
     }
 }
