@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
 
-    public static final String EXCHANGE_PRODUCT = "product";
+    public static final String EXCHANGE_PRODUCT = "products";
 
     @Bean
     public TopicExchange productExchange() {

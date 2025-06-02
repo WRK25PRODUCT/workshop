@@ -1,7 +1,6 @@
 package com.gft.workshop.promotion.integration.business.services.impl;
 
 import com.gft.workshop.product.business.model.Category;
-import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.business.services.impl.PromotionQuantityServiceImpl;
@@ -14,10 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -82,6 +81,23 @@ class PromotionQuantityServiceIT {
 
         assertTrue(optional.isPresent());
         assertEquals(optional.get().getId(), promotionQuantity1.getId());
+    }
+
+    @Test
+    @DisplayName("get promotions by categories")
+    void getPromotionsByCategoriesTest() {
+
+        promotionQuantity1.setId(null);
+        newPromotionQuantity.setId(null);
+        promotionQuantityService.createPromotionQuantity(promotionQuantity1);
+        promotionQuantityService.createPromotionQuantity(newPromotionQuantity);
+
+        List<PromotionQuantity> promotions = promotionQuantityService.getPromotionsByCategories(List.of(Category.TOYS, Category.BOOKS));
+
+        assertEquals(2, promotions.size());
+        assertTrue(promotions.stream().anyMatch(p -> p.getCategory() == Category.TOYS));
+        assertTrue(promotions.stream().anyMatch(p -> p.getCategory() == Category.BOOKS));
+
     }
 
     @Test

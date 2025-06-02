@@ -1,8 +1,8 @@
 package com.gft.workshop.promotion.presentation.controlles;
 
-import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.services.PromotionQuantityService;
+import com.gft.workshop.promotion.presentation.dto.CategoryRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,11 +50,11 @@ public class PromotionQuantityController {
 
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id){
-
-        promotionQuantityService.deletePromotionQuantity(id);
-
-        return ResponseEntity.noContent().build();
+    @PostMapping("/get-by-category")
+    public ResponseEntity<List<PromotionQuantity>> getActivePromotionsByCategory(@RequestBody CategoryRequest request){
+        List<PromotionQuantity> promotions = promotionQuantityService.getPromotionsByCategories(request.getCategories());
+        return ResponseEntity.ok(promotions);
     }
+
+
 }

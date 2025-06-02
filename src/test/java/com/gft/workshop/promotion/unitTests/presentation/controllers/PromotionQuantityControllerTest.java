@@ -5,6 +5,8 @@ import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.business.services.PromotionQuantityService;
 import com.gft.workshop.promotion.presentation.controlles.PromotionQuantityController;
+import com.gft.workshop.promotion.presentation.dto.CategoryRequest;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -80,14 +82,21 @@ class PromotionQuantityControllerTest {
     }
 
     @Test
-    @DisplayName("Should delete promotion quantity and return 204")
-    void deletePromotionQuantityOkTest() {
+    @DisplayName("Should return active promotions by categories and 200")
+    void getPromotionsByCategoriesTest() {
 
-        ResponseEntity<?> response = promotionQuantityController.delete(1L);
+        List<Category> categoryList = List.of(Category.TOYS, Category.BOOKS);
+        List<PromotionQuantity> promotions = List.of(promotionQuantity1, newPromotionQuantity);
 
-        assertThat(response.getStatusCode().value()).isEqualTo(204);
-        verify(promotionQuantityService).deletePromotionQuantity(1L);
+        CategoryRequest request = new CategoryRequest();
+        request.setCategories(categoryList);
 
+        when(promotionQuantityService.getPromotionsByCategories(categoryList)).thenReturn(promotions);
+
+        ResponseEntity<List<PromotionQuantity>> response = promotionQuantityController.getActivePromotionsByCategory(request);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isEqualTo(promotions);
     }
 
     @Test

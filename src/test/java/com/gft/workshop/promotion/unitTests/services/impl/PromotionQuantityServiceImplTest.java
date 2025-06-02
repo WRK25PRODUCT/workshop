@@ -16,8 +16,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
@@ -25,9 +25,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class PromotionQuantityServiceImplTest {
@@ -151,6 +148,35 @@ class PromotionQuantityServiceImplTest {
     }
 
     @Test
+    @DisplayName("get promotions by categories")
+    void getPromotionsByCategoriesTest(){
+
+        List<Category> categories = List.of(Category.TOYS, Category.BOOKS);
+
+        List<PromotionQuantityPL> promotionPLList = List.of(promotionQuantityPL);
+
+        when(promotionQuantityPLRepository.findActivePromotionsByCategory(
+                org.mockito.ArgumentMatchers.eq(categories),
+                org.mockito.ArgumentMatchers.any(Date.class)
+        )).thenReturn(promotionPLList);
+
+        when(mapper.map(promotionQuantityPL, PromotionQuantity.class)).thenReturn(promotionQuantity1);
+
+        List<PromotionQuantity> result = promotionQuantityService.getPromotionsByCategories(categories);
+
+        assertEquals(1, result.size());
+        assertEquals(promotionQuantity1.getId(), result.get(0).getId());
+
+        verify(promotionQuantityPLRepository).findActivePromotionsByCategory(
+                org.mockito.ArgumentMatchers.eq(categories),
+                org.mockito.ArgumentMatchers.any(Date.class)
+        );
+
+        verify(mapper).map(promotionQuantityPL, PromotionQuantity.class);
+
+    }
+
+    @Test
     @DisplayName("delete promotion quantity by Id null")
     void deletePromotionQuantityByIdNullTest(){
 
@@ -197,7 +223,6 @@ class PromotionQuantityServiceImplTest {
         assertEquals(2, result.size());
         assertEquals(promotionQuantity1, result.get(0));
     }
-
 
     // *******************************************************
     //
