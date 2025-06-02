@@ -17,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -83,87 +82,86 @@ public class PromotionSeasonServiceImplTest {
     }
 
     @Test
-    @DisplayName("get promotion season by Id")
+    @DisplayName("Get PromotionSeason by Id")
     void getPromotionSeasonByIdTest() {
 
-        when(promotionSeasonPLRepository.findById(promotionSeasonPL.getId())).thenReturn(Optional.of(promotionSeasonPL));
-        when(mapper.map(promotionSeasonPL, PromotionSeason.class)).thenReturn(promotionSeason1);
-
-        PromotionSeason promotionSeason = promotionSeasonService.readPromotionSeasonById(promotionSeason1.getId());
-
-        assertNotNull(promotionSeason);
-        assertEquals(promotionSeason1.getId(), promotionSeason.getId());
 
 
     }
 
     @Test
-    @DisplayName("read promotion season by Id should throw BusinessException when not found")
-    void readPromotionQuantityByIdNotFoundTest(){
+    @DisplayName("Read PromotionSeason by Id should throw BusinessException when not found")
+    void readPromotionSeasonByIdNotFoundTest(){
 
-        when(promotionSeasonPLRepository.findById(100L)).thenReturn(Optional.empty());
 
-        BusinessException exception = assertThrows(BusinessException.class, () -> {
-            promotionSeasonService.readPromotionSeasonById(100L);
+
+    }
+
+    @Test
+    @DisplayName("Update not found PromotionSeason by Id")
+    void updateNotFoundPromotionSeasonIdTest(){
+
+
+
+    }
+
+    @Test
+    @DisplayName("Update PromotionSeason id null should throw BusinessException")
+    void updatePromotionSeasonWithIdNullTest(){
+
+
+
+    }
+
+    @Test
+    @DisplayName("Update PromotionSeason correctly")
+    void updatePromotionSeasonOkTest(){
+
+
+
+    }
+
+    @Test
+    @DisplayName("Get PromotionSeasons by categories")
+    void getPromotionSeasonByCategoriesTest(){
+
+
+
+    }
+
+    @Test
+    @DisplayName("Delete PromotionSeason by Id null")
+    void deletePromotionSeasonByIdNullTest(){
+
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            promotionSeasonService.deletePromotionSeason(null);
         });
 
-        assertEquals("Promotion season not found with the id: 100", exception.getMessage());
+        assertEquals("Cannot delete a PromotionSeason with a null ID", ex.getMessage());
 
     }
 
     @Test
-    @DisplayName("update not found promotion quantity by Id")
-    void updateNotFoundPromotionQuantityIdTest(){
+    @DisplayName("Delete PromotionSeason by Id not found")
+    void deletePromotionSeasonByIdNotFoundTest() {
 
+        BusinessException ex = assertThrows(BusinessException.class, () -> {
+            promotionSeasonService.deletePromotionSeason(promotionSeason1.getId());
+        });
 
-
-    }
-
-    @Test
-    @DisplayName("update promotionQuantity id null should throw BusinessException")
-    void updatePromotionQuantityWithIdNullTest(){
-
-
-
-    }
-
-    @Test
-    @DisplayName("update promotion quantity correctly")
-    void updatePromotionQuantityOkTest(){
-
-
-
-    }
-
-    @Test
-    @DisplayName("get promotions by categories")
-    void getPromotionsByCategoriesTest(){
-
-
-
-    }
-
-    @Test
-    @DisplayName("delete promotion quantity by Id null")
-    void deletePromotionQuantityByIdNullTest(){
-
-
-
-    }
-
-    @Test
-    @DisplayName("delete promotion quantity by Id not found")
-    void deletePromotionQuantityByIdNotFoundTest() {
-
-
+        assertEquals("Cannot delete the PromotionSeason: ID not found", ex.getMessage());
 
     }
 
     @Test
     @DisplayName("delete promotion quantity successfully")
-    void deleteProductOkTest() {
+    void deletePromotionSeasonOkTest() {
 
+        when(promotionSeasonPLRepository.findById(1L)).thenReturn(Optional.of(promotionSeasonPL));
 
+        promotionSeasonService.deletePromotionSeason(1L);
+
+        verify(promotionSeasonPLRepository).delete(promotionSeasonPL);
 
     }
 

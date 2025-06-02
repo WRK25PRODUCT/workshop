@@ -14,7 +14,11 @@ public interface PromotionSeasonService {
 /*
     void updatePromotionSeason(PromotionSeason promotionSeason);
 
+    */
+
     void deletePromotionSeason(Long id);
+
+    /*
 
     List<PromotionSeason> getAllPromotionSeason();
 
