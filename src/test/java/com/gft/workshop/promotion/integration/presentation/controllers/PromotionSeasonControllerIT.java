@@ -94,8 +94,19 @@ public class PromotionSeasonControllerIT {
     @DisplayName("Should return all PromotionSeason and 200 OK")
     void getAllPromotionSeasonTest() throws Exception {
 
+        promotionSeasonPL.setId(null);
+        newPromotionSeasonPL.setId(null);
 
+        promotionSeasonPLRepository.save(promotionSeasonPL);
+        promotionSeasonPLRepository.save(newPromotionSeasonPL);
 
+        MvcResult result = mockMvc.perform(get(uri))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        PromotionSeason[] promotionSeasons = objectMapper.readValue(result.getResponse().getContentAsString(), PromotionSeason[].class);
+
+        assertThat(promotionSeasons).hasSize(2);
     }
 
 

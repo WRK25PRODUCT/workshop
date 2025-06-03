@@ -88,12 +88,12 @@ class PromotionSeasonControllerTest {
     }
 
     @Test
-    @DisplayName("Should return all PromotionSeason and 200")
+    @DisplayName("Should return all PromotionSeason")
     void getAllPromotionSeasonTest() {
 
         when(promotionSeasonService.getAllPromotionSeason()).thenReturn(List.of(promotionSeason1, newPromotionSeason));
 
-        List<PromotionSeason> response = promotionSeasonService.getAllPromotionSeason();
+        List<PromotionSeason> response = promotionSeasonController.getAllPromotionSeason();
 
         assertThat(response).hasSize(2);
 
