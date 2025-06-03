@@ -43,6 +43,8 @@ public class PromotionSeasonController {
 
     }
 
+    */
+
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody PromotionSeason promotionSeason, @PathVariable Long id) {
 
@@ -50,6 +52,7 @@ public class PromotionSeasonController {
 
     }
 
+    /*
     @PostMapping("/get-by-category")
     public ResponseEntity<List<PromotionSeason>> getActivePromotionSeasonByCategory(@RequestBody CategoryRequest request){
 
