@@ -2,7 +2,6 @@ package com.gft.workshop.promotion.unitTests.services.impl;
 
 import com.gft.workshop.config.ExceptionHandler.BusinessException;
 import com.gft.workshop.product.business.model.Category;
-import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.business.services.impl.PromotionQuantityServiceImpl;
@@ -155,7 +154,7 @@ class PromotionQuantityServiceImplTest {
 
         List<PromotionQuantityPL> promotionPLList = List.of(promotionQuantityPL);
 
-        when(promotionQuantityPLRepository.findActivePromotionsByCategory(
+        when(promotionQuantityPLRepository.findActivePromotionQuantityByCategory(
                 org.mockito.ArgumentMatchers.eq(categories),
                 org.mockito.ArgumentMatchers.any(Date.class)
         )).thenReturn(promotionPLList);
@@ -167,7 +166,7 @@ class PromotionQuantityServiceImplTest {
         assertEquals(1, result.size());
         assertEquals(promotionQuantity1.getId(), result.get(0).getId());
 
-        verify(promotionQuantityPLRepository).findActivePromotionsByCategory(
+        verify(promotionQuantityPLRepository).findActivePromotionQuantityByCategory(
                 org.mockito.ArgumentMatchers.eq(categories),
                 org.mockito.ArgumentMatchers.any(Date.class)
         );

@@ -1,11 +1,13 @@
 package com.gft.workshop.promotion.unitTests.presentation.controllers;
 
 import com.gft.workshop.product.business.model.Category;
+import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionSeason;
 import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.business.services.PromotionSeasonService;
 import com.gft.workshop.promotion.integration.model.PromotionSeasonPL;
 import com.gft.workshop.promotion.presentation.controlles.PromotionSeasonController;
+import com.gft.workshop.promotion.presentation.dto.CategoryRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -83,7 +85,18 @@ class PromotionSeasonControllerTest {
     @DisplayName("Should return active PromotionSeason by categories and 200")
     void getPromotionSeasonByCategoriesTest() {
 
+        List<Category> categoryList = List.of(Category.TOYS, Category.BOOKS);
+        List<PromotionSeason> promotions = List.of(promotionSeason1, newPromotionSeason);
 
+        CategoryRequest request = new CategoryRequest();
+        request.setCategories(categoryList);
+
+        when(promotionSeasonService.getPromotionSeasonByCategories(categoryList)).thenReturn(promotions);
+
+        ResponseEntity<List<PromotionSeason>> response = promotionSeasonController.getActivePromotionSeasonByCategory(request);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isEqualTo(promotions);
 
     }
 

@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -159,7 +160,28 @@ public class PromotionSeasonServiceImplTest {
     @DisplayName("Get PromotionSeasons by categories")
     void getPromotionSeasonByCategoriesTest(){
 
+        List<Category> categories = List.of(Category.TOYS, Category.BOOKS);
 
+        List<PromotionSeasonPL> promotionPLList = List.of(promotionSeasonPL);
+
+        when(promotionSeasonPLRepository.findActivePromotionSeasonByCategory(
+                ArgumentMatchers.eq(categories),
+                ArgumentMatchers.any(Date.class)
+        )).thenReturn(promotionPLList);
+
+        when(mapper.map(promotionSeasonPL, PromotionSeason.class)).thenReturn(promotionSeason1);
+
+        List<PromotionSeason> result = promotionSeasonService.getPromotionSeasonByCategories(categories);
+
+        assertEquals(1, result.size());
+        assertEquals(promotionSeason1.getId(), result.get(0).getId());
+
+        verify(promotionSeasonPLRepository).findActivePromotionSeasonByCategory(
+                ArgumentMatchers.eq(categories),
+                ArgumentMatchers.any(Date.class)
+        );
+
+        verify(mapper).map(promotionSeasonPL, PromotionSeason.class);
 
     }
 

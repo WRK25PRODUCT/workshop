@@ -1,14 +1,18 @@
 package com.gft.workshop.promotion.business.services.impl;
 
 import com.gft.workshop.config.ExceptionHandler.BusinessException;
+import com.gft.workshop.product.business.model.Category;
+import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionSeason;
 import com.gft.workshop.promotion.business.services.PromotionSeasonService;
+import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
 import com.gft.workshop.promotion.integration.model.PromotionSeasonPL;
 import com.gft.workshop.promotion.integration.repositories.PromotionSeasonPLRepository;
 import jakarta.transaction.Transactional;
 import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,6 +66,20 @@ public class PromotionSeasonServiceImpl implements PromotionSeasonService {
                 .map(p-> mapper.map(p, PromotionSeason.class))
                 .toList();
     }
+
+    @Override
+    public List<PromotionSeason> getPromotionSeasonByCategories(List<Category> categories) {
+
+        //TODO excepciones
+
+        List<PromotionSeasonPL> promotionSeasonPLs = promotionSeasonPLRepository
+                .findActivePromotionSeasonByCategory(categories, new Date());
+
+        return promotionSeasonPLs.stream().map(promotionSeasonPL -> mapper.map(promotionSeasonPL, PromotionSeason.class))
+                .toList();
+
+    }
+
 
     @Override
     public PromotionSeason readPromotionSeasonById(Long id) {

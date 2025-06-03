@@ -1,6 +1,7 @@
 package com.gft.workshop.promotion.integration.business.services.impl;
 
 import com.gft.workshop.product.business.model.Category;
+import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionSeason;
 import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.business.services.impl.PromotionSeasonServiceImpl;
@@ -90,7 +91,16 @@ public class PromotionSeasonServiceIT {
     @DisplayName("Get PromotionSeason by categories")
     void getPromotionSeasonByCategoriesTest() {
 
+        promotionSeason1.setId(null);
+        newPromotionSeason.setId(null);
+        promotionSeasonService.createPromotionSeason(promotionSeason1);
+        promotionSeasonService.createPromotionSeason(newPromotionSeason);
 
+        List<PromotionSeason> promotions = promotionSeasonService.getPromotionSeasonByCategories(List.of(Category.TOYS, Category.BOOKS));
+
+        assertEquals(2, promotions.size());
+        assertTrue(promotions.stream().anyMatch(p -> p.getAffectedCategories().stream().anyMatch(category -> category.equals(Category.TOYS))));
+        assertTrue(promotions.stream().anyMatch(p -> p.getAffectedCategories().stream().anyMatch(category -> category.equals(Category.BOOKS))));
 
     }
 
