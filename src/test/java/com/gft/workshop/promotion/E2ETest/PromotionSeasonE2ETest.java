@@ -51,7 +51,7 @@ class PromotionSeasonE2ETest {
         initObjects();
     }
 
-    /*
+
     @Test
     @DisplayName(("should create a promotion season and return 201"))
     void createPromotionSeasonOkTest(){
@@ -100,8 +100,6 @@ class PromotionSeasonE2ETest {
         assertThat(getResponse.getBody().getId()).isEqualTo(id);
     }
 
-
-     */
     // *******************************************************
     //
     // Private Methods

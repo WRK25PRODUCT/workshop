@@ -4,6 +4,7 @@ import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.promotion.business.model.PromotionSeason;
 import com.gft.workshop.promotion.business.model.PromotionType;
 import com.gft.workshop.promotion.business.services.PromotionSeasonService;
+import com.gft.workshop.promotion.integration.model.PromotionSeasonPL;
 import com.gft.workshop.promotion.presentation.controlles.PromotionSeasonController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,6 +34,7 @@ public class PromotionSeasonControllerTest {
 
     private PromotionSeason promotionSeason1;
     private PromotionSeason newPromotionSeason;
+    private PromotionSeasonPL promotionSeasonPL;
 
     @BeforeEach
     void init(){
@@ -71,8 +73,10 @@ public class PromotionSeasonControllerTest {
     @DisplayName("Should update PromotionSeason and return 204")
     void updatePromotionSeasonTest() {
 
+        ResponseEntity<?> response = promotionSeasonController.update(promotionSeason1, 1L);
 
-
+        assertThat(response.getStatusCode().value()).isEqualTo(204);
+        verify(promotionSeasonService).updatePromotionSeason(promotionSeason1);
     }
 
     @Test
@@ -133,6 +137,16 @@ public class PromotionSeasonControllerTest {
         newPromotionSeason.setPromotionType(PromotionType.SEASON);
         newPromotionSeason.setName("Book Festival");
         newPromotionSeason.setAffectedCategories(List.of(Category.BOOKS));
+
+        promotionSeasonPL = new PromotionSeasonPL();
+        promotionSeasonPL.setId(1L);
+        promotionSeasonPL.setStartDate(startDate);
+        promotionSeasonPL.setEndDate(endDate);
+        promotionSeasonPL.setDiscount(15.0);
+        promotionSeasonPL.setPromotionType(PromotionType.SEASON);
+        promotionSeasonPL.setName("Spring Toys Promo PL");
+        promotionSeasonPL.setAffectedCategories(List.of(Category.TOYS));
+
     }
 
 }
