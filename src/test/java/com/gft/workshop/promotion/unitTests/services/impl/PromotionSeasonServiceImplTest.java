@@ -200,10 +200,17 @@ public class PromotionSeasonServiceImplTest {
     }
 
     @Test
-    @DisplayName("get all promotion quantities")
+    @DisplayName("get all promotion seasons")
     void getAllPromotionQuantitiesTest(){
 
+        when(promotionSeasonPLRepository.findAll()).thenReturn(List.of(promotionSeasonPL, newPromotionSeasonPL));
+        when(mapper.map(promotionSeasonPL, PromotionSeason.class)).thenReturn(promotionSeason1);
+        when(mapper.map(newPromotionSeasonPL, PromotionSeason.class)).thenReturn(newPromotionSeason);
 
+        List<PromotionSeason> result = promotionSeasonService.getAllPromotionSeason();
+
+        assertEquals(2, result.size());
+        assertEquals(promotionSeason1, result.get(0));
 
     }
 
