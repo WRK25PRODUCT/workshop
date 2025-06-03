@@ -8,7 +8,8 @@ INSERT INTO products (name, description, price, weight, category, in_catalog, st
 INSERT INTO promotions (start_date, end_date, discount, promotion_type) VALUES
 ('2025-06-01', '2025-06-15', 0.15, 'SEASON'),
 ('2025-07-01', '2025-07-31', 0.10, 'QUANTITY'),
-('2025-08-15', '2025-08-31', 0.20, 'SEASON');
+('2025-08-15', '2025-08-31', 0.20, 'SEASON'),
+('2025-06-01', '2025-06-30', 0.10, 'QUANTITY');
 
 INSERT INTO promotion_season (id, name) VALUES
 (1, 'Summer Sale'),
@@ -20,10 +21,11 @@ INSERT INTO promotion_season_categories (promotion_season_id, category) VALUES
 (3, 'BOOKS');
 
 INSERT INTO promotion_quantities (id, quantity, category) VALUES
-(2, 2, 'TOYS');
+(2, 2, 'TOYS'),
+(4, 5, 'TOYS');
 
 INSERT INTO history (user_id, product_id, timestamp) VALUES
-  ('user01', 1, DATEADD('DAY', -2, CURRENT_TIMESTAMP)),
-  ('user02', 2, DATEADD('DAY', -1, CURRENT_TIMESTAMP)),
-  ('user01', 3, CURRENT_TIMESTAMP),
-  ('user03', 1, DATEADD('DAY', -3, CURRENT_TIMESTAMP));
+('user01', 1, CURRENT_TIMESTAMP - INTERVAL '2 days'),
+('user02', 2, CURRENT_TIMESTAMP - INTERVAL '1 day'),
+('user01', 3, CURRENT_TIMESTAMP),
+('user03', 1, CURRENT_TIMESTAMP - INTERVAL '3 days');
