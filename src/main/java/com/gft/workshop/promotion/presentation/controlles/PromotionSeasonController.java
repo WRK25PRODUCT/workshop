@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/promotionsSeason")
 public class PromotionSeasonController {
@@ -35,15 +37,10 @@ public class PromotionSeasonController {
 
     }
 
-    /*
     @GetMapping
-    public List<PromotionSeason> getAllPromotionQuantities(){
-
-        return null;
-
+    public List<PromotionSeason> getAllPromotionSeason(){
+        return promotionSeasonService.getAllPromotionSeason();
     }
-
-    */
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody PromotionSeason promotionSeason, @PathVariable Long id) {
