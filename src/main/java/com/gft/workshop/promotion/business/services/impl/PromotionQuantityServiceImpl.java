@@ -82,7 +82,7 @@ public  class PromotionQuantityServiceImpl implements PromotionQuantityService {
     @Override
     public List<PromotionQuantity> getPromotionQuantityByCategories(List<Category> categories) {
         List<PromotionQuantityPL> promotionPLs = promotionQuantityPLRepository
-                .findActivePromotionsByCategory(categories, new Date());
+                .findActivePromotionQuantityByCategory(categories, new Date());
 
         return promotionPLs.stream()
                 .map(pl -> mapper.map(pl, PromotionQuantity.class))

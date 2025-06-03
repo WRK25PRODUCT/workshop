@@ -1,7 +1,6 @@
 package com.gft.workshop.promotion.integration.repositories;
 
 import com.gft.workshop.product.business.model.Category;
-import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.integration.model.PromotionQuantityPL;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +16,7 @@ public interface PromotionQuantityPLRepository extends JpaRepository<PromotionQu
     WHERE p.category IN :categories
     AND :today BETWEEN p.startDate AND p.endDate
     """)
-    List<PromotionQuantityPL> findActivePromotionsByCategory(
+    List<PromotionQuantityPL> findActivePromotionQuantityByCategory(
             @Param("categories") List<Category> categories,
             @Param("today") Date today
     );

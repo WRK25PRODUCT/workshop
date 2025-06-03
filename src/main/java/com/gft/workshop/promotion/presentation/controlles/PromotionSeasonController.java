@@ -1,7 +1,9 @@
 package com.gft.workshop.promotion.presentation.controlles;
 
+import com.gft.workshop.promotion.business.model.PromotionQuantity;
 import com.gft.workshop.promotion.business.model.PromotionSeason;
 import com.gft.workshop.promotion.business.services.PromotionSeasonService;
+import com.gft.workshop.promotion.presentation.dto.CategoryRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,15 +55,14 @@ public class PromotionSeasonController {
 
     }
 
-    /*
     @PostMapping("/get-by-category")
     public ResponseEntity<List<PromotionSeason>> getActivePromotionSeasonByCategory(@RequestBody CategoryRequest request){
 
-        return null;
+        List<PromotionSeason> promotions = promotionSeasonService.getPromotionSeasonByCategories(request.getCategories());
+
+        return ResponseEntity.ok(promotions);
 
     }
-
-    */
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {

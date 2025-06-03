@@ -17,9 +17,7 @@ public interface PromotionSeasonService {
     void deletePromotionSeason(Long id);
 
     List<PromotionSeason> getAllPromotionSeason();
-/*
-    List<PromotionSeason> getPromotionSeasonByCategories(List<Category> categories);
 
-    */
+    List<PromotionSeason> getPromotionSeasonByCategories(List<Category> categories);
 
 }
