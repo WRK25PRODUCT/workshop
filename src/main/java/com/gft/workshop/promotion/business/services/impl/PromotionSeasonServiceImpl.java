@@ -58,7 +58,9 @@ public class PromotionSeasonServiceImpl implements PromotionSeasonService {
 
     @Override
     public List<PromotionSeason> getAllPromotionSeason() {
-        return List.of();
+        return promotionSeasonPLRepository.findAll().stream()
+                .map(p-> mapper.map(p, PromotionSeason.class))
+                .toList();
     }
 
     @Override
