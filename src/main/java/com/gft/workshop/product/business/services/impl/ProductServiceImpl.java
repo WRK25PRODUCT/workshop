@@ -5,6 +5,7 @@ import com.gft.workshop.product.business.model.InventoryData;
 import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.business.services.ProductService;
 import com.gft.workshop.product.integration.messaging.producer.StockNotificationProducer;
+import com.gft.workshop.product.integration.model.InventoryDataPL;
 import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.product.integration.repositories.ProductPLRepository;
 import jakarta.transaction.Transactional;
@@ -44,6 +45,22 @@ public class ProductServiceImpl implements ProductService {
         }
 
         ProductPL productPL = mapper.map(product, ProductPL.class);
+        
+        if (product.getInventoryData() != null) {
+            InventoryData inventory = product.getInventoryData();
+            InventoryDataPL inventoryPL = new InventoryDataPL();
+            inventoryPL.setStock(inventory.getStock());
+            inventoryPL.setThreshold(inventory.getThreshold());
+            inventoryPL.setTotalSales(inventory.getTotalSales());
+            productPL.setInventoryDataPL(inventoryPL);
+        } else {
+            InventoryDataPL emptyInventory = new InventoryDataPL();
+            emptyInventory.setStock(0);
+            emptyInventory.setThreshold(0);
+            emptyInventory.setTotalSales(0);
+            productPL.setInventoryDataPL(emptyInventory);
+        }
+
         Long newId = productPLRepository.save(productPL).getId();
 
         logger.info("Product created with ID={}", newId);
@@ -133,11 +150,11 @@ public class ProductServiceImpl implements ProductService {
         productPL.setInCatalog(product.isInCatalog());
 
         if (product.getInventoryData() != null) {
-            InventoryData inventory = new InventoryData();
+            InventoryDataPL inventory = new InventoryDataPL();
             inventory.setStock(product.getInventoryData().getStock());
             inventory.setThreshold(product.getInventoryData().getThreshold());
             inventory.setTotalSales(product.getInventoryData().getTotalSales());
-            productPL.setInventoryData(inventory);
+            productPL.setInventoryDataPL(inventory);
         }
 
         productPLRepository.save(productPL);
@@ -167,7 +184,7 @@ public class ProductServiceImpl implements ProductService {
                     return new BusinessException("In order to update the stock of a product, the id must exist in the database");
                 });
 
-        int currentStock = product.getInventoryData().getStock();
+        int currentStock = product.getInventoryDataPL().getStock();
         int newStock = currentStock + quantityChange;
 
         if (newStock < 0) {
@@ -175,9 +192,9 @@ public class ProductServiceImpl implements ProductService {
             throw new BusinessException("In order to update the stock of a product, the stock can't drop below 0");
         }
 
-        int threshold = product.getInventoryData().getThreshold();
+        int threshold = product.getInventoryDataPL().getThreshold();
 
-        product.getInventoryData().setStock(newStock);
+        product.getInventoryDataPL().setStock(newStock);
         productPLRepository.save(product);
 
         logger.info("Stock updated for product ID={}: {} → {}", productId, currentStock, newStock);

@@ -5,6 +5,7 @@ import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.product.business.model.InventoryData;
 import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.business.services.impl.ProductServiceImpl;
+import com.gft.workshop.product.integration.model.InventoryDataPL;
 import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.product.integration.repositories.ProductPLRepository;
 import com.gft.workshop.product.presentation.dto.StockUpdateDTO;
@@ -50,7 +51,7 @@ class ProductControllerIT {
     private ProductPL productPL1;
     private ProductPL productPL2;
     private ProductPL savedProductPL;
-    private Product updated;
+    private ProductPL updated;
 
     @BeforeEach
     void init() {
@@ -171,7 +172,7 @@ class ProductControllerIT {
         productPL1.setId(null);
         savedProductPL = repository.save(productPL1);
 
-        updated = new Product();
+        updated = new ProductPL();
         updated.setId(savedProductPL.getId());
         updated.setName("Updated");
         updated.setDescription(savedProductPL.getDescription());
@@ -180,11 +181,11 @@ class ProductControllerIT {
         updated.setCategory(savedProductPL.getCategory());
         updated.setInCatalog(savedProductPL.isInCatalog());
 
-        InventoryData inventory = new InventoryData();
-        inventory.setStock(savedProductPL.getInventoryData().getStock());
-        inventory.setThreshold(savedProductPL.getInventoryData().getThreshold());
-        inventory.setTotalSales(savedProductPL.getInventoryData().getTotalSales());
-        updated.setInventoryData(inventory);
+        InventoryDataPL inventory = new InventoryDataPL();
+        inventory.setStock(savedProductPL.getInventoryDataPL().getStock());
+        inventory.setThreshold(savedProductPL.getInventoryDataPL().getThreshold());
+        inventory.setTotalSales(savedProductPL.getInventoryDataPL().getTotalSales());
+        updated.setInventoryDataPL(inventory);
 
         String json = objectMapper.writeValueAsString(updated);
 
@@ -253,7 +254,7 @@ class ProductControllerIT {
         savedProductPL = repository.save(productPL1);
 
         Long productId = savedProductPL.getId();
-        int initialStock = savedProductPL.getInventoryData().getStock();
+        int initialStock = savedProductPL.getInventoryDataPL().getStock();
         int quantityChange = -5;
 
         StockUpdateDTO stockUpdateDTO = new StockUpdateDTO(quantityChange);
@@ -268,7 +269,7 @@ class ProductControllerIT {
 
         Optional<ProductPL> result = repository.findById(productId);
         assertThat(result).isPresent();
-        assertThat(result.get().getInventoryData().getStock()).isEqualTo(initialStock + quantityChange);
+        assertThat(result.get().getInventoryDataPL().getStock()).isEqualTo(initialStock + quantityChange);
 
     }
 
@@ -340,11 +341,11 @@ class ProductControllerIT {
         productPL1.setCategory(Category.SPORTS);
         productPL1.setInCatalog(true);
 
-        InventoryData inventoryPL1 = new InventoryData();
+        InventoryDataPL inventoryPL1 = new InventoryDataPL();
         inventoryPL1.setStock(40);
         inventoryPL1.setThreshold(4);
         inventoryPL1.setTotalSales(150);
-        productPL1.setInventoryData(inventoryPL1);
+        productPL1.setInventoryDataPL(inventoryPL1);
 
         productPL2 = new ProductPL();
         productPL2.setId(2L);
@@ -355,11 +356,11 @@ class ProductControllerIT {
         productPL2.setCategory(Category.TOYS);
         productPL2.setInCatalog(true);
 
-        InventoryData inventoryPL2 = new InventoryData();
+        InventoryDataPL inventoryPL2 = new InventoryDataPL();
         inventoryPL2.setStock(35);
         inventoryPL2.setThreshold(3);
         inventoryPL2.setTotalSales(90);
-        productPL2.setInventoryData(inventoryPL2);
+        productPL2.setInventoryDataPL(inventoryPL2);
 
     }
 

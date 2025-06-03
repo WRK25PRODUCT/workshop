@@ -7,6 +7,7 @@ import com.gft.workshop.product.business.model.InventoryData;
 import com.gft.workshop.product.business.model.Product;
 import com.gft.workshop.product.business.services.impl.ProductServiceImpl;
 import com.gft.workshop.product.integration.messaging.producer.StockNotificationProducer;
+import com.gft.workshop.product.integration.model.InventoryDataPL;
 import com.gft.workshop.product.integration.model.ProductPL;
 import com.gft.workshop.product.integration.repositories.ProductPLRepository;
 import org.dozer.DozerBeanMapper;
@@ -67,15 +68,55 @@ class ProductServiceImplTest {
     @DisplayName("create product successfully")
     void createProductOkTest() {
         product1.setId(null);
+
+        InventoryData inventoryData = new InventoryData();
+        inventoryData.setTotalSales(100);
+        inventoryData.setThreshold(5);
+        inventoryData.setStock(40);
+
+        product1.setInventoryData(inventoryData);
+
         ProductPL mappedPL = new ProductPL();
         mappedPL.setId(99L);
         when(mapper.map(product1, ProductPL.class)).thenReturn(mappedPL);
+
+        InventoryDataPL inventoryDataPL = new InventoryDataPL();
+        inventoryDataPL.setThreshold(product1.getInventoryData().getThreshold());
+        inventoryDataPL.setTotalSales(product1.getInventoryData().getTotalSales());
+        inventoryDataPL.setStock(product1.getInventoryData().getStock());
+
+        mappedPL.setInventoryDataPL(inventoryDataPL);
+
         when(productPLRepository.save(mappedPL)).thenReturn(mappedPL);
 
         Long resultId = productServiceImpl.createProduct(product1);
 
         assertEquals(99L, resultId);
         verify(productPLRepository).save(mappedPL);
+    }
+
+    @Test
+    @DisplayName("create product with null inventoryData")
+    void createProductWithNullInventoryDataTest() {
+        Product product = new Product();
+        product.setId(null);
+        product.setName("test product");
+        product.setPrice(BigDecimal.TEN);
+        product.setWeight(1.0);
+        product.setCategory(Category.TOYS);
+        product.setInCatalog(true);
+        product.setDescription("test product description");
+        product.setInventoryData(null); // <-- aquí el punto clave
+
+        ProductPL mappedPL = new ProductPL();
+        mappedPL.setId(123L);
+        when(mapper.map(product, ProductPL.class)).thenReturn(mappedPL);
+        when(productPLRepository.save(any(ProductPL.class))).thenReturn(mappedPL);
+
+        Long result = productServiceImpl.createProduct(product);
+
+        assertEquals(123L, result);
+        verify(productPLRepository).save(any(ProductPL.class));
     }
 
     @DisplayName("read product by id successfully")
@@ -237,9 +278,9 @@ class ProductServiceImplTest {
         productServiceImpl.updateProduct(product1);
 
         verify(productPLRepository).save(productPL1);
-        assertEquals(10, productPL1.getInventoryData().getStock());
-        assertEquals(2, productPL1.getInventoryData().getThreshold());
-        assertEquals(5, productPL1.getInventoryData().getTotalSales());
+        assertEquals(10, productPL1.getInventoryDataPL().getStock());
+        assertEquals(2, productPL1.getInventoryDataPL().getThreshold());
+        assertEquals(5, productPL1.getInventoryDataPL().getTotalSales());
     }
 
     @Test
@@ -250,12 +291,12 @@ class ProductServiceImplTest {
         int quantityChange = -2;
         int expectedStock = curerentStock + quantityChange;
 
-        InventoryData inventoryData = new InventoryData();
+        InventoryDataPL inventoryData = new InventoryDataPL();
         inventoryData.setStock(curerentStock);
 
         ProductPL productPL = new ProductPL();
         productPL.setId(1L);
-        productPL.setInventoryData(inventoryData);
+        productPL.setInventoryDataPL(inventoryData);
 
         when(productPLRepository.findById(1L)).thenReturn(Optional.of(productPL));
 
@@ -264,7 +305,7 @@ class ProductServiceImplTest {
         verify(productPLRepository).findById(1L);
         verify(productPLRepository).save(productPL);
 
-        assertEquals(expectedStock, productPL.getInventoryData().getStock());
+        assertEquals(expectedStock, productPL.getInventoryDataPL().getStock());
 
     }
 
@@ -272,12 +313,12 @@ class ProductServiceImplTest {
     @DisplayName("Should throw Business Exception: new stock is below 0")
     void updateProductStockNewStockBelowZero() {
 
-        InventoryData inventoryData = new InventoryData();
+        InventoryDataPL inventoryData = new InventoryDataPL();
         inventoryData.setStock(10);
 
         ProductPL productPL = new ProductPL();
         productPL.setId(1L);
-        productPL.setInventoryData(inventoryData);
+        productPL.setInventoryDataPL(inventoryData);
 
         when(productPLRepository.findById(1L)).thenReturn(Optional.of(productPL));
 
@@ -332,13 +373,13 @@ class ProductServiceImplTest {
     @DisplayName("Should only send stock update notification")
     void updateProductStockNoThresholdCrossed() {
 
-        InventoryData inventoryData = new InventoryData();
+        InventoryDataPL inventoryData = new InventoryDataPL();
         inventoryData.setStock(10);
         inventoryData.setThreshold(5);
 
         ProductPL productPL = new ProductPL();
         productPL.setId(1L);
-        productPL.setInventoryData(inventoryData);
+        productPL.setInventoryDataPL(inventoryData);
 
         when(productPLRepository.findById(1L)).thenReturn(Optional.of(productPL));
 
@@ -355,13 +396,13 @@ class ProductServiceImplTest {
     @DisplayName("Should send stock update notification and stock below notification")
     void updateProductStockThresholdCrossedBelow() {
 
-        InventoryData inventoryData = new InventoryData();
+        InventoryDataPL inventoryData = new InventoryDataPL();
         inventoryData.setStock(10);
         inventoryData.setThreshold(5);
 
         ProductPL productPL = new ProductPL();
         productPL.setId(1L);
-        productPL.setInventoryData(inventoryData);
+        productPL.setInventoryDataPL(inventoryData);
 
         when(productPLRepository.findById(1L)).thenReturn(Optional.of(productPL));
 
@@ -378,13 +419,13 @@ class ProductServiceImplTest {
     @DisplayName("Should send stock update notification and stock below notification")
     void updateProductStockThresholdCrossedRestock() {
 
-        InventoryData inventoryData = new InventoryData();
+        InventoryDataPL inventoryData = new InventoryDataPL();
         inventoryData.setStock(5);
         inventoryData.setThreshold(10);
 
         ProductPL productPL = new ProductPL();
         productPL.setId(1L);
-        productPL.setInventoryData(inventoryData);
+        productPL.setInventoryDataPL(inventoryData);
 
         when(productPLRepository.findById(1L)).thenReturn(Optional.of(productPL));
 

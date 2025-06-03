@@ -137,7 +137,7 @@ class ProductServiceIT {
         Optional<ProductPL> updatedProductPL = productPLRepository.findById(newId);
 
         assertTrue(updatedProductPL.isPresent());
-        assertEquals(expectedStock, updatedProductPL.get().getInventoryData().getStock());
+        assertEquals(expectedStock, updatedProductPL.get().getInventoryDataPL().getStock());
 
     }
 
