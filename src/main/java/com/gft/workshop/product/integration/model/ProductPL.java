@@ -41,7 +41,7 @@ public class ProductPL {
     private boolean inCatalog;
 
     @Embedded
-    private InventoryData inventoryData;
+    private InventoryDataPL inventoryDataPL;
 
 }
 
