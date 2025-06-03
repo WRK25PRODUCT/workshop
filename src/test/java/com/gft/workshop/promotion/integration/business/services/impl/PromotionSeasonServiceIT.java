@@ -108,6 +108,16 @@ public class PromotionSeasonServiceIT {
 
     }
 
+    @Test
+    @DisplayName("get all promotion seasons")
+    void getAllPromotionSeasonTest(){
+
+        List<PromotionSeason> result = promotionSeasonService.getAllPromotionSeason();
+
+        assertEquals(2, result.size());
+
+    }
+
     // *******************************************************
     //
     // Private Methods
