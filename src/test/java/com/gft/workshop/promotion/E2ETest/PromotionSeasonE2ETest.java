@@ -1,6 +1,5 @@
 package com.gft.workshop.promotion.E2ETest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gft.workshop.product.business.model.Category;
 import com.gft.workshop.promotion.business.model.PromotionSeason;
 import com.gft.workshop.promotion.business.model.PromotionType;
@@ -11,36 +10,32 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ActiveProfiles("application-dev.properties")
-@SpringBootTest
-@AutoConfigureMockMvc
+@ActiveProfiles("test")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 class PromotionSeasonE2ETest {
 
     @Autowired
-    private MockMvc mockMvc;
+    private TestRestTemplate restTemplate;
 
     @Autowired
     private PromotionSeasonPLRepository promotionSeasonPLRepository;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @LocalServerPort
+    private int port;
 
     private final String uri = "/api/v1/promotionsSeason";
 
@@ -49,59 +44,60 @@ class PromotionSeasonE2ETest {
     private PromotionSeasonPL newPromotionSeasonPL;
     private PromotionSeasonPL promotionSeasonPL;
 
+    private HttpHeaders headers;
+
     @BeforeEach
     void init(){
-        promotionSeasonPLRepository.deleteAll();
         initObjects();
     }
 
     /*
     @Test
     @DisplayName(("should create a promotion season and return 201"))
-    void createPromotionSeasonOkTest() throws Exception{
+    void createPromotionSeasonOkTest(){
 
         promotionSeason1.setId(null);
 
-        String requestJson = objectMapper.writeValueAsString(promotionSeason1);
+        String url = "http://localhost:" + port + uri;
 
-        MvcResult result = mockMvc.perform(post(uri)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson))
-                        .andExpect(status().isOk())
-                        .andReturn();
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        String responseBody = result.getResponse().getContentAsString();
+        HttpEntity<PromotionSeason> request = new HttpEntity<>(promotionSeason1, headers);
 
-        assertThat(responseBody).isNotEmpty();
+        ResponseEntity<Long> postResponse = restTemplate.postForEntity(url, request, Long.class);
 
-        Long promotionSeasonId = objectMapper.readValue(responseBody, Long.class);
+        assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(postResponse.getBody()).isNotNull();
 
-        assertThat(promotionSeasonId).isNotNull();
-        assertThat(promotionSeasonPLRepository.findById(promotionSeasonId));
-
+        Optional<PromotionSeasonPL> optional = promotionSeasonPLRepository.findById(postResponse.getBody());
+        assertThat(optional).isPresent();
     }
-
-
-
 
     @Test
     @DisplayName("Should return existing PromotionSeason by ID and 200 OK")
-    void getPromotionSeasonByIdTest() throws Exception {
+    void getPromotionSeasonByIdTest(){
 
-        promotionSeasonPL.setId(null);
+        promotionSeason1.setId(null);
 
-        savePromotionSeasonPL = promotionSeasonPLRepository.save(promotionSeasonPL);
+        String postUrl = "http://localhost:" + port + uri;
 
-        MvcResult result = mockMvc.perform(get(uri + "/" + savePromotionSeasonPL.getId()))
-                .andExpect(status().isOk())
-                .andReturn();
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        PromotionSeason promotionSeason = objectMapper.readValue(result.getResponse().getContentAsString(), PromotionSeason.class);
+        HttpEntity<PromotionSeason> request = new HttpEntity<>(promotionSeason1, headers);
 
-        promotionSeason1.setId(promotionSeason.getId());
+        ResponseEntity<Long> postResponse = restTemplate.postForEntity(postUrl, request, Long.class);
 
-        assertThat(promotionSeason).isNotNull();
-        assertThat(promotionSeason.getId()).isEqualTo(promotionSeason1.getId());
+        assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        Long id = postResponse.getBody();
+
+        assertThat(id).isNotNull();
+
+        String getUrl = "http://localhost:" + port + uri + "/" + id;
+        ResponseEntity<PromotionSeason> getResponse = restTemplate.getForEntity(getUrl, PromotionSeason.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(getResponse.getBody()).isNotNull();
+        assertThat(getResponse.getBody().getId()).isEqualTo(id);
     }
 
 
@@ -156,6 +152,6 @@ class PromotionSeasonE2ETest {
         newPromotionSeasonPL.setName("Books Season PL");
         newPromotionSeasonPL.setAffectedCategories(List.of(Category.BOOKS));
 
+        headers = new HttpHeaders();
     }
-
 }

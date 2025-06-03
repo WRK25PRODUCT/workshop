@@ -2,14 +2,13 @@ package com.gft.workshop.promotion.presentation.controlles;
 
 import com.gft.workshop.promotion.business.model.PromotionSeason;
 import com.gft.workshop.promotion.business.services.PromotionSeasonService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/promotionsSeason")
 public class PromotionSeasonController {
-
-
 
     private final PromotionSeasonService promotionSeasonService;
 
@@ -22,7 +21,7 @@ public class PromotionSeasonController {
 
         Long id = promotionSeasonService.createPromotionSeason(promotionSeason);
 
-        return ResponseEntity.ok().body(id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(id);
 
     }
 

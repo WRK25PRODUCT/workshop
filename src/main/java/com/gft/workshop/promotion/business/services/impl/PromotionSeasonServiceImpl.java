@@ -5,6 +5,7 @@ import com.gft.workshop.promotion.business.model.PromotionSeason;
 import com.gft.workshop.promotion.business.services.PromotionSeasonService;
 import com.gft.workshop.promotion.integration.model.PromotionSeasonPL;
 import com.gft.workshop.promotion.integration.repositories.PromotionSeasonPLRepository;
+import jakarta.transaction.Transactional;
 import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ public class PromotionSeasonServiceImpl implements PromotionSeasonService {
 
 
     @Override
+    @Transactional
     public Long createPromotionSeason(PromotionSeason promotionSeason) {
 
         if(promotionSeason.getId() != null){
@@ -67,4 +69,30 @@ public class PromotionSeasonServiceImpl implements PromotionSeasonService {
 
     }
 
+    @Override
+    @Transactional
+    public void updatePromotionSeason(PromotionSeason promotionSeason) {
+
+        if(promotionSeason.getId() == null){
+            throw new BusinessException("In order to update a promotion season, the id must not be null");
+        }
+
+        Optional<PromotionSeasonPL> optional = promotionSeasonPLRepository.findById(promotionSeason.getId());
+
+        if(optional.isEmpty()){
+            throw new BusinessException("In order to update a promotion season, the id must exist in the database");
+        }
+
+        PromotionSeasonPL promotionSeasonPL = optional.get();
+
+        promotionSeasonPL.setName(promotionSeason.getName());
+        promotionSeasonPL.setDiscount(promotionSeason.getDiscount());
+        promotionSeasonPL.setPromotionType(promotionSeason.getPromotionType());
+        promotionSeasonPL.setStartDate(promotionSeason.getStartDate());
+        promotionSeasonPL.setEndDate(promotionSeason.getEndDate());
+        promotionSeasonPL.setAffectedCategories(promotionSeason.getAffectedCategories());
+
+        promotionSeasonPLRepository.save(promotionSeasonPL);
+
+    }
 }

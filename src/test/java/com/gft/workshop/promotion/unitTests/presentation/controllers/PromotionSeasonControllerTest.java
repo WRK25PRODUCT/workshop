@@ -40,7 +40,7 @@ public class PromotionSeasonControllerTest {
     }
 
     @Test
-    @DisplayName("Should create a PromotionSeason successfully and return 200 with ID")
+    @DisplayName("Should create a PromotionSeason successfully and return 201 with ID")
     void createPromotionSeasonOkTest() {
 
         promotionSeason1.setId(null);
@@ -49,7 +49,7 @@ public class PromotionSeasonControllerTest {
 
         ResponseEntity<Long> response = promotionSeasonController.create(promotionSeason1);
 
-        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getStatusCode().value()).isEqualTo(201);
         assertThat(response.getBody()).isEqualTo(1L);
 
     }
