@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -53,6 +54,11 @@ public class PromotionSeasonServiceImpl implements PromotionSeasonService {
 
         promotionSeasonPLRepository.delete(optional.get());
 
+    }
+
+    @Override
+    public List<PromotionSeason> getAllPromotionSeason() {
+        return List.of();
     }
 
     @Override
