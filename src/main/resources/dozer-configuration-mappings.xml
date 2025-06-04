@@ -4,6 +4,33 @@
           xsi:schemaLocation="http://dozer.sourceforge.net
           http://dozer.sourceforge.net/schema/beanmapping.xsd">
 
-    <!-- Business to Integration -->
+
+    <mapping>
+        <class-a>com.gft.workshop.product.integration.model.ProductPL</class-a>
+        <class-b>com.gft.workshop.product.business.model.Product</class-b>
+
+        <field>
+            <a>inventoryDataPL</a>
+            <b>inventoryData</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>com.gft.workshop.product.integration.model.InventoryDataPL</class-a>
+        <class-b>com.gft.workshop.product.business.model.InventoryData</class-b>
+
+        <field>
+            <a>stock</a>
+            <b>stock</b>
+        </field>
+        <field>
+            <a>threshold</a>
+            <b>threshold</b>
+        </field>
+        <field>
+            <a>totalSales</a>
+            <b>totalSales</b>
+        </field>
+    </mapping>
 
 </mappings>
