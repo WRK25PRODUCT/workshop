@@ -81,12 +81,22 @@ public  class PromotionQuantityServiceImpl implements PromotionQuantityService {
 
     @Override
     public List<PromotionQuantity> getPromotionQuantityByCategories(List<Category> categories) {
+
+        if (categories == null) {
+            throw new BusinessException("Category list must not be null");
+        }
+
+        if (categories.isEmpty()) {
+            throw new BusinessException("Category list must not be empty");
+        }
+
         List<PromotionQuantityPL> promotionPLs = promotionQuantityPLRepository
                 .findActivePromotionQuantityByCategory(categories, new Date());
 
         return promotionPLs.stream()
                 .map(pl -> mapper.map(pl, PromotionQuantity.class))
                 .toList();
+
     }
 
     @Transactional

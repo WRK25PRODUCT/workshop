@@ -186,6 +186,31 @@ public class PromotionSeasonServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should throw BusinessException when category list is null")
+    void getPromotionSeasonByCategoriesNullList() {
+
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            promotionSeasonService.getPromotionSeasonByCategories(null);
+
+        });
+
+        assertEquals("Category list must not be null", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw BusinessException when category list is empty")
+    void getPromotionSeasonByCategoriesEmptyList() {
+
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            promotionSeasonService.getPromotionSeasonByCategories(List.of());
+
+        });
+
+        assertEquals("Category list must not be empty", exception.getMessage());
+    }
+
+
+    @Test
     @DisplayName("Delete PromotionSeason by Id null")
     void deletePromotionSeasonByIdNullTest(){
 

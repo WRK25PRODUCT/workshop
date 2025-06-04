@@ -70,8 +70,14 @@ public class PromotionSeasonServiceImpl implements PromotionSeasonService {
     @Override
     public List<PromotionSeason> getPromotionSeasonByCategories(List<Category> categories) {
 
-        //TODO excepciones
+        if (categories == null) {
+            throw new BusinessException("Category list must not be null");
+        }
 
+        if (categories.isEmpty()) {
+            throw new BusinessException("Category list must not be empty");
+        }
+        
         List<PromotionSeasonPL> promotionSeasonPLs = promotionSeasonPLRepository
                 .findActivePromotionSeasonByCategory(categories, new Date());
 

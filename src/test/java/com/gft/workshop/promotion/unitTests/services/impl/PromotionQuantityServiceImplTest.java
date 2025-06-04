@@ -176,6 +176,30 @@ class PromotionQuantityServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should throw BusinessException when category list is null")
+    void getPromotionQuantityByCategoriesNullList() {
+
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            promotionQuantityService.getPromotionQuantityByCategories(null);
+
+        });
+
+        assertEquals("Category list must not be null", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw BusinessException when category list is empty")
+    void getPromotionQuantityByCategoriesEmptyList() {
+
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            promotionQuantityService.getPromotionQuantityByCategories(List.of());
+
+        });
+
+        assertEquals("Category list must not be empty", exception.getMessage());
+    }
+
+    @Test
     @DisplayName("delete promotion quantity by Id null")
     void deletePromotionQuantityByIdNullTest(){
 
