@@ -7,10 +7,7 @@ import com.gft.workshop.promotion.business.services.PromotionQuantityService;
 import com.gft.workshop.promotion.business.services.PromotionSeasonService;
 import com.gft.workshop.promotion.presentation.dto.CategoryRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,5 +36,17 @@ public class PromotionController {
 
         return ResponseEntity.ok(promotions);
     }
+
+    @GetMapping
+    public List<Promotion> getAllPromotions(){
+
+        List<PromotionQuantity> promotionsQuantity = promotionQuantityService.getAllPromotionQuantities();
+        List<PromotionSeason> promotionsSeason = promotionSeasonService.getAllPromotionSeason();
+
+        List<Promotion> promotions = new ArrayList<>();
+        promotions.addAll(promotionsQuantity);
+        promotions.addAll(promotionsSeason);
+
+        return (promotions);    }
 
 }
