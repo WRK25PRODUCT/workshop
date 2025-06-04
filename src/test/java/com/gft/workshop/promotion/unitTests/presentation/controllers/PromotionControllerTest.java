@@ -73,6 +73,21 @@ class PromotionControllerTest {
 
     }
 
+    @Test
+    @DisplayName("Should return all promotions")
+    void getAllPromotionsTest() {
+
+        when(promotionQuantityService.getAllPromotionQuantities()).thenReturn(List.of(promotionQuantity));
+        when(promotionSeasonService.getAllPromotionSeason()).thenReturn(List.of(promotionSeason));
+
+        List<Promotion> response = promotionController.getAllPromotions();
+
+        assertThat(response).hasSize(2);
+        assertThat(response).containsExactlyInAnyOrder(promotionQuantity, promotionSeason);
+
+    }
+
+
     // *******************************************************
     //
     // Private Methods
