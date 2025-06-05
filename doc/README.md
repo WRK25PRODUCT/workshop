@@ -1,4 +1,4 @@
-# 🛍️ PRODUCTOS API Endpoints
+# 🛍️ PRODUCT API Endpoints
 
 RESTful API built with Spring Boot for managing products, promotions (seasonal and quantity-based), and inventory.  
 Designed following a layered architecture (`integration`, `business`, `presentation`).  
