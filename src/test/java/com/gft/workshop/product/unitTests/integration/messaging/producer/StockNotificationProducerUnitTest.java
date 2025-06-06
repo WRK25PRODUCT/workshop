@@ -51,7 +51,6 @@ public class StockNotificationProducerUnitTest {
     }
 
     private void initObjects() {
-        Mockito.when(productExchange.getName()).thenReturn("product");
         producer = new StockNotificationProducer(rabbitTemplate);
     }
 }
