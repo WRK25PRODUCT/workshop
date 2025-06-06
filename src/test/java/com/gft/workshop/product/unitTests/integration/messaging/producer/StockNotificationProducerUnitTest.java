@@ -35,23 +35,23 @@ public class StockNotificationProducerUnitTest {
     @Test
     void shouldSendRestockNotification() {
         producer.sendRestockNotification(1L, 10);
-        Mockito.verify(rabbitTemplate).convertAndSend("product", "stock.restock", new StockNotificationDTO(1L, 10));
+        Mockito.verify(rabbitTemplate).convertAndSend("products", "stock.restock", new StockNotificationDTO(1L, 10));
     }
 
     @Test
     void shouldSendBelowThresholdNotification() {
         producer.sendBelowThresholdNotification(1L, 10);
-        Mockito.verify(rabbitTemplate).convertAndSend("product", "stock.low", new StockNotificationDTO(1L, 10));
+        Mockito.verify(rabbitTemplate).convertAndSend("product.low", "stock.low", new StockNotificationDTO(1L, 10));
     }
 
     @Test
     void shouldSendStockUpdateNotification() {
         producer.sendStockUpdateNotification(1L, 10);
-        Mockito.verify(rabbitTemplate).convertAndSend("product", "stock.change", new StockNotificationDTO(1L, 10));
+        Mockito.verify(rabbitTemplate).convertAndSend("product.changed", "stock.change", new StockNotificationDTO(1L, 10));
     }
 
     private void initObjects() {
         Mockito.when(productExchange.getName()).thenReturn("product");
-        producer = new StockNotificationProducer(rabbitTemplate, productExchange);
+        producer = new StockNotificationProducer(rabbitTemplate);
     }
 }
